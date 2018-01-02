@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="probNumRep">
+<sql id="probNumRep">
+FROM 
+ins_team team
+LEFT JOIN 
+(SELECT COUNT(1)COUNT,team.tno FROM qx_czy czy 
+ JOIN ins_team team ON team.tno=czy.tid 
+ JOIN ins_wo wo ON wo.p_optid=czy.czyid 
+ JOIN ins_pln_meter pln ON wo.woid=pln.woid
+ LEFT JOIN ins_fb_testpm test ON test.pid=pln.pid
+WHERE test.rst='0'
+GROUP BY team.tno)a ON team.tno=a.tno
+LEFT JOIN 
+(SELECT COUNT(1)COUNT,team.tno FROM qx_czy czy 
+ JOIN ins_team team ON team.tno=czy.tid 
+ JOIN ins_wo wo ON wo.p_optid=czy.czyid 
+ JOIN ins_pln_meter pln ON wo.woid=pln.woid
+ LEFT JOIN ins_fb_testpm test ON test.pid=pln.pid
+WHERE test.rst='1'
+GROUP BY team.tno)c ON team.tno=c.tno
+where 1=1 
+ <isNotEmpty property="tno">
+ and team.tno=#tno#
+ </isNotEmpty>
+ <isNotEmpty property="failNum">
+ and c.count &gt; #failNum#
+ </isNotEmpty>
+</sql>
+<select id="probNumRepQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+<include refid="common.pagingTop"/>
+SELECT team.tno,team.tname,IFNULL(a.count,0) successNum, IFNULL(c.count,0) failNum,
+(IFNULL(a.count,0)+IFNULL(c.count,0))AS totalNum 
+<include refid="probNumRep.probNumRep"/>
+<include refid="common.pagingBottom"/>
+</select>
+<select id="probNumRepCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+SELECT COUNT(1)
+<include refid="probNumRep.probNumRep"/>
+</select>
+<sql id="probDetailRep">
+ FROM qx_czy czy 
+ JOIN ins_team team ON team.tno=czy.tid 
+ JOIN ins_wo wo ON wo.p_optid=czy.czyid
+ JOIN ins_pln_meter pln ON wo.woid=pln.woid 
+ JOIN ins_fb_meter fb ON pln.pid=fb.pid
+ LEFT JOIN INS_FB_TESTPM pm ON  fb.pid=pm.pid
+ where 1=1 
+ <isNotEmpty property="tno">
+ and team.tno=#tno#
+ </isNotEmpty>
+  <isNotEmpty property="rst">
+ and pm.rst=#rst#
+ </isNotEmpty>
+</sql>
+<select id="probDetailRepQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+<include refid="common.pagingTop"/>
+SELECT wo.woid,pln.pid,team.tname,pm.msn,pm.tiid,fb.verid,
+(select name from p_code where code_type='result' and lang=#appLang# and value=pm.rst)rst,
+(select tiname from p_ps_tiname where tiid=pm.tiid and lang=#appLang#) tiname
+<include refid="probNumRep.probDetailRep"/>
+<include refid="common.pagingBottom"/>
+</select>
+<select id="probDetailRepCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+SELECT COUNT(1)
+<include refid="probNumRep.probDetailRep"/>
+</select>
+<select id="getRst" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+SELECT CONCAT(obis,":",(SELECT NAME FROM p_code WHERE code_type='result' AND VALUE=rst AND lang=#appLang#),IF(VALUE IS NULL,"",CONCAT(":",VALUE)))result FROM INS_FB_TESTPMCODE
+where tiid=#TIID# and pid=#PID# and msn=#MSN#
+</select>
+
+<sql id="getTestDetail">
+ FROM 
+ ins_fb_meter  fb
+ JOIN ins_fb_testpm pm ON fb.pid=pm.pid
+ JOIN  ins_fb_testpmcode pcode ON 
+ pm.pid=pcode.pid AND pm.tiid=pcode.tiid
+ LEFT JOIN 
+(  SELECT doc.item_id,doc.unit,m.verid,don.item_name,don.lang FROM dlms_obis_code doc JOIN ar_meter_model m ON m.verid=doc.verid
+JOIN  dlms_obis_name don ON doc.item_id=don.item_id AND doc.verid=don.verid 
+ WHERE  doc.isshow='1'  AND m.verid=#verid#
+	UNION 
+	SELECT doc.item_id,doc.unit,m.verid,don.item_name,don.lang FROM dlms_obis_code doc  JOIN ar_meter_model m ON doc.verid = '0'
+		JOIN  dlms_obis_name don ON doc.item_id=don.item_id AND doc.verid=don.verid 
+	 WHERE  isshow='1' AND m.verid=#verid#
+	   AND  NOT EXISTS
+	(SELECT 1 FROM dlms_obis_code c,ar_meter_model m  WHERE c.item_id =doc.item_id	
+	 AND c.verid=m.verid AND m.verid=#verid# )) name
+ON  name.item_id=pcode.obis AND  fb.verid=name.verid 
+ WHERE name.lang=#appLang# and fb.pid=#pid# and pm.tiid=#tiid#
+</sql>
+<select id="getTestDetailQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+<include refid="common.pagingTop"/>
+ SELECT fb.pid,pcode.obis,name.item_name,
+ (select name from p_code where code_type='result' and value=pcode.rst and lang=#appLang#) rst,
+concat(ifnull(pcode.value,''),ifnull(name.unit,'')) value
+<include refid="probNumRep.getTestDetail"/>
+<include refid="common.pagingBottom"/>
+</select>
+<select id="getTestDetailCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+SELECT COUNT(1)
+<include refid="probNumRep.getTestDetail"/>
+</select>
+</sqlMap>

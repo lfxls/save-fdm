@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="czygl">
+		
+		<!-- 取单位 -->
+ 	 	<select id="getDw" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+ 	 		SELECT DWDM AS ID, DWMC AS NAME, 'DW' AS TYPE FROM QX_QY WHERE SJDWDM = #nodeId#
+ 	 	</select>
+ 	 	
+ 	 	<!-- 取机构 -->
+ 	 	<select id="getJg" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+ 	 		SELECT BMID AS ID, BMMC AS NAME, 'JG' AS TYPE, DWDM AS INFO FROM QX_BM WHERE SJBMID = #nodeId#
+ 	 	</select>
+ 	 	
+ 	 	<!-- 取操作员 -->
+ 	 	<select id="getCzy" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+	 	 	SELECT BM.CZYID AS ID, CZY.XM AS NAME, 'CZY' AS TYPE
+			  FROM QX_CZYBM BM, QX_CZY CZY
+			 WHERE BM.CZYID = CZY.CZYID
+			   AND BM.BMID = #nodeId#
+			   AND CZY.CZYID != 'admin'
+ 	 	</select>
+ 	 	
+ 	 	 <!-- 取访问单位 -->
+	 	  <select id="getQxFwTree" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	 	SELECT DW.DWDM, DW.DWMC, DW.JB, DECODE(QX.DWDM, NULL,'0','1') AS CHECKED
+			  FROM QX_QY DW, (SELECT DWDM FROM QX_CZYFWQX WHERE CZYID = #czyid#) QX
+			 WHERE DW.DWDM = QX.DWDM(+)
+			 <isEqual property="root" compareValue="true">
+				AND DW.DWDM = #dwdm# 
+			 </isEqual>
+			 <isEqual property="root" compareValue="false">
+				AND DW.SJDWDM = #dwdm#
+			 </isEqual>
+	 	 </select>
+ 	 
+ 	 	<!-- 查询操作员 -->
+ 	 	<select id="queryCzy" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+  	 		SELECT CZY.CZYID AS ID, CZY.XM AS NAME, 'CZY' AS TYPE
+			  FROM QX_CZY CZY WHERE DWDM LIKE #unitCode# || '%'
+			  <isNotEmpty property="czyid">
+			  	AND CZYID = #czyid#
+			  </isNotEmpty>
+			   <isNotEmpty property="xm">
+			  	AND XM LIKE '%' || #xm# || '%'
+			  </isNotEmpty> 
+  	 	</select>
+  	 	
+  	 	<!-- 查询操作员角色 -->
+  	 	<select id="getJsTree" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+  	 		SELECT JS.JSID, JS.JSMC, DECODE(CZY.JSID, NULL, '0', '1') AS CHECKED
+			  FROM QX_JS JS, QX_CZYJS CZY
+			 WHERE JS.JSID = CZY.JSID(+)
+			   AND CZY.CZYID(+) = #czyid#
+			   <isNotEmpty property="cdubz">
+			   and js.cdubz = #cdubz#
+			   </isNotEmpty>
+  	 	</select>
+  	 	
+  	 	<!-- 插入操作员-->
+  	 	<insert id="insCzy" parameterClass="java.util.HashMap">
+  	 		INSERT INTO QX_CZY
+			  (CZYID, DWDM, XM, MM, ZT, SJHM, DHHM, CJRQ,bdip,sysjq,sysjz, yxdz,txfws)
+			SELECT #czyid# AS CZYID, DWDM, #xm# AS XM, #mm# AS MM, #zt# AS ZT, #sjhm# AS SJHM, #dhhm# AS DHHM, SYSDATE AS CJRQ,
+			#ip# as bdip,#sysjq# as sysjq,#sysjz# as sysjz, #yxdz# as yxdz, #txfws# txfws
+			 FROM QX_BM WHERE BMID = #bmid#
+  	 	</insert>
+  	 	
+  	 	<!-- 插入操作员部门-->
+  	 	<insert id="insCzyBm" parameterClass="java.util.HashMap">
+  	 		INSERT INTO QX_CZYBM (CZYID, BMID) VALUES (#czyid#, #bmid#)
+  	 	</insert>
+  	 	
+  	 	<!-- 插入操作员角色-->
+  	 	<insert id="insCzyJs" parameterClass="java.util.HashMap">
+  	 		INSERT INTO QX_CZYJS (CZYID, JSID)
+  	 		SELECT #czyid# AS CZYID, JSID FROM QX_JS 
+  	 		WHERE JSID
+  	 		<iterate prepend="IN" open="(" close=")" property="jsids" conjunction=",">
+				#jsids[]#
+			</iterate> 
+  	 	</insert>
+  	 	
+  	 	<!-- 修改操作员 -->
+  	 	<update id="updCzy" parameterClass="java.util.HashMap">
+  	 		<isEqual property="czyid" compareValue="admin">
+  	 			update qx_adminmm set mm = #mm#,cjrq=sysdate where czyid='admin'
+  	 		</isEqual>
+  	 		<isNotEqual property="czyid" compareValue="admin">
+  	 		UPDATE QX_CZY SET XM = #xm#, SJHM = #sjhm#, DHHM = #dhhm#, yxdz = #yxdz#, ZT = #zt#
+  	 		<isNotEmpty property="mm">
+  	 			,MM = #mm#
+  	 		</isNotEmpty>
+ 			,bdip = #ip#
+ 			,sysjq = #sysjq#
+ 			,sysjz = #sysjz#
+ 			,dwdm = (SELECT DWDM FROM QX_BM WHERE BMID = #bmid#)
+ 			,txfws = #txfws#
+  	 		WHERE CZYID = #czyid#
+  	 		</isNotEqual>
+  	 	</update>
+  	 	
+  	 	<!-- 删除操作员角色 -->
+  	 	<delete id="delCzyJs" parameterClass="java.util.HashMap">
+  	 		DELETE FROM QX_CZYJS WHERE CZYID = #czyid#
+  	 	</delete>
+  	 	
+  	 	<!-- 更新操作员部门-->
+  	 	<update id="updCzyBm" parameterClass="java.util.HashMap">
+  	 		UPDATE QX_CZYBM SET BMID = #bmid# WHERE CZYID = #czyid#
+  	 	</update>
+  	 	
+  	 	<!-- 删除操作员部门 -->
+  	 	<delete id="delCzyBm" parameterClass="java.util.HashMap">
+  	 		DELETE FROM QX_CZYBM WHERE CZYID = #czyid#
+  	 	</delete>
+  	 	
+  	 	<!-- 删除操作员访问权限 -->
+  	 	<delete id="delCzyFwqx" parameterClass="java.util.HashMap">
+  	 		DELETE FROM QX_CZYFWQX WHERE CZYID = #czyid#
+  	 	</delete>
+  	 	
+  	 	<!-- 删除操作员 -->
+  	 	<delete id="delCzy" parameterClass="java.util.HashMap">
+  	 		DELETE FROM QX_CZY WHERE CZYID = #czyid#
+  	 	</delete>
+  	 	
+  	 	<!-- 插入操作员权限 -->
+  	 	<insert id="insFwdwRoot" parameterClass="java.util.HashMap">
+  	 	  INSERT INTO QX_CZYFWQX (CZYID, DWDM, FWJB)
+		  SELECT #czyid# AS CZYID, DW.DWDM, DW.JB
+		    FROM QX_QY DW
+		   WHERE DW.DWDM = #dwdm#
+  	 	</insert>
+  	 	
+  	 	<!-- 插入操作员访问单位 -->	 
+	 	 <insert id="insFwdw" parameterClass="java.util.HashMap">
+			INSERT INTO QX_CZYFWQX (CZYID, DWDM, FWJB)
+			  SELECT #czyid# AS CZYID, DW.DWDM, DW.JB
+			    FROM QX_QY DW
+			   START WITH DW.DWDM
+			<iterate prepend="IN" open="(" close=")" property="fwdws" conjunction=",">
+				#fwdws[]#
+			</iterate> 
+			  CONNECT BY PRIOR DW.DWDM = DW.SJDWDM
+	 	 </insert>
+	 	 
+	 	 <sql id="userListWhere">
+	 	 	<isNotEmpty property="dwdm">
+			  	AND t.dwdm like #dwdm# || '%'
+			</isNotEmpty>
+		 	<isNotEmpty property="czyid">
+			  	AND t.CZYID like '%' || #czyid# || '%'
+			</isNotEmpty>
+			<isNotEmpty property="xm">
+			  	AND t.XM LIKE '%' || #xm# || '%'
+			</isNotEmpty> 
+			<isNotEmpty property="bmid">
+			  	 and exists (select 1 from qx_czybm b where b.bmid=#bmid# and b.czyid=t.czyid)
+			</isNotEmpty> 
+			<isNotEmpty property="zt">
+			  	 and t.zt = #zt#
+			</isNotEmpty> 
+			 and t.czyid not in
+                (select t1.czyid
+                   from qx_czybm t1, pos_station t2
+                  where t1.bmid = t2.posid)
+			order by t.dwdm,t.cjrq desc
+		</sql>
+	 	 
+	     <!-- 取操作员 列表-->
+ 	 	<select id="getUserListQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 	 		<include refid='common.pagingTop'/>
+	 	 	select t.czyid,
+		       t.dwdm,
+		       (select q.dwmc
+		          from qx_qy q
+		         where q.dwdm = t.dwdm
+		           and rownum = 1) dwmc,
+		       (select b.bmmc
+		          from qx_bm b
+		         where b.bmid =
+		               (select cb.bmid from qx_czybm cb where cb.czyid = t.czyid)) bmmc,
+		       t.xm,
+		       t.zt as czyzt,
+		       (select c.name
+		          from p_code c
+		         where c.code_type = 'czyzt'
+		         	and c.lang = #appLang#
+		           and c.value = t.zt) zt,
+		       t.sjhm,
+		       t.dhhm,
+		       t.yxdz,
+		       to_char(t.cjrq, 'yyyy-mm-dd') cjrq,
+		       t.mmcwcs
+		  from qx_czy t
+		  where t.DWDM LIKE #unitCode# || '%'
+		  <include refid="userListWhere"/>
+		  <include refid='common.pagingBottom'/>
+ 	 	</select>
+ 	 	
+ 	 <!-- 分页 --> 
+	 <select id="getUserListCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		select count(t.czyid) from qx_czy t where 1=1
+		<include refid="userListWhere"/>
+	 </select>
+	
+	<!--获取当前单位所有上级单位-->
+	<select id="getAllParentDw" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select dwmc from qx_qy start with dwdm = #dwdm# connect by prior sjdwdm = dwdm order by jb
+	</select>
+	
+	<sql id="posListWhere">
+		 where p.status = '1'
+		   and p.postype = '1'
+	   <isNotEmpty property="dwdm">
+	   and p.p_deptid like  #dwdm#|| '%'
+	   </isNotEmpty>
+	   <isNotEmpty property="posName">
+	   and p.posname like '%'|| #posName# ||'%'
+	   </isNotEmpty>
+	   and p.posid not in (select au.posid from POS_OPT_AUTHORIZE au where au.czyid=#czyid#)
+	</sql>
+	
+	<!--获取指定单位下属售电点-->
+	<select id="getDeptPosListQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<include refid='common.pagingTop'/>
+		select p.posname,
+		       (select q.dwmc from qx_qy q where q.dwdm = p.p_deptid) dwmc,
+		       p.posid,
+		       p.p_deptid
+		  from pos_station p
+		<include refid="posListWhere"/>  
+		and not exists (select 'z' from pos_opt_authorize pa where pa.posid = p.posid)
+		<include refid='common.pagingBottom'/>
+	</select>
+ 	
+ 	 <!-- 分页 --> 
+	 <select id="getDeptPosListCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		select count(p.posid) from pos_station p
+		<include refid="posListWhere"/>  
+	 </select>	
+	 
+	 <!--获取已经授权属售电点列表-->
+	<select id="getAuthorizedPosListQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select (select q.dwmc from qx_qy q where q.dwdm = t.p_deptid) dwmc,
+	       (select s.posname from pos_station s where s.posid = t.posid) posname,
+	       t.posid
+	  from pos_opt_authorize t
+	  where t.czyid = #czyid#
+	</select>
+	
+	 <!-- 分页 --> 
+	 <select id="getAuthorizedPosListCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		select count(t.czyid) from pos_opt_authorize t where t.czyid = #czyid#
+	 </select>
+	 
+	<!-- 售电点授权-->
+ 	<insert id="authPos" parameterClass="java.util.HashMap">
+ 		insert into pos_opt_authorize
+		  (czyid, posid, p_deptid)
+		values
+		  (#czyid#, #posid#, #dwdm#)
+ 	</insert>
+ 	
+ 	<!-- 售电点授权取消 -->
+ 	<delete id="cancelAuthPos" parameterClass="java.util.HashMap">
+ 		delete pos_opt_authorize
+		 where czyid = #czyid#
+		   and posid = #posid#
+ 	</delete>
+ 	
+ 	<!-- 电网树单位 -->
+	<select id="getDwDw" parameterClass="java.util.HashMap"	resultClass="java.util.HashMap">
+		SELECT DWDM AS DWBM, DWMC AS DWMC, DWDM, 'dw' AS TYPE, JB AS DWLX
+		FROM QX_QY DW
+		WHERE DW.SJDWDM = #nodeId#
+		<include refid='common.fwdwFilter' />
+		ORDER BY DWDM
+	</select>
+	
+	<!-- 给某个操作员分配pos机权限 -->
+	<insert id="authPosMachine" parameterClass="java.util.HashMap">
+	     insert into posm_opt_authorize
+	        (czyid, posmid)
+	      values
+	        (#czyid#, #posmid#)
+	</insert>
+	
+	<!-- 取消某个操作员对pos机的使用权限-->
+	<delete id="cancelAuthPosMachine" parameterClass="java.util.HashMap">
+		  delete posm_opt_authorize
+	       where czyid = #czyid#
+	         and posmid = #posmid#
+	</delete>
+	
+	<!-- 获取授权的pos机 -->
+	<select id="getAuthorizedPosMachineListQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	  select t.posmid, t1.model,t2.posname
+        from posm_opt_authorize t, pos_mach t1,pos_station_all t2
+       where t.posmid = t1.posmid 
+         and t1.posid = t2.posid 
+         and t.czyid = #czyid#
+	</select>
+	
+	<!--分页-->
+	<select id="getAuthorizedPosMachineListCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	  select count(t.czyid)
+        from posm_opt_authorize t
+       where t.czyid = #czyid#
+	</select>
+	
+	<sql id="getPosMachineListWhere">
+	     <isNotEmpty property="posmid">
+     	     and t1.posmid like '%'||#posmid#||'%'
+	     </isNotEmpty>
+<!--	     <isNotEmpty property="posId">-->
+<!--	   		 and t.posid = #posId#-->
+<!--	     </isNotEmpty>-->
+<!--         <isNotEmpty property="departId">-->
+<!--             and t.p_deptid like #departId#||'%'-->
+<!--         </isNotEmpty>-->
+         <isNotEmpty property="czyid">
+             and t1.posmid not in (select t2.posmid
+                                from POSM_OPT_AUTHORIZE t2
+                               where t2.czyid = #czyid#)
+         </isNotEmpty>
+         	and t1.posid = (SELECT t3.bmid FROM qx_czybm t3 where t3.czyid = #czyid#)
+	</sql>
+
+	<!-- 获取该用户所在单位下未授权的pos机 -->
+	<select id="getPosMachineListQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<include refid='common.pagingTop'/>
+	      select t1.posmid, t1.model,pos.posname
+	        from pos_station_all t, pos_mach t1,pos_station_all pos
+	       where t.posid = t1.posid
+	         and t1.posid = pos.posid
+		<include refid='getPosMachineListWhere'/>
+		and not exists (select 'z' from POSM_OPT_AUTHORIZE pa where pa.posmid = t1.posmid and pa.czyid=#czyid#)
+   		<include refid='common.pagingBottom'/>
+	</select>
+	
+	<!-- 分页 -->
+	<select id="getPosMachineListCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		 select count(t1.posmid)
+	       from pos_station_all t, pos_mach t1
+	      where t.posid = t1.posid
+	     <include refid="getPosMachineListWhere"/>
+	</select>
+</sqlMap>
+
+	
+

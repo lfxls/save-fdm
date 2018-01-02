@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="insFailRep">
+<select id="getTestItem" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+SELECT t.tiid bm,n.tiname mc FROM p_ps_ti t JOIN p_ps_tiname n WHERE t.tiid=n.tiid AND lang=#appLang#
+</select>
+<sql id="getFailRep">
+FROM ins_team team
+ LEFT JOIN qx_czy czy ON team.tno=czy.TID
+ LEFT JOIN ins_wo wo ON wo.p_optid=czy.CZYID
+ LEFT JOIN ins_pln_meter pln ON wo.woid=pln.WOID
+ LEFT JOIN ins_fb_meter fb ON pln.pid=fb.pid 
+ JOIN INS_FB_TESTPM PM ON fb.pid=pm.pid 
+ LEFT JOIN p_ps_category cate ON fb.verid=cate.verid
+ LEFT JOIN P_PS_TEST test ON pm.tiid=test.tiid AND test.cate_no=cate.cate_no
+ LEFT JOIN p_ps_tiname NAME ON pm.tiid=name.tiid
+ where pm.rst='1' and name.lang=#appLang# AND cate.PM_TYPE='2'
+ <isNotEmpty property="tno">
+ and team.tno=#tno#
+ </isNotEmpty>
+ <isNotEmpty property="tiid">
+ and pm.tiid=#tiid#
+ </isNotEmpty>
+ <isNotEmpty property="level">
+ and test.level=#level#
+ </isNotEmpty>
+</sql>
+<select id="getFailRepQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+<include refid="common.pagingTop"/>
+SELECT DISTINCT team.tname,pln.pid,wo.woid,fb.cno,fb.cname,fb.o_msn omsn,fb.n_msn nmsn,
+(select name from p_code where code_type='level' and value=test.level and lang=#appLang# ) LEVEL,
+(select name from p_code where code_type='result' and value=pm.rst and lang=#appLang# )result,
+(SELECT xm FROM qx_czy  WHERE czyid=wo.p_optid)optname,pm.pid,name.tiname,pm.rst 
+<include refid="insFailRep.getFailRep"/>
+<include refid="common.pagingBottom"/>
+</select>
+<select id="getFailRepCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+select count(1)
+<include refid="insFailRep.getFailRep"/>
+</select>
+<select id="getChart" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+select count(1) FROM ins_team team
+ LEFT JOIN qx_czy czy ON team.tno=czy.TID
+ LEFT JOIN ins_wo wo ON wo.p_optid=czy.CZYID
+ LEFT JOIN ins_pln_meter pln ON wo.woid=pln.WOID
+ LEFT JOIN ins_fb_meter fb ON pln.pid=fb.pid 
+ JOIN INS_FB_TESTPM PM ON fb.pid=pm.pid 
+ LEFT JOIN   p_ps_category cate   ON fb.verid = cate.verid
+ LEFT JOIN P_PS_TEST test ON pm.tiid=test.tiid  AND test.cate_no=cate.cate_no
+ where pm.rst='1' and pm.tiid=#tiid#  AND cate.PM_TYPE='2'
+ <isNotEmpty property="tno">
+ and team.tno=#tno#
+ </isNotEmpty>
+</select>
+</sqlMap>

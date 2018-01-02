@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="insProRep">
+<select id="getChart" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+SELECT 
+  IFNULL(re.insNum,0) insNum,team.tno,team.tname,re.delayNum
+FROM
+    ins_team team LEFT JOIN
+(
+SELECT COUNT(*) AS insNum,team.tno,team.tname,d.delayNum FROM ins_team team 
+JOIN qx_czy  czy ON team.tno=czy.tid 
+LEFT JOIN ins_wo  wo ON  czy.czyid=wo.p_optid
+LEFT JOIN ins_pln_meter pln ON pln.woid=wo.woid
+LEFT JOIN 
+		(SELECT 
+        COUNT(pln.pid) AS DelayNum,team.tno
+      FROM
+        ins_team team 
+        JOIN qx_czy czy 
+          ON team.tno = czy.tid 
+        JOIN ins_wo wo 
+          ON czy.czyid = wo.p_optid 
+        JOIN ins_pln_meter pln 
+          ON pln.woid = wo.woid
+          WHERE  wo.pf_date &lt;NOW() AND( pln.status = '0' || pln.status = '1' || pln.status = '2' || pln.status = '5' )
+      GROUP BY team.tno)d     
+	ON team.tno=d.tno
+WHERE  pln.status='3'||pln.status='4' 
+GROUP BY team.tno,team.tname
+)re   ON re.tno=team.tno where 1=1 
+	<isNotEmpty property="delayNum">
+	 and  IFNULL(DelayNum, 0)  &gt;  #delayNum#
+	</isNotEmpty>
+	<isNotEmpty property="insNum">
+	 and IFNULL(insNum,0)  &gt;  #insNum#
+	</isNotEmpty>
+</select>
+<sql id="getInsProRep">
+	FROM ins_team team  LEFT JOIN 
+	(SELECT COUNT(*) AS insNum,team.tno  FROM ins_team team 
+	 JOIN qx_czy  czy ON team.tno=czy.tid 
+	LEFT JOIN ins_wo  wo ON  czy.czyid=wo.p_optid
+	LEFT JOIN ins_pln_meter pln ON pln.woid=wo.woid
+	WHERE pln.status='3'||pln.status='4'
+	GROUP BY team.tno
+	) a ON team.tno=a.tno
+	LEFT JOIN 
+	(SELECT COUNT(*) AS uninsNum,team.tno  FROM ins_team team 
+	JOIN qx_czy  czy ON team.tno=czy.tid 
+	JOIN ins_wo  wo ON  czy.czyid=wo.p_optid
+	JOIN ins_pln_meter pln ON pln.woid=wo.woid
+	WHERE pln.status='0'||pln.status='1'||pln.status='2'||pln.status='5'
+	GROUP BY team.tno
+	) b ON a.tno=b.tno
+	 LEFT JOIN 
+    (SELECT 
+      COUNT(e.tno) dateNum, tno 
+    FROM
+      (SELECT 
+        team.tno 
+      FROM
+        ins_team team 
+        JOIN qx_czy czy 
+          ON team.tno = czy.tid 
+        JOIN ins_wo wo 
+          ON czy.czyid = wo.p_optid 
+        JOIN ins_pln_meter pln 
+          ON pln.woid = wo.woid
+        JOIN ins_fb_meter fb
+        ON pln.pid=fb.pid  
+      GROUP BY team.tno, DATE_FORMAT(fb.op_date, '%y-%m-%d')) e 
+    GROUP BY e.tno) c
+    ON a.tno = c.tno 
+	LEFT JOIN     
+	(SELECT 
+        COUNT(pln.pid) AS DelayNum,team.tno
+      FROM
+        ins_team team 
+        JOIN qx_czy czy 
+          ON team.tno = czy.tid 
+        JOIN ins_wo wo 
+          ON czy.czyid = wo.p_optid 
+        JOIN ins_pln_meter pln 
+          ON pln.woid = wo.woid
+          WHERE  DATE_FORMAT(wo.pf_date,'%y-%m-%d') &lt;NOW() AND( pln.status = '0' || pln.status = '1' || pln.status = '2' || pln.status = '5' )
+      GROUP BY team.tno) d 
+      ON a.tno=d.tno
+LEFT JOIN 
+(SELECT 
+        COUNT(*) AS PFNUM ,team.tno
+      FROM
+        ins_team team 
+        JOIN qx_czy czy 
+          ON team.tno = czy.tid 
+        JOIN ins_wo wo 
+          ON czy.czyid = wo.p_optid 
+        JOIN ins_pln_meter pln 
+          ON pln.woid = wo.woid
+          WHERE  wo.pf_date &lt; NOW() 
+      GROUP BY team.tno
+)e 
+ON a.tno=e.tno where 1=1 
+	<isNotEmpty property="insNum">
+	and IFNULL(a.insNum,0) &gt;  #insNum#
+	</isNotEmpty>
+	<isNotEmpty property="delayNum">
+	 and  IFNULL(d.DelayNum, 0)  &gt;  #delayNum#
+	</isNotEmpty>
+	
+</sql>
+<select id="getInsProRepQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+<include refid="common.pagingTop"/>
+SELECT 
+  team.TNAME, ( IFNULL(b.uninsNum, 0) + IFNULL(a.insNum, 0) ) SUBNUM,
+   IFNULL(b.uninsNum, 0) UNINSNUM, a.tno, IFNULL(a.insNum, 0) INSNUM,
+    c.DATENUM, ROUND(IFNULL(a.insNum, 0) / IFNULL(c.dateNum, 0), 2) AVERNUM,
+     IFNULL(d.DelayNum, 0) DelayNum, e.PFNUM, ROUND( IFNULL(d.DelayNum, 0) / IFNULL(e.PFNUM, 0), 2) * 100 AS DEVIATION 
+  <include refid="insProRep.getInsProRep"/>
+<include refid="common.pagingBottom"/>
+</select>
+<select id="getInsProRepCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+select count(*)
+<include refid="insProRep.getInsProRep"/>
+</select>
+</sqlMap>

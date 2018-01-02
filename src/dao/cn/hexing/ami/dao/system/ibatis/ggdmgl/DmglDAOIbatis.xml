@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="dmgl">
+	
+	<sql id="DMXX">
+		 <isNotEqual prepend="and" property="code_sort_id" compareValue="-1">
+	 		 code_sort_id = #code_sort_id#
+	 	 </isNotEqual>
+	 	 <isEqual prepend="and" property="code_sort_id" compareValue="-1">
+             code_sort_id = (select code_sort_id
+                     from (select rownum rn, c.*
+                             from (select code_sort_id
+                                     from p_code_sort
+                                    where lang = #lang#
+                                      and name like '%' || #name# || '%'
+                                    order by code_sort_id) c)
+                    where rn = 1)
+	 	 </isEqual>
+	</sql>
+	
+	<!--根据条件查询代码信息-->
+	<select id="DMXXQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 		<include refid='common.pagingTop'/>
+ 		select code_id as id, code_type as dmfl, value as dmz, name as dmmc,code_sort_id,isshow
+		  from p_code
+		 where lang = #lang#
+		 <include refid='DMXX'/>
+		 order by code_id
+		 <include refid='common.pagingBottom'/>
+ 	</select>
+ 	
+ 	
+ 	<!--根据条件查询代码信息的数量-->
+ 	<select id="DMXXCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+ 		select count(code_id) 
+ 		  from p_code
+ 		 where lang = #lang#
+ 		  <include refid='DMXX'/>
+ 	</select>
+ 	
+ 	<sql id="DMFL">
+	   <isNotEqual prepend="and" property="name" compareValue="">
+ 		name like '%' || #name# || '%'
+ 	   </isNotEqual>
+ 	</sql>
+ 	
+ 	<!--根据条件查询代码分类-->
+ 	<select id="DMFLQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	     <include refid='common.pagingTop'/>
+		  select code_sort_id as sortid,
+		         code_type as dmfl,
+		         name as dmflmc
+		    from p_code_sort
+		   where lang = #lang#
+		   <include refid="DMFL"/>
+		   order by code_sort_id
+	    <include refid='common.pagingBottom'/>
+ 	</select>
+ 	
+ 	<!--根据条件查询代码分类的数量-->
+ 	<select id="DMFLCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		 select count(code_sort_id)
+	       from p_code_sort
+	      where lang = #lang#
+	      <include refid="DMFL"/>
+ 	</select>
+ 	
+ 	<!--根据id查询代码分类-->
+ 	<select id="QueryDMFLByID" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.system.pojo.ggdmgl.DmFl">
+		select code_sort_id as dmflbs,
+		       name         as dmflmc,
+		       code_type    as dmflbm
+		  from p_code_sort
+		 where code_sort_id = #code_sort_id#
+		 	and lang = #lang#
+ 	</select>
+ 	
+ 	<!--根据id查询代码信息-->
+ 	<select id="QueryDMXXByID" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.system.pojo.ggdmgl.DmXx">
+		 select code_id as dmbs,
+		        code_sort_id as dmflbs,
+		        code_type as dmfl,
+		        value as dmz,
+		        name as dmmc,
+		        code_sort_id,
+		        isshow
+		   from p_code
+		  where code_id = #code_id#
+		  	and lang = #lang#
+ 	</select>
+ 	
+ 	<!--新增代码分类-->
+ 	<insert id="inDmFl" parameterClass="java.util.HashMap">
+ 		<selectKey resultClass="java.lang.Integer" keyProperty="code_sort_id">
+			 select s_p_code.nextval from dual
+		</selectKey>
+		 insert into p_code_sort
+		   (code_sort_id,
+		    name,
+		    code_type,
+		    vn,
+		    valid_flag,
+		    lang)
+		 values
+		   (#code_sort_id#,
+		    #dmflmc#,
+		    #dmflbm#,
+		    '1',
+		    '1',
+		    #lang#)
+ 	</insert>
+ 	
+ 	<!--修改代码分类-->
+ 	<update id="updDmFl"  parameterClass="java.util.HashMap">
+	   update p_code_sort
+          set name = #dmflmc#, code_type =  #dmflbm#
+        where code_sort_id = #code_sort_id#
+ 	</update>
+ 	
+ 	
+ 	 <!--新增代码值-->
+ 	<insert id="inDmXx" parameterClass="java.util.HashMap">
+ 		<selectKey resultClass="java.lang.Integer" keyProperty="id">
+			 select s_p_code.nextval from dual
+		</selectKey>
+			insert into p_code
+			  (code_id, code_sort_id, code_type, value, name, lang,isshow)
+			values
+			  (#id#, #code_sort_id#, (select s.code_type from p_code_sort s where s.code_sort_id=#code_sort_id# and rownum=1), #dmz#, #dmmc#, #lang#,#isshow#)
+ 	</insert>
+ 	
+    <!--修改代码值-->
+ 	<update id="updDmXx"  parameterClass="java.util.HashMap">
+		update p_code
+		   set value = #dmz#,
+		       name = #dmmc#,
+		       isshow = #isshow#
+		 where code_id = #code_id#
+ 	</update>
+ 	
+ 	<!--根据id删除代码分类-->
+ 	<delete id="delDmFl" parameterClass="java.util.HashMap">
+	 	 delete p_code_sort
+	      where code_sort_id = #code_sort_id#
+ 	</delete>
+ 	
+ 	<!--根据代码分类id删除代码值-->
+ 	<delete id="delDmXxByFl" parameterClass="java.util.HashMap">
+	 	 delete p_code
+	      where code_sort_id = #code_sort_id#
+ 	</delete>
+ 	
+ 	<!--根据id删除代码值-->
+ 	<delete id="delDmXx" parameterClass="java.util.HashMap">
+	 	 delete p_code
+	      where code_id = #code_id#
+ 	</delete>
+</sqlMap>
+
+	
+

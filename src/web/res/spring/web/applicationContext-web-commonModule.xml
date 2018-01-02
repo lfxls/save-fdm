@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+>
+	<bean id="dwrAction" class="cn.hexing.ami.web.action.DwrAction" scope="prototype"/>
+	<bean id="commonAction" class="cn.hexing.ami.web.action.CommonAction" scope="prototype">
+		<property name="commonManager" ref="commonManager"/>
+	</bean>
+	
+	<bean id="loggerInterceptor" class="cn.hexing.ami.web.interceptor.LoggerInterceptor" scope="prototype"/>
+	<bean id="exceptionIntercept" class="cn.hexing.ami.web.interceptor.ExceptionIntercept" scope="prototype"/>
+	<bean id="sessionIntercept" class="cn.hexing.ami.web.interceptor.SessionIntercept" scope="prototype"/>
+
+
+	<!--登录-->
+	<bean id="loginAction" class="cn.hexing.ami.web.action.LoginAction" scope="prototype">
+		<property name="loginManager" ref="loginManager"/>
+	</bean>
+	
+	<!--框架-->
+	<bean id="viewAction" class="cn.hexing.ami.web.action.ViewAction" scope="prototype">
+		<property name="loginManager" ref="loginManager"/>
+	</bean>
+	
+	<!--主页-->
+	<bean id="mainPageAction" class="cn.hexing.ami.web.action.MainPageAction" scope="prototype">
+		<property name="mainPageManager" ref="mainPageManager"/>
+	</bean>
+	
+	<!--左边树-->
+	<bean id="leftTreeAction" class="cn.hexing.ami.web.action.LeftTreeAction" scope="prototype">
+		<property name="leftTreeManager" ref="leftTreeManager"/>
+	</bean>
+	
+	<!--群组-->
+	<bean id="qzAction" class="cn.hexing.ami.web.action.QzAction" scope="prototype">
+		<property name="qzManager" ref="qzManager"/>
+	</bean>
+	
+	<!--群组设置-->
+	<bean id="qzszAction" class="cn.hexing.ami.web.action.QzszAction" scope="prototype">
+		<property name="qzszManager" ref="qzszManager"/>
+	</bean>
+	
+	<!--license信息管理-->
+	<bean id="licMgtAction" class="cn.hexing.ami.web.action.license.LicMgtAction" scope="prototype">
+		<property name="licMgtManager" ref="licMgtManager"/>
+	</bean>
+	
+	<!--短信服务-->
+	<bean id="smsServerAction" class="cn.hexing.ami.web.action.sms.SmsServerAction" scope="prototype">
+		<property name="smsServerService" ref="smsServerService"/>
+	</bean>
+	
+	<!--短信服务-->
+	<bean id="todoAction" class="cn.hexing.ami.web.action.TodoAction" scope="prototype">
+		<property name="toDoInf" ref="toDoInf"/>
+	</bean>	
+</beans>

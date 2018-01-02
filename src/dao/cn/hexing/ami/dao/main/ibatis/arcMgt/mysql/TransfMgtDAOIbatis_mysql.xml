@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="transfMgt">
+	<!-- 插入变压器信息 -->
+	<insert id="insertTransf" parameterClass="java.util.HashMap">
+		<!-- <selectKey resultClass="java.lang.String" keyProperty="tfid">
+			SELECT nextval('S_TRANSF')
+		</selectKey> -->
+		insert into ar_tf
+			(tfId, uid, tfName, addr,
+			<isNotEmpty property="cap">
+   			cap,
+   			</isNotEmpty>
+			status, data_src)
+		values
+			(#tfId#, #nodeIddw#, #tfName#, #addr#, 
+			<isNotEmpty property="cap">
+    		#cap#,
+    		</isNotEmpty> 
+			#status#, #dataSrc#)
+		
+	</insert>
+	
+	<!-- 更新变压器信息 -->
+	<update id="updateTransf" parameterClass="java.util.HashMap">
+		update ar_tf
+			set tfName = #tfName#, uid = #nodeIddw#, addr = #addr#, 
+			<isNotEmpty property="cap">
+    		cap = #cap#,
+    		</isNotEmpty>
+    		<isEmpty property="cap">
+    		cap = null,
+    		</isEmpty>
+			status = #status#
+				where tfId = #tfId#
+	</update>
+	
+	<!-- 删除变压器信息 -->
+	<delete id="deleteTransf" parameterClass="java.util.HashMap">
+		delete from ar_tf
+			where tfId = #tfId#
+	</delete>
+	
+	<!-- 判断变压器是否已经存在 -->
+	<select id="existsTransf" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select 1 from ar_tf
+			where tfId = #tfId#
+	</select>
+	
+	<!-- 变压器管理界面，获取变压器列表 -->
+	<select id="getTransfListQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<include refid='common.pagingTop'/>
+			select tf.tfId, tf.uid, tf.tfName, tf.addr, tf.cap,
+			dw.dwmc as uname,
+			tf.status as tfStatus,
+			(select c.name 
+					from p_code c 
+				where c.code_type = 'tfStatus' 
+					and c.lang = #appLang# 
+					and c.value = tf.status) status,
+			(SELECT name FROM p_code WHERE code_type='dataSrc' AND lang=#appLang# and value=tf.data_src) dataSrc
+			from ar_tf tf left join qx_qy dw on tf.uid= dw.dwdm
+				where 1=1
+				<isNotEmpty property="uid">
+				AND tf.uid like concat(#uid#,'%')
+				</isNotEmpty>
+				<isNotEmpty property="tfId">
+				AND tf.tfId like concat('%',#tfId#,'%')
+				</isNotEmpty>
+				<isNotEmpty property="tfName"> 
+				and tf.tfName like concat('%',#tfName#,'%')
+				</isNotEmpty>
+				<isNotEmpty property="status"> 
+				and tf.status = #status#
+				</isNotEmpty>
+				<isNotEmpty property="dataSrc">
+				AND tf.data_src=#dataSrc#
+				</isNotEmpty>
+				<include refid="common.nodeFilterN"/>
+		<include refid='common.pagingBottom'/>
+	</select>
+	
+	<!-- 变压器管理界面，获取变压器总数 -->
+	<select id="getTransfListCount" resultClass="int">
+		select count(tf.tfId)
+			from ar_tf tf left join qx_qy dw on tf.uid= dw.dwdm
+				where 1=1
+				<isNotEmpty property="uid">
+				AND tf.uid like concat(#uid#,'%')
+				</isNotEmpty>
+				<isNotEmpty property="tfName"> 
+				and tf.tfName like concat('%',#tfName#,'%')
+				</isNotEmpty>
+				<isNotEmpty property="status"> 
+				and tf.status = #status#
+				</isNotEmpty>
+				<isNotEmpty property="dataSrc">
+				AND tf.data_src=#dataSrc#
+				</isNotEmpty>
+				<include refid="common.nodeFilterN"/>
+	</select>
+	
+	<!-- 变压器选择界面，获取变压器列表 -->
+	<select id="transfSelQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<include refid='common.pagingTop'/>
+			select tf.tfId, tf.uid, tf.tfName, tf.addr, tf.cap,
+			dw.dwmc as uname,
+			tf.status as tfStatus,
+			(select c.name 
+					from p_code c 
+				where c.code_type = 'tfStatus' 
+					and c.lang = #appLang# 
+					and c.value = tf.status) status
+			from ar_tf tf left join qx_qy dw on tf.uid= dw.dwdm
+				where 1=1
+				<isNotEmpty property="uid">
+				AND tf.uid = #uid#
+				</isNotEmpty>
+				<isNotEmpty property="tfName"> 
+				and tf.tfName like concat('%',#tfName#,'%')
+				</isNotEmpty>
+				and tf.status = '0'
+		<include refid='common.pagingBottom'/>
+	</select>
+	<!-- 变压器选择界面，获取变压器总数 -->
+	<select id="transfSelCount" resultClass="int">
+		select count(tf.tfId)
+			from ar_tf tf left join qx_qy dw on tf.uid= dw.dwdm
+				where 1=1
+				<isNotEmpty property="uid">
+				AND tf.uid = #uid#
+				</isNotEmpty>
+				<isNotEmpty property="tfName"> 
+				and tf.tfName like concat('%',#tfName#,'%')
+				</isNotEmpty>			
+				and tf.status = '0'
+	</select>
+	
+	<!-- Running状态的变压器不可以删除 -->
+	<select id="queryStsIsRun" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		select tfId from AR_TF
+			where tfId = #tfId# and status = '0'
+	</select>
+	
+	<!-- 变压器下面有表计的 -->
+	<select id="queryMeterUnderTf" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		select 1 from ar_tf tf inner join ar_meter m
+			where tf.tfId = m.tfId
+				and tf.tfId = #tfId#
+	</select>
+	
+	<!-- 查询变压器下面是否有安装计划 -->
+	<select id="qyInsPlan" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		select 1 
+			from (select tfid from INS_PLN_METER union select tfid from INS_PLN_DCU union select  tfid from INS_PLN_COLLECTOR) a
+		where a.tfid = #tfId#
+	</select>
+	
+	<!-- 获得所有的变压器 -->
+	<select id="getAllTransformer" resultClass="cn.hexing.ami.dao.common.pojo.arc.Transformer">
+		select tfId, uid, tfName, addr, cap, status
+			from ar_tf
+		where uid IS NOT NULL AND uid != ''
+	</select>
+	
+	<!-- 获取变压器状态 -->
+	<select id="queryStatus" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		select status 
+			from AR_TF
+		where tfId = #tfId#
+	</select>
+	
+	<!-- 编辑变压器获取信息 -->
+	<select id="getTf" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select tf.tfid tfid, tf.uid uid, tf.tfname tfname, tf.addr addr, 
+		<!-- CAST(FORMAT(tf.cap, 0) AS CHAR) as cap 该方法会有千分位--> 
+		<!-- cast(round(tf.cap, 0, 0) as char) as cap -->
+		CAST(CAST(cap AS SIGNED) AS CHAR) AS cap, 
+		tf.status status, tf.data_src data_src, q.dwmc nodeTextdw		
+			from ar_tf tf left join qx_qy q on tf.uid = q.dwdm
+		where tfId = #tfId#
+	</select>
+	
+	<!--查询变压器修改之前的单位-->
+	<select id="queryDW" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		select uid from AR_TF
+			where tfId = #tfId#
+	</select>
+	
+	<!-- 删除变压器，param里面没有tfName，需从数据库中根据tfId查询 -->
+	<select id="qyTfName" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		select tfName
+			from ar_tf
+		where tfId = #tfId#
+	</select>
+
+</sqlMap>

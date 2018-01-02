@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="woStsRep" >
+<sql id="getWoSts">
+FROM (
+SELECT wo.woid,wo.type,wo.status,team.tname,DATE_FORMAT(wo.pf_date,'%Y-%m-%d') pfdate,
+(SELECT NAME FROM p_code WHERE code_type='fbDataType' AND VALUE=wo.type AND lang=#appLang#)woType,
+(SELECT NAME FROM p_code WHERE code_type='woStatus' AND VALUE=wo.status AND lang=#appLang#)statusname,
+(SELECT COUNT(1) FROM ins_pln_meter WHERE woid=wo.woid AND (STATUS='3' OR STATUS='4')) insNum,
+(SELECT COUNT(1) FROM ins_pln_meter WHERE woid=wo.woid AND STATUS &lt;&gt; '3' AND STATUS&lt;&gt;'4') uninsNum,
+(SELECT COUNT(1) FROM ins_pln_meter WHERE woid=wo.woid ) totalNum,
+ (SELECT  DATE_FORMAT(OP_DATE,'%Y-%m-%d')  FROM  INS_WO_OPLOG WHERE woid = wo.woid AND STATUS = '6' ORDER BY op_date DESC LIMIT 1) opDate, 
+(SELECT xm FROM qx_czy WHERE czyid=wo.p_optid)OPTNAME
+FROM ins_team team 
+left JOIN qx_czy  czy ON team.tno=czy.tid 
+right JOIN ins_wo  wo ON  czy.czyid=wo.p_optid
+WHERE 1=1 
+<isNotEmpty property="tno">
+AND team.tno =#tno# 
+</isNotEmpty>
+<isNotEmpty property="woid">
+AND wo.woid LIKE CONCAT('%',#woid#,'%')
+</isNotEmpty>
+<isNotEmpty property="status">
+AND wo.status=#status#
+</isNotEmpty>
+ )re
+WHERE 1=1 
+<isNotEmpty property="delayDate">
+and  IF(DATEDIFF(IFNULL(re.opdate,NOW()),IFNULL(re.pfdate,NOW()))&lt;0,0,DATEDIFF(IFNULL(re.opdate,NOW()),IFNULL(re.pfdate,NOW()))) &gt; #delayDate#
+</isNotEmpty>
+</sql>
+<select id="getWoStsCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+select count(1) 
+<include refid="woStsRep.getWoSts"/>
+</select>
+<select id="getWoStsQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+<include refid="common.pagingTop"/>
+SELECT re.*,
+IF(DATEDIFF(IFNULL(re.opdate,NOW()),IFNULL(re.pfdate,NOW()))&lt;0,0,DATEDIFF(IFNULL(re.opdate,NOW()),IFNULL(re.pfdate,NOW())))delayDate
+<include refid="woStsRep.getWoSts"/>
+<include refid="common.pagingBottom"/>
+</select>
+
+<select id="getStatusLs" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+SELECT value,name FROM p_code  WHERE code_type='woStatus' AND lang=#appLang#
+</select>
+
+<select id="getChart" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+SELECT COUNT(1) FROM ins_team team 
+LEFT JOIN qx_czy  czy ON team.tno=czy.tid 
+RIGHT JOIN ins_wo  wo ON  czy.czyid=wo.p_optid
+WHERE wo.status=#status#
+<isNotEmpty property="tno">
+and  czy.tid=#tno#
+</isNotEmpty>
+</select>
+</sqlMap>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- 安装进度报表-->
+	<bean id="insProRepAction" class="cn.hexing.ami.web.action.report.insInfoReport.InsProRepAction" scope="prototype">
+		<property name="insProRepManager" ref="insProRepManager"/>
+	</bean>
+	<!--安装计划状态-->
+	<bean id="planStsRepAction" class="cn.hexing.ami.web.action.report.insInfoReport.PlanStsRepAction" scope="prototype">
+		<property name="planStsRepManager" ref="planStsRepManager"/>
+	</bean>
+	<!--安装数量统计-->
+	<bean id="insNumRepAction" class="cn.hexing.ami.web.action.report.insInfoReport.InsNumRepAction" scope="prototype">
+		<property name="insNumRepManager" ref="insNumRepManager"/>
+	</bean>
+	<!--安装明细报表-->
+	<bean id="insDetailRepAction" class="cn.hexing.ami.web.action.report.insInfoReport.InsDetailRepAction" scope="prototype">
+		<property name="insDetailRepManager" ref="insDetailRepManager"/>
+	</bean>
+	<!--安装工单状态-->
+	<bean id="woStsRepAction" class="cn.hexing.ami.web.action.report.insInfoReport.WoStsRepAction" scope="prototype">
+		<property name="woStsRepManager" ref="woStsRepManager"/>
+	</bean>
+	<!--失败分布统计-->
+	<bean id="insFailRepAction" class="cn.hexing.ami.web.action.report.insQualReport.InsFailRepAction" scope="prototype">
+		<property name="insFailRepManager" ref="insFailRepManager"/>
+	</bean>
+	<!--安装问题数量统计-->
+	<bean id="probNumRepAction" class="cn.hexing.ami.web.action.report.insQualReport.ProbNumRepAction" scope="prototype">
+		<property name="probNumRepManager" ref="probNumRepManager"/>
+	</bean>
+</beans>

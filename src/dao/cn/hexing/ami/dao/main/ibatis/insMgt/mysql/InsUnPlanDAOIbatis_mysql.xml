@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+	
+<sqlMap namespace="insUnPlan">
+    <!-- 无序安装工单查询  -->
+	<sql id="wo">
+	   FROM INS_WO WO LEFT JOIN QX_CZY CZY ON WO.P_OPTID = CZY.CZYID
+            WHERE 1 = 1 
+            AND WO.TYPE = '1'
+		  <isNotEmpty property="status">
+		  	 AND WO.STATUS = #status#
+		  </isNotEmpty>
+		  <isNotEmpty property="woid">
+		  	 AND WO.WOID LIKE CONCAT('%', #woid#, '%')
+		  </isNotEmpty>
+		  <isNotEmpty property="popid">
+		  	 AND WO.P_OPTID=#popid#
+		  </isNotEmpty>
+		  ORDER BY WO.C_DATE DESC
+    </sql>
+  
+  	<select id="queryInsWOCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(WO.WOID) 
+		<include refid='insUnPlan.wo'/>
+	</select>
+	
+	<select id="queryInsWOQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true" >
+	    <include refid='common.pagingTop'/>
+	      SELECT
+	        (SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'woStatus' AND T.LANG = #appLang# AND T.VALUE = WO.STATUS) SNAME, WO.STATUS STATUS,
+	         DATE_FORMAT(WO.C_DATE, '%Y-%m-%d %H:%i:%s') CDATE, WO.P_OPTID POPID, CZY.XM POPNAME,
+	         WO.WOID WOID, WO.C_OPTID COPTID, 
+	         IF(WO.C_OPTID = 'admin','admin',(SELECT QC.XM FROM QX_CZY QC WHERE QC.CZYID=WO.C_OPTID)) COPTNAME,
+	         DATE_FORMAT(WO.PF_DATE, '%Y-%m-%d') FTIME
+ 		<include refid='insUnPlan.wo'/>
+		<include refid='common.pagingBottom'/>
+		<include refid="common.pagingSort"/>
+	</select>
+	
+	<!-- 查询已选择用户 -->
+	<select id="selCustCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(C.CNO)
+		FROM AR_CUSTOMER C LEFT JOIN QX_QY QY ON C.UID = QY.DWDM
+		WHERE 1 = 1
+		<isNotEmpty property="cno">
+			AND C.CNO LIKE CONCAT('%', #cno#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="cname">
+			AND C.CNAME LIKE CONCAT('%', #cname#, '%')
+		</isNotEmpty>
+		<isNotEmpty property="nodeIddw">
+			AND C.UID LIKE CONCAT(#nodeIddw#,'%') 
+		</isNotEmpty>
+		AND C.CNO 
+		<iterate prepend="IN" open="(" close=")" property="cnos" conjunction=",">
+			#cnos[]#
+		</iterate>
+	</select>
+	
+	<select id="selCustQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true" >
+	    <include refid='common.pagingTop'/>
+	    SELECT C.CNO CNO, C.CNAME CNAME, C.ADDR ADDR, QY.DWMC UNAME
+		FROM AR_CUSTOMER C LEFT JOIN QX_QY QY ON C.UID = QY.DWDM
+		WHERE 1 = 1
+		<isNotEmpty property="cno">
+			AND C.CNO LIKE CONCAT('%', #cno#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="cname">
+			AND C.CNAME LIKE CONCAT('%', #cname#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="nodeIddw">
+			AND C.UID LIKE CONCAT(#nodeIddw#,'%') 
+		</isNotEmpty>
+		AND C.CNO 
+		<iterate prepend="IN" open="(" close=")" property="cnos" conjunction=",">
+			#cnos[]#
+		</iterate>
+		<include refid='common.pagingBottom'/>
+		<include refid="common.pagingSort"/>
+	</select>
+	
+	<!-- 查询未选择用户 -->
+	<select id="unSelCustCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(C.CNO)
+		FROM AR_CUSTOMER C LEFT JOIN QX_QY QY ON C.UID = QY.DWDM
+		WHERE 1 = 1
+		AND C.DISP_STATUS != '1'
+		AND NOT EXISTS(
+			SELECT 1 FROM INS_PLN_METER P WHERE P.CNO = C.CNO 
+			AND P.STATUS NOT IN ('3','4')
+			AND P.P_TYPE = '1'
+			<isNotEmpty property="dcnos">
+				AND P.CNO 
+				<iterate prepend="NOT IN" open="(" close=")" property="dcnos" conjunction=",">
+					#dcnos[]#
+				</iterate>
+			</isNotEmpty>
+		)
+		<isNotEmpty property="cno">
+			AND C.CNO LIKE CONCAT('%', #cno#, '%')
+		</isNotEmpty>
+		<isNotEmpty property="cname">
+			AND C.CNAME LIKE CONCAT('%', #cname#, '%')
+		</isNotEmpty>
+		<isNotEmpty property="nodeIddw">
+			AND C.UID LIKE CONCAT(#nodeIddw#,'%') 
+		</isNotEmpty>
+		<isNotEmpty property="cnos">
+			AND C.CNO 
+			<iterate prepend="NOT IN" open="(" close=")" property="cnos" conjunction=",">
+				#cnos[]#
+			</iterate>
+		</isNotEmpty>
+	</select>
+	
+	<select id="unSelCustQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true" >
+	    <include refid='common.pagingTop'/>
+	    SELECT C.CNO CNO, C.CNAME CNAME, C.ADDR ADDR, QY.DWMC UNAME
+		FROM AR_CUSTOMER C LEFT JOIN QX_QY QY ON C.UID = QY.DWDM
+		WHERE 1 = 1
+		AND C.DISP_STATUS != '1'
+		AND NOT EXISTS(
+			SELECT 1 FROM INS_PLN_METER P WHERE P.CNO = C.CNO 
+			AND P.STATUS NOT IN ('3','4')
+			AND P.P_TYPE = '1'
+			<isNotEmpty property="dcnos">
+				AND P.CNO 
+				<iterate prepend="NOT IN" open="(" close=")" property="dcnos" conjunction=",">
+					#dcnos[]#
+				</iterate>
+			</isNotEmpty>
+		)
+		<isNotEmpty property="cno">
+			AND C.CNO LIKE CONCAT('%', #cno#, '%')
+		</isNotEmpty>
+		<isNotEmpty property="cname">
+			AND C.CNAME LIKE CONCAT('%', #cname#, '%')
+		</isNotEmpty>
+		<isNotEmpty property="nodeIddw">
+			AND C.UID LIKE CONCAT(#nodeIddw#,'%') 
+		</isNotEmpty>
+		<isNotEmpty property="cnos">
+			AND C.CNO 
+			<iterate prepend="NOT IN" open="(" close=")" property="cnos" conjunction=",">
+				#cnos[]#
+			</iterate>
+		</isNotEmpty>
+		<include refid='common.pagingBottom'/>
+		<include refid="common.pagingSort"/>
+	</select>
+	
+	<!-- 获取工单号 -->
+	<select id="getWOID" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+   		SELECT NEXTVAL('S_INS_WORKORDER') FROM DUAL
+   </select>
+   
+   <!-- 插入工单 -->
+	<insert id="insWorkOrder" parameterClass="java.util.HashMap" >
+		INSERT INTO INS_WO(WOID,TYPE,STATUS,RSP_NAME,P_OPTID,C_OPTID,C_DATE,PF_DATE)
+		VALUES(#woid#,'1',#status#,null,#popid#,#coptid#,now(),#fTime#);
+	</insert>
+	
+	<!-- 更新工单 -->
+	<update id="updWorkOrder" parameterClass="java.util.HashMap" >
+		UPDATE INS_WO
+		SET STATUS=#status#, P_OPTID=#popid#,
+		C_OPTID=#coptid#,PF_DATE=#fTime#
+		WHERE WOID=#woid#
+	</update>
+	
+	<!-- 获取安装计划id -->
+	<select id="getMeterPlnId" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		SELECT NEXTVAL('S_INSPLAN_METER') FROM DUAL
+	</select>
+	
+	<!-- 插入表安装计划 -->
+	<insert id="insMInsP" parameterClass="java.util.HashMap">
+		INSERT INTO INS_PLN_METER(PID,P_TYPE,WOID,BUSS_TYPE,STATUS,N_MSN,O_MSN,CNO,TFID,M_TYPE,M_WIRING,M_MODE,UPT_DATE,OPTID)
+    	VALUES 
+    	(#pid#, '1',#woid#,null, #status#, null, null, #cno#, null, null, null, null, now(), #coptid#)  
+   </insert>
+   
+   <!-- 删除表安装计划 -->
+   <delete id="delMInsP" parameterClass="java.util.HashMap">
+   		DELETE FROM INS_PLN_METER WHERE WOID=#woid#
+   </delete>
+   
+   <!--删除表计安装计划操作日志 -->
+   <delete id="delMInsPlnOPLog" parameterClass="java.util.HashMap">
+		DELETE FROM INS_PLN_OPLOG 
+		WHERE PID IN (SELECT P.PID FROM INS_PLN_METER P WHERE P.WOID=#woid#)
+   </delete>
+   
+   <!-- 更新表安装计划 -->
+	<update id="updMInsP" parameterClass="java.util.HashMap">
+		UPDATE INS_PLN_METER
+		SET STATUS=#status#,UPT_DATE=NOW(),
+			OPTID=#coptid#
+		WHERE WOID=#woid# AND CNO=#cno#
+   </update>
+   
+   <!-- 删除工单 -->
+   <delete id="delWO" parameterClass="java.util.HashMap">
+   		DELETE FROM INS_WO WHERE WOID=#woid#
+   </delete>
+   
+   <!-- 删除工单操作日志 -->
+   <delete id="delWOOPLog" parameterClass="java.util.HashMap">
+   		DELETE FROM INS_WO_OPLOG WHERE WOID=#woid#
+   </delete>
+   
+   <!-- 删除工单下除当前户号之外的其他的表安装计划 -->
+   <delete id="delByWOAndCno" parameterClass="java.util.HashMap">
+   		DELETE FROM INS_PLN_METER WHERE WOID=#woid#
+   		AND CNO
+		<iterate prepend="NOT IN" open="(" close=")" property="cnos" conjunction=",">
+			#cnos[]#
+		</iterate>
+   </delete>
+   
+   <!-- 删除工单下除当前户号之外的其他的表安装计划对应的操作日志 -->
+   <delete id="delOPLogByWOAndCno" parameterClass="java.util.HashMap">
+   		DELETE FROM INS_PLN_OPLOG
+   		WHERE PID IN (
+   		SELECT P.PID
+   		FROM INS_PLN_METER P 
+   		WHERE P.WOID=#woid#
+   		AND P.CNO
+		<iterate prepend="NOT IN" open="(" close=")" property="cnos" conjunction=",">
+			#cnos[]#
+		</iterate>
+		)
+   </delete>
+   
+   <!-- 获取工单下所有已分配的用户 -->
+   <select id="getDispCust" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+   		SELECT P.CNO CNO
+   		FROM INS_PLN_METER P
+   		WHERE P.WOID=#woid#
+   </select>
+   
+   <!-- 获取工单下集中器已分配的变压器 -->
+   <select id="getDDispTf" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+   		SELECT P.TFID TFID
+   		FROM INS_PLN_DCU P
+   		WHERE P.WOID=#woid#
+   </select>
+   
+   <!-- 获取工单下采集器已分配的变压器 -->
+   <select id="getCDispTf" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+   		SELECT P.TFID TFID
+   		FROM INS_PLN_COLLECTOR P
+   		WHERE P.WOID=#woid#
+   </select>
+   
+   <!-- 集中器安装计划查询  -->
+	<sql id="dInsPlan">
+	   FROM INS_PLN_DCU P  
+	   		LEFT JOIN INS_WO WO ON P.WOID = WO.WOID
+            LEFT JOIN AR_TF TF ON P.TFID = TF.TFID
+            LEFT JOIN QX_QY QY ON TF.UID = QY.DWDM
+            WHERE 1 = 1 
+            AND P.P_TYPE = '1'
+          <include refid="common.nodeFilterN"/>
+		  <isNotEmpty property="tfName">
+		     AND TF.TFNAME LIKE CONCAT('%',#tfName#,'%')
+		  </isNotEmpty>
+		  <isNotEmpty property="bussType">
+		  	 AND P.BUSS_TYPE = #bussType#
+		  </isNotEmpty>
+		  <isNotEmpty property="status">
+		  	 AND P.STATUS = #status#
+		  </isNotEmpty>
+		  ORDER BY P.PID DESC
+    </sql>
+  
+  	<select id="queryDInsPCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(P.PID) 
+		<include refid='insUnPlan.dInsPlan'/>
+	</select>
+	
+	<select id="queryDInsPQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true" >
+	    <include refid='common.pagingTop'/>
+	      SELECT
+	        (SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'planStatus' AND T.LANG = #appLang# AND T.VALUE = P.STATUS) SNAME, P.STATUS STATUS,
+	         TF.TFID TFID, TF.TFNAME TFNAME, TF.ADDR ADDR, QY.DWMC UNAME, TF.UID UID,
+	         DATE_FORMAT(P.UPT_DATE, '%Y-%m-%d %H:%i:%s') UTIME, P.PID PID, P.OPTID OPR,
+	         P.WOID WOID, WO.P_OPTID POPTID
+ 		<include refid='insUnPlan.dInsPlan'/>
+		<include refid='common.pagingBottom'/>
+		<include refid="common.pagingSort"/>
+	</select>
+	
+	<!-- 采集器安装计划查询  -->
+	<sql id="cInsPlan">
+	   FROM INS_PLN_COLLECTOR P  
+	   		LEFT JOIN INS_WO WO ON P.WOID = WO.WOID
+            LEFT JOIN AR_TF TF ON P.TFID = TF.TFID
+            LEFT JOIN QX_QY QY ON TF.UID = QY.DWDM
+            WHERE 1 = 1 
+            AND P.P_TYPE = '1'
+          <include refid="common.nodeFilterN"/>
+		  <isNotEmpty property="tfName">
+		     AND TF.TFNAME LIKE CONCAT('%',#tfName#,'%')
+		  </isNotEmpty>
+		  <isNotEmpty property="bussType">
+		  	 AND P.BUSS_TYPE = #bussType#
+		  </isNotEmpty>
+		  <isNotEmpty property="status">
+		  	 AND P.STATUS = #status#
+		  </isNotEmpty>
+		  ORDER BY P.PID DESC
+    </sql>
+  
+  	<select id="queryCInsPCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(P.PID) 
+		<include refid='insUnPlan.cInsPlan'/>
+	</select>
+	
+	<select id="queryCInsPQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true" >
+	    <include refid='common.pagingTop'/>
+	      SELECT
+	        (SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'planStatus' AND T.LANG = #appLang# AND T.VALUE = P.STATUS) SNAME, P.STATUS STATUS,
+	         TF.TFID TFID, TF.TFNAME TFNAME, TF.ADDR ADDR, QY.DWMC UNAME, TF.UID UID,
+	         DATE_FORMAT(P.UPT_DATE, '%Y-%m-%d %H:%i:%s') UTIME, P.PID PID, P.OPTID OPR,
+	         P.WOID WOID, WO.P_OPTID POPTID
+ 		<include refid='insUnPlan.cInsPlan'/>
+		<include refid='common.pagingBottom'/>
+		<include refid="common.pagingSort"/>
+	</select>
+	
+	<!-- 查询已选择变压器 -->
+	<select id="selTfCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(TF.TFID)
+		FROM AR_TF TF LEFT JOIN QX_QY QY ON TF.UID = QY.DWDM
+		WHERE 1 = 1
+		AND TF.TFID 
+		<iterate prepend="IN" open="(" close=")" property="tfIds" conjunction=",">
+			#tfIds[]#
+		</iterate>
+	</select>
+	
+	<select id="selTfQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true" >
+	    <include refid='common.pagingTop'/>
+	    SELECT TF.TFID TFID, TF.TFNAME TFNAME, TF.ADDR ADDR, QY.DWDM UNAME
+		FROM AR_TF TF LEFT JOIN QX_QY QY ON TF.UID = QY.DWDM
+		WHERE 1 = 1
+		AND TF.TFID 
+		<iterate prepend="IN" open="(" close=")" property="tfIds" conjunction=",">
+			#tfIds[]#
+		</iterate>
+		<include refid='common.pagingBottom'/>
+		<include refid="common.pagingSort"/>
+	</select>
+	
+	<!-- 查询未选择变压器 -->
+	<select id="unSelTfCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(TF.TFID)
+		FROM AR_TF TF LEFT JOIN QX_QY QY ON TF.UID = QY.DWDM
+		WHERE 1 = 1
+		<include refid="common.nodeFilter"/>
+		<isNotEmpty property="tfId">
+			AND TF.TFID = #tfId#
+		</isNotEmpty>
+		<isNotEmpty property="tfName">
+			AND TF.TFNAME = #tfName#
+		</isNotEmpty>
+		<isNotEmpty property="nodeIddw">
+			AND TF.UID = #nodeIddw#
+		</isNotEmpty>
+		<isNotEmpty property="tfIds">
+			AND TF.TFID 
+			<iterate prepend="NOT IN" open="(" close=")" property="tfIds" conjunction=",">
+				#tfIds[]#
+			</iterate>
+		</isNotEmpty>
+	</select>
+	
+	<select id="unSelTfQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true" >
+	    <include refid='common.pagingTop'/>
+	    SELECT TF.TFID TFID, TF.TFNAME TFNAME, TF.ADDR ADDR, QY.DWDM UNAME
+		FROM AR_TF TF LEFT JOIN QX_QY QY ON TF.UID = QY.DWDM
+		WHERE 1 = 1
+		<include refid="common.nodeFilter"/>
+		<isNotEmpty property="tfId">
+			AND TF.TFID = #tfId#
+		</isNotEmpty>
+		<isNotEmpty property="tfName">
+			AND TF.TFNAME = #tfName#
+		</isNotEmpty>
+		<isNotEmpty property="nodeIddw">
+			AND TF.UID = #nodeIddw#
+		</isNotEmpty>
+		<isNotEmpty property="tfIds">
+			AND TF.TFID 
+			<iterate prepend="NOT IN" open="(" close=")" property="tfIds" conjunction=",">
+				#tfIds[]#
+			</iterate>
+		</isNotEmpty>
+		<include refid='common.pagingBottom'/>
+		<include refid="common.pagingSort"/>
+	</select>
+	
+	<!-- 插入集中器安装计划 -->
+	<insert id="insDInsP" parameterClass="java.util.HashMap">
+	    <selectKey resultClass="java.lang.String" keyProperty="pid">
+			SELECT NEXTVAL('S_INSPLAN_DCU') FROM DUAL
+		</selectKey>
+		INSERT INTO INS_PLN_DCU(PID,P_TYPE,WOID,BUSS_TYPE,STATUS,N_DSN,O_DSN,TFID,DCU_MODEL,UPT_DATE,OPTID)
+	    VALUES 
+	    (#pid#, '1',#woid#,null, #status#, null, null, #tfId#, null, now(), #coptid#)  
+   </insert>
+   
+   <!-- 删除集中器安装计划 -->
+   <delete id="delDInsP" parameterClass="java.util.HashMap">
+   		DELETE FROM INS_PLN_DCU WHERE PID=#pid#
+   </delete>
+   
+   <!-- 更新集中器安装计划 -->
+	<update id="updDInsP" parameterClass="java.util.HashMap">
+		UPDATE INS_PLN_DCU
+		SET STATUS=#status#,UPT_DATE=NOW(),
+			OPTID=#coptid#
+		WHERE WOID=#woid# AND CNO=#cno#
+   </update>
+   
+   
+    <!-- 删除工单下除当前变压器之外的其他的集中器安装计划 -->
+   <delete id="delDByWOAndTf" parameterClass="java.util.HashMap">
+   		DELETE FROM INS_PLN_DCU WHERE WOID=#woid#
+   		AND TFID
+		<iterate prepend="NOT IN" open="(" close=")" property="tfIds" conjunction=",">
+			#tfIds[]#
+		</iterate>
+   </delete>
+   
+   <!-- 插入采集器安装计划 -->
+	<insert id="insCInsP" parameterClass="java.util.HashMap">
+	    <selectKey resultClass="java.lang.String" keyProperty="pid">
+			SELECT NEXTVAL('S_INSPLAN_COL') FROM DUAL
+		</selectKey>
+		INSERT INTO INS_PLN_COLLECTOR(PID,P_TYPE,WOID,BUSS_TYPE,STATUS,N_CSN,O_CSN,TFID,CL_MODEL,UPT_DATE,OPTID)
+	    VALUES 
+	    (#pid#, '1',#woid#,null, #status#, null, null, #tfId#, null, now(), #coptid#)  
+   </insert>
+   
+   <!-- 删除采集器安装计划 -->
+   <delete id="delCInsP" parameterClass="java.util.HashMap">
+   		DELETE FROM INS_PLN_COLLECTOR WHERE PID=#pid#
+   </delete>
+   
+   <!-- 更新采集器安装计划 -->
+	<update id="updCInsP" parameterClass="java.util.HashMap">
+		UPDATE INS_PLN_COLLECTOR
+		SET STATUS=#status#,UPT_DATE=NOW(),
+			OPTID=#coptid#
+		WHERE WOID=#woid# AND TFID=#tfId#
+   </update>
+   
+   
+    <!-- 删除工单下除当前变压器之外的其他的采集器安装计划 -->
+   <delete id="delCByWOAndTf" parameterClass="java.util.HashMap">
+   		DELETE FROM INS_PLN_COLLECTOR WHERE WOID=#woid#
+   		AND TFID
+		<iterate prepend="NOT IN" open="(" close=")" property="tfIds" conjunction=",">
+			#tfIds[]#
+		</iterate>
+   </delete>
+   
+   <!-- 根据工单id获取处理人信息 -->
+   <select id="getOPTInfoByWOID" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+   		SELECT WO.P_OPTID OPTID, CZY.XM OPTNAME
+   		FROM INS_WO WO LEFT JOIN QX_CZY CZY ON WO.P_OPTID = CZY.CZYID
+   		WHERE WO.WOID=#woid#
+   </select>
+   
+   <!-- 插入工单操作日志 -->
+   <insert id="insWOOPLog" parameterClass="java.util.HashMap">
+	    <selectKey resultClass="java.lang.String" keyProperty="logId">
+			SELECT NEXTVAL('S_WORKORDER_OPLOG') FROM DUAL
+		</selectKey>
+		INSERT INTO INS_WO_OPLOG(LOGID,WOID,STATUS,OPTID,OP_DATE)
+    	VALUES 
+    	(#logId#,#woid#,#status#,#coptid#,now())  
+   </insert>
+   
+   <!-- 插入表安装计划操作日志 -->
+   <insert id="insPlnOPLog" parameterClass="java.util.HashMap">
+	    <selectKey resultClass="java.lang.String" keyProperty="logId">
+			SELECT NEXTVAL('S_INSPLAN_OPLOG') FROM DUAL
+		</selectKey>
+		INSERT INTO INS_PLN_OPLOG(LOGID,PID,DEV_TYPE,STATUS,OPTID,OP_DATE)
+    	VALUES 
+    	(#logId#, #pid#,#devType#,#status#,#coptid#,now())  
+   </insert>
+   
+   <!-- 获取工单号和户号对应的安装计划id -->
+   <select id="getIdByWOIDAndCno" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+   		SELECT PM.PID
+   		FROM INS_PLN_METER PM
+   		WHERE PM.WOID=#woid#
+   		AND PM.CNO=#cno#
+   </select>
+</sqlMap>

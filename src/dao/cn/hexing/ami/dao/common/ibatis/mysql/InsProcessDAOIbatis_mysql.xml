@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="insProcess">  
+
+	<select id="validOpt" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT * 
+		FROM QX_CZY OPR LEFT JOIN INS_TEAM T ON OPR.TID = T.TNO
+		WHERE OPR.CZYID = #optid# 
+		AND OPR.MM = #pwd#
+		AND T.STATUS = '0'
+		AND OPR.ZT = '0'
+	</select>
+	
+	<!-- 获取操作员信息 -->
+	<select id="getOprInfo" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT OPR.CZYID OPTID, OPR.XM NAME, OPR.SJHM PHONE,
+		T.TNAME TNAME
+		FROM QX_CZY OPR LEFT JOIN INS_TEAM T ON OPR.TID = T.TNO
+		WHERE OPR.CZYID = #optID#
+		AND T.STATUS = '0'
+		AND OPR.ZT = '0'
+	</select>
+	
+	<!-- 获取厂商表型信息 -->
+	<select id="getFacModel" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT M.MFID FAC, M.M_MODEL MMODEL
+		FROM AR_FAC_MODEL M
+	</select>
+	
+	<!-- 获取表计型号信息 -->
+	<select id="getModel" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT M.M_VERID MVERID, M.VERID VERID,
+		M.M_MODEL MMODEL
+		FROM AR_METER_MODEL M
+	</select>
+	
+	<!-- 获取obis信息 -->
+	<select id="getOBISInfo" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT DISTINCT C.ITEM_ID, C.DLMS_DATA_TYPE DATATYPE, C.XCTPT XCTPT, C.SCALE SCALE, C.UNIT UNIT,
+		C.BUSS_TYPE BUSSTYPE, '' OPTTYPE
+		FROM DLMS_OBIS_CODE C
+		WHERE C.ITEM_ID = #itemid#
+	</select>
+	
+	<!-- 获取内控版本号对应的obis信息 -->
+	<select id="getVerOBISInfo" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT C.ITEM_ID ITEMID, C.DLMS_DATA_TYPE DATATYPE,
+		C.BUSS_TYPE BUSSTYPE, '' OPTTYPE, N.LANG LANG, N.ITEM_NAME ITEMNAME
+		FROM DLMS_OBIS_CODE C, DLMS_OBIS_NAME N
+		WHERE C.VERID = N.VERID
+		AND C.ITEM_ID = N.ITEM_ID
+		AND C.BUSS_TYPE = 'BASIC_VERSION_MGT'
+	</select>
+	
+	<!-- 验证下载反馈中的hhu请求id是否存在下载工单日志中-->
+	<select id="validateRidByWO" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT * FROM INS_WO_HHULOG HW WHERE HW.REQID = #rid# AND HW.OPT_RST = #rst#
+		AND HW.HHUID = #hhuid# AND HW.OPTID=#optid#
+	</select>
+	
+	<!-- 验证下载反馈中的hhu请求id是否存在下载基础数据日志中-->
+	<select id="validateRidByBasic" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT * FROM HHU_DU_HHULOG HL WHERE HL.REQID = #rid# AND HL.UPT_RST = #rst#
+		AND HL.HHUID = #hhuid# AND HL.OPTID=#optid#
+	</select>
+	
+	<select id="getSimSNObis" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		SELECT ITEM_ID FROM DLMS_OBIS_CODE 
+		WHERE BUSS_TYPE='READ_SIM_SERIALNO'
+	</select>
+	
+	<!-- 获取最新一条的APP软件版本信息 -->
+	<select id="getNewAppVerInf" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT DATE_FORMAT(APP.PTIME,'%Y-%m-%d %H:%i:%s') PTIME,APP.APPVRN APPVRN, APP.APPURL APPURL
+		FROM HHU_APP APP
+		WHERE APP.PTIME IN (SELECT MAX(PTIME) PTIME FROM HHU_APP)
+	</select>
+	
+	<!-- 验证sim卡号是否已经绑定在新装表中 -->
+	<select id="existSimInMeter" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT 1 
+		FROM AR_METER
+		WHERE SIMNO = #simNo#
+		AND STATUS = #status#
+	</select>
+	
+	<!-- 查询表 -->
+	<select id="getMeterByMsn" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT MSN,CNO,STATUS,UID 
+		FROM AR_METER
+		WHERE MSN = #msn#
+	</select>
+	
+	<!-- 查询用户 -->
+	<select id="getCustByCno" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT CNO,UID 
+		FROM AR_CUSTOMER
+		WHERE CNO = #cno#
+	</select>
+	
+	<!-- 查询变压器 -->
+	<select id="getTFByTFNO" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT TFID,UID 
+		FROM AR_TF
+		WHERE TFID = #tfNo#
+	</select>
+</sqlMap>

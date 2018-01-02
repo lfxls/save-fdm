@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="insNumRep" >
+<sql id="getInsNum">
+ FROM ins_team team LEFT JOIN
+  REPORT_INS_NUM rep
+  ON team.tno=rep.tno
+  where
+  <isEqual property="dateType" compareValue="0">
+    rep.op_date &gt;= str_to_date(#startDate#,'%Y-%m-%d')
+  and rep.op_date &lt;=str_to_date(#endDate#,'%Y-%m-%d')
+  </isEqual>
+  <isEqual property="dateType" compareValue="1">
+  rep.op_date &gt;= str_to_date(#startMonth#,'%Y-%m')
+  and rep.op_date &lt;=str_to_date(#endMonth#,'%Y-%m')
+  </isEqual>
+  <isNotEmpty property="tno">
+  and team.tno=#tno#
+  </isNotEmpty>
+  group by team.tno,team.tname, DATE_FORMAT(rep.op_date,'%y-%m')
+  
+</sql>
+<select id="getInsNumCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+select count(1) from (
+select count(1) 
+
+<include refid="insNumRep.getInsNum"/>)a 
+</select>
+<select id="getInsNumQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+<include refid="common.pagingTop"/>
+SELECT team.tno, team.tname,DATE_FORMAT(rep.op_date,'%Y-%m')opdate, SUM(rep.ins_num)insnum, SUM(rep.unins_num)uninsnum,SUM(rep.rep_num)repnum
+,SUM(rep.tol_num)tolnum,IFNULL(team.p_num,1)pnum,round((SUM(rep.tol_num)/IFNULL(team.p_num,1)),2)averNum
+<include refid="insNumRep.getInsNum"/>
+<include refid="common.pagingBottom"/>
+</select>
+<sql id="getInsNumDetail">
+ FROM ins_team team LEFT JOIN
+  REPORT_INS_NUM rep
+  ON team.tno=rep.tno
+  where rep.dev_type='0'
+   <isEqual property="dateType" compareValue="0">
+    and rep.op_date &gt;= str_to_date(#startDate#,'%Y-%m-%d')
+  	and rep.op_date &lt;=str_to_date(#endDate#,'%Y-%m-%d')
+  </isEqual>
+  <isEqual property="dateType" compareValue="1">
+	 and rep.op_date &gt;= str_to_date(#startMonth#,'%Y-%m')
+	  and rep.op_date &lt;=str_to_date(#endMonth#,'%Y-%m')
+  </isEqual>
+  <isNotEmpty property="tno">
+  and team.tno=#tno#
+  </isNotEmpty>
+</sql>
+<select id="getInsNumDetailQuery"  parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+<include refid="common.pagingTop"/>
+SELECT team.tno,team.tname,DATE_FORMAT(rep.op_date,'%Y-%m-%d') OPDATE,rep.ins_num insNum,
+rep.unins_num uninsNum,rep.rep_num repNum,rep.tol_num tolNum,
+IFNULL(team.p_num,1)pnum,round((rep.tol_num/IFNULL(team.p_num,1)),2)averNum
+<include refid="insNumRep.getInsNumDetail"/>
+<include refid="common.pagingBottom"/>
+</select>
+<select id="getInsNumDetailCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+select count(1)
+<include refid="insNumRep.getInsNumDetail"/>
+</select>
+<select id="getChart" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+SELECT team.tno,team.tname,DATE_FORMAT(rep.op_date,'%Y-%m-%d') OPDATE,rep.tol_num tolNum
+<include refid="insNumRep.getInsNumDetail"/>
+</select>
+<select id="getChart2" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+SELECT team.tno,team.tname,DATE_FORMAT(rep.op_date,'%Y-%m') OPDATE,SUM(rep.tol_num) tolNum
+<include refid="insNumRep.getInsNum"/>
+</select>
+<insert id="insNum" parameterClass="java.util.HashMap">
+ call d_install_device_num(#opDate#)
+</insert>
+
+</sqlMap>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="hhuLog">
+<!-- 工单_掌机日志列表 -->
+<sql id="hhuWoLog">
+	from INS_WO_HHULOG log <!-- join INS_WO_HHULOGWO logwo on log.logid = logwo.logid -->
+	where 1 = 1
+	<isNotEmpty property="optId">
+		AND log.optid like concat('%', #optId#, '%')
+	</isNotEmpty>
+	<isNotEmpty property="hhuId">
+		AND log.hhuid like concat('%', #hhuId#, '%')
+	</isNotEmpty>
+	<isNotEmpty property="opt_rst">
+		AND log.opt_rst like concat('%', #opt_rst#, '%')
+	</isNotEmpty>
+	<isNotEmpty property="startDate">
+		and date_format(log.op_date, '%Y-%m-%d') <![CDATA[ >= ]]> #startDate#
+	</isNotEmpty>
+	<isNotEmpty property="endDate">
+		and date_format(log.op_date, '%Y-%m-%d') <![CDATA[ <= ]]> #endDate#
+	</isNotEmpty>
+	<isNotEmpty property="opt_type">
+		AND log.opt_type like concat('%', #opt_type#, '%')
+	</isNotEmpty>
+	order by log.op_date desc
+</sql>
+<!-- 获取工单_掌机日志列表 -->
+<select id="getHhuWoLogListQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<include refid='common.pagingTop'/>
+	select log.logid logid, log.reqid reqid, 
+	(SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'hhuOptType' AND T.LANG = #appLang# AND T.VALUE = log.opt_type) opt_type, 
+	log.optid optid, log.hhuid hhuid, 
+	(SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'hhuUptWay' AND T.LANG = #appLang# AND T.VALUE = log.upt_way) upt_way, 
+	(SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'hhuRst' AND T.LANG = #appLang# AND T.VALUE = log.opt_rst) opt_rst,
+	log.err_msg err_msg, date_format(log.op_date, '%Y-%m-%d %H:%i:%s') op_date
+	<include refid="hhuLog.hhuWoLog"/>
+	<include refid='common.pagingBottom'/>
+</select>
+<!-- 获取工单_掌机日志总数 -->
+<select id="getHhuWoLogListCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select count(log.logid)
+	<include refid="hhuLog.hhuWoLog"/>
+</select>
+
+<!-- 基础数据_掌机日志列表 -->
+<sql id="hhuDuLog">
+	from HHU_DU_HHULOG log <!-- join INS_WO_HHULOGWO logwo on log.logid = logwo.logid -->
+	where 1 = 1
+	<isNotEmpty property="optId">
+		AND log.optid like concat('%', #optId#, '%')
+	</isNotEmpty>
+	<isNotEmpty property="hhuId">
+		AND log.hhuid like concat('%', #hhuId#, '%')
+	</isNotEmpty>
+	<isNotEmpty property="upt_rst">
+		AND log.upt_rst like concat('%', #upt_rst#, '%')
+	</isNotEmpty>
+	<isNotEmpty property="startDate">
+		and date_format(log.upt_date, '%Y-%m-%d') <![CDATA[ >= ]]> #startDate#
+	</isNotEmpty>
+	<isNotEmpty property="endDate">
+		and date_format(log.upt_date, '%Y-%m-%d') <![CDATA[ <= ]]> #endDate#
+	</isNotEmpty>
+	order by log.upt_date desc
+</sql>
+<!-- 获取基础数据_掌机日志列表 -->
+<select id="getHhuDuLogListQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<include refid='common.pagingTop'/>
+	select log.logid logid, log.reqid reqid, log.optid optid, log.hhuid hhuid, 
+	(SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'hhuUptWay' AND T.LANG = #appLang# AND T.VALUE = log.upt_way) upt_way, 
+	(SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'hhuRst' AND T.LANG = #appLang# AND T.VALUE = log.upt_rst) upt_rst,
+	log.err_msg err_msg, date_format(log.upt_date, '%Y-%m-%d %H:%i:%s') upt_date  
+	<include refid="hhuLog.hhuDuLog"/>
+	<include refid='common.pagingBottom'/>
+</select>
+<!-- 获取基础数据_掌机日志总数 -->
+<select id="getHhuDuLogListCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select count(log.logid)
+	<include refid="hhuLog.hhuDuLog"/>
+</select>
+
+<!-- 明细中，获取工单信息列表 -->
+<select id="getHhuWoListQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<include refid='common.pagingTop'/>
+	select WO.woid woid, 
+	(SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'fbDataType' AND T.LANG = #appLang# AND T.VALUE = WO.type) type, 
+	(SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'woStatus' AND T.LANG = #appLang# AND T.VALUE = WO.status) status, 
+	WO.P_OPTID P_OPTID, Q.tid tid, 
+	(select ins.tname from ins_team ins where ins.tno = Q.tid) tname,
+	WO.C_OPTID C_OPTID, 
+	date_format(WO.C_DATE, '%Y-%m-%d') C_DATE
+		from INS_WO WO 
+		join INS_WO_HHULOGWO LOG on WO.woid = LOG.woid
+		join QX_CZY Q on WO.P_OPTID = Q.CZYID
+			where log.logid = #logId#
+	<include refid='common.pagingBottom'/>
+</select>
+<!-- 明细中，获取工单信息总数 -->
+<select id="getHhuWoListCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select count(WO.woid)
+	from INS_WO WO 
+	join INS_WO_HHULOGWO LOG on WO.woid = LOG.woid
+	join QX_CZY Q on WO.P_OPTID = Q.CZYID
+		where log.logid = #logId#
+</select>
+
+<!-- 明细中，获取变压器信息列表 -->
+<select id="getHhuTfListQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<include refid='common.pagingTop'/>
+	select TF.TFID TFID, TF.TFNAME TFNAME, TF.OPTID OPTID, 
+	(SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'opType' AND T.LANG = #appLang# AND T.VALUE = TF.OP_TYPE) OP_TYPE, 
+	date_format(TF.OP_DATE, '%Y-%m-%d') OP_DATE,
+	TF.STATUS STATUS 
+	from HHU_DU_TF TF 
+	join HHU_DU_HHULOGOP LOG on TF.OPID = LOG.OPID
+		where LOG.logid = #logId#
+	<include refid='common.pagingBottom'/>
+</select>
+<!-- 明细中，获取变压器信息总数 -->
+<select id="getHhuTfListCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select count(TF.TFID)
+	from HHU_DU_TF TF 
+	join HHU_DU_HHULOGOP LOG on TF.OPID = LOG.OPID
+		where LOG.logid = #logId#
+</select>
+
+<!-- 明细中，获取参数方案信息列表 -->
+<select id="getHhuPsListQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<include refid='common.pagingTop'/>
+	select PS.verid verid, PS.cate_no cate_no, PS.cate_name cate_name, PS.obis obis, 
+	(SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'pmType' AND T.LANG = #appLang# AND T.VALUE = PS.pm_type) pm_type, 
+	PS.optid optid, 
+	(SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'opType' AND T.LANG = #appLang# AND T.VALUE = PS.op_type) OP_TYPE, 
+	date_format(PS.OP_DATE, '%Y-%m-%d') OP_DATE   
+	from HHU_DU_PS PS 
+	join HHU_DU_HHULOGOP LOG on PS.OPID = LOG.OPID
+		where LOG.logid = #logId#
+	<include refid='common.pagingBottom'/>
+</select>
+<!-- 明细中，获取参数方案信息总数 -->
+<select id="getHhuPsListCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select count(PS.opid)
+	from HHU_DU_PS PS 
+	join HHU_DU_HHULOGOP LOG on PS.OPID = LOG.OPID
+		where LOG.logid = #logId#
+</select>
+
+<!-- 明细中，获取编码信息列表 -->
+<select id="getHhuCodeListQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<include refid='common.pagingTop'/>
+	select	C.code_name code_name, C.name name, C.lang language, C.optid optid, 
+	(SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'opType' AND T.LANG = #appLang# AND T.VALUE = C.op_type) OP_TYPE, 
+	date_format(C.OP_DATE, '%Y-%m-%d') OP_DATE
+	from HHU_DU_CODE C 
+	join HHU_DU_HHULOGOP LOG on C.OPID = LOG.OPID
+		where LOG.logid = #logId#
+	<include refid='common.pagingBottom'/>
+</select>
+<!-- 明细中，获取编码信息总数 -->
+<select id="getHhuCodeListCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select count(C.opid)
+	from HHU_DU_CODE C 
+	join HHU_DU_HHULOGOP LOG on C.OPID = LOG.OPID
+		where LOG.logid = #logId#
+</select>
+
+<!-- 明细中，获取Token信息列表 -->
+<select id="getHhuTokenListQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<include refid='common.pagingTop'/>
+	select T.token token, T.msn msn, T.optid optid, 
+	(SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'opType' AND T.LANG = #appLang# AND T.VALUE = T.op_type) OP_TYPE,
+	date_format(T.op_date, '%Y-%m-%d') op_date
+	from HHU_DU_TOKEN T 
+	join HHU_DU_HHULOGOP LOG on T.OPID = LOG.OPID
+		where LOG.logid = #logId#
+	<include refid='common.pagingBottom'/>
+</select>
+<!-- 明细中，获取Token信息总数 -->
+<select id="getHhuTokenListCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select count(T.opid)
+	from HHU_DU_TOKEN T 
+	join HHU_DU_HHULOGOP LOG on T.OPID = LOG.OPID
+		where LOG.logid = #logId#
+</select>
+
+</sqlMap>

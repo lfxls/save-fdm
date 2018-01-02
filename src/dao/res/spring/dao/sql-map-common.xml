@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+    <settings useStatementNamespaces="true" />
+	<!--common-->
+    <sqlMap resource="cn/hexing/ami/dao/common/ibatis/CommonDAOIbatis.xml" />
+    <!--登录-->
+    <sqlMap resource="cn/hexing/ami/dao/common/ibatis/LoginDAOIbatis.xml" />
+    <!--左边树-->
+    <sqlMap resource="cn/hexing/ami/dao/common/ibatis/LeftTreeDAOIbatis.xml"/>
+	<!--群组-->
+    <sqlMap resource="cn/hexing/ami/dao/common/ibatis/QzDAOIbatis.xml"/>
+    <!--群组设置-->
+    <sqlMap resource="cn/hexing/ami/dao/common/ibatis/QzszDAOIbatis.xml"/>
+     <!--首 页-->
+    <sqlMap resource="cn/hexing/ami/dao/common/ibatis/MainPageDAOIbatis.xml"/>
+	
+	<!--通讯任务操作-->
+    <sqlMap resource="cn/hexing/ami/dao/common/ibatis/client/ClientTaskDAOIbatis.xml" />
+    <!--模板表-->
+    <sqlMap resource="cn/hexing/ami/dao/common/ibatis/client/TaskTemplateDAOIbatis.xml" />
+	<!--参数表-->
+    <sqlMap resource="cn/hexing/ami/dao/common/ibatis/client/ZdcsDAOIbatis.xml" />
+    <!--任务表-->
+    <sqlMap resource="cn/hexing/ami/dao/common/ibatis/client/ZdRwDAOIbatis.xml" />
+    <!--短信表-->
+    <sqlMap resource="cn/hexing/ami/dao/common/ibatis/client/SmsSendDAOIbatis.xml" />
+	<!--license管理-->
+    <sqlMap resource="cn/hexing/ami/dao/common/ibatis/license/LicMgtDAOIbatis.xml" />
+    <!--短信服务-->
+    <sqlMap resource="cn/hexing/ami/dao/common/ibatis/sms/SmsServerDAOIbatis.xml" />
+    <!--FDM服务-->
+    <sqlMap resource="cn/hexing/ami/dao/common/ibatis/fdm/FDMDAOIbatis.xml" /> 
+
+    <!--待办事项-->
+    <sqlMap resource="cn/hexing/ami/dao/common/ibatis/TodoDAOIbatis.xml" />    
+    
+</sqlMapConfig>

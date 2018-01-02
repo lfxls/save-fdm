@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+    
+<!--报表管理-->
+<sqlMapConfig>
+    <settings useStatementNamespaces="true" />
+    <!--安装进度报表-->
+    <sqlMap resource="cn/hexing/ami/dao/report/ibatis/insInfoReport/mysql/InsProRepDAOIbatis_mysql.xml" />
+    <!--计划统计报表-->
+    <sqlMap resource="cn/hexing/ami/dao/report/ibatis/insInfoReport/mysql/PlanStsRepDAOIbatis_mysql.xml" />
+    <!--安装数量报表-->
+    <sqlMap resource="cn/hexing/ami/dao/report/ibatis/insInfoReport/mysql/InsNumRepDAOIbatis_mysql.xml" />
+    <!--安装明细报表-->
+    <sqlMap resource="cn/hexing/ami/dao/report/ibatis/insInfoReport/mysql/InsDetailRepDAOIbatis_mysql.xml" />
+    <!--工单统计报表-->
+    <sqlMap resource="cn/hexing/ami/dao/report/ibatis/insInfoReport/mysql/WoStsRepDAOIbatis_mysql.xml" />
+   	<!--失败分布统计-->
+    <sqlMap resource="cn/hexing/ami/dao/report/ibatis/insQualReport/mysql/InsFailRepDAOIbatis_mysql.xml" />
+	<!--安装问题数量统计-->
+    <sqlMap resource="cn/hexing/ami/dao/report/ibatis/insQualReport/mysql/ProbNumRepDAOIbatis_mysql.xml" />
+</sqlMapConfig>
+   

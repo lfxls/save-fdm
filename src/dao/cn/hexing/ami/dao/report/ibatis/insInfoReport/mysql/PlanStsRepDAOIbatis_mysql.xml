@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="planStsRep" >
+<select id="getChart" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+ SELECT COUNT(*) FROM ins_pln_meter pln LEFT JOIN  ins_wo wo ON pln.woid=wo.woid
+LEFT JOIN qx_czy czy ON wo.p_optid=czy.czyid
+ where pln.status=#status#
+<isNotEmpty property="tno">
+and  czy.tid=#tno#
+</isNotEmpty>
+<isNotEmpty property="woid">
+and wo.woid LIKE CONCAT('%',#woid#,'%')
+</isNotEmpty>
+</select>
+<select id="getStatusLs" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+SELECT value,name FROM p_code  WHERE code_type='planStatus' AND lang=#appLang#
+</select>
+<sql id="getPlanSts">
+FROM ins_pln_meter pln
+LEFT JOIN ins_wo wo ON pln.woid=wo.woid
+LEFT JOIN qx_czy czy ON wo.p_optid =czy.czyid
+LEFT JOIN ins_team team ON czy.tid=team.tno
+LEFT JOIN ar_customer cust ON pln.cno=cust.cno
+LEFT JOIN ins_fb_meter fb ON pln.pid=fb.pid
+where 1=1
+<isNotEmpty property="tno">
+and team.tno=#tno#
+</isNotEmpty>
+<isNotEmpty property="status">
+and pln.status=#status#
+</isNotEmpty>
+<isNotEmpty property="woid">
+and wo.woid LIKE CONCAT('%',#woid#,'%')
+</isNotEmpty>
+<isNotEmpty property="delayDate">
+and IF(DATEDIFF(IF(pln.status='5',NOW(),IFNULL(fb.op_date, NOW())), IFNULL(wo.pf_date, NOW()))&lt;0,0,DATEDIFF(IF(pln.status='5',NOW(),IFNULL(fb.op_date, NOW())),IFNULL(wo.pf_date,NOW()))) &gt; #delayDate#
+</isNotEmpty>
+</sql>
+<select id="getPlanStsQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+<include refid="common.pagingTop"/>
+SELECT pln.pid,pln.woid,team.tno,team.tname,DATE_FORMAT(pln.upt_date,'%Y-%m-%d') uptDate,
+cust.cno,cust.cname,ifnull(fb.o_msn,pln.o_msn) omsn,ifnull(fb.n_msn,pln.n_msn) nmsn,DATE_FORMAT(wo.pf_date,'%Y-%m-%d') pfdate, IF(pln.status='5','',DATE_FORMAT(fb.op_date, '%Y-%m-%d')) opdate,
+IF(DATEDIFF(IF(pln.status='5',NOW(),IFNULL(fb.op_date, NOW())), IFNULL(wo.pf_date, NOW()))&lt;0,0,DATEDIFF(IF(pln.status='5',NOW(),IFNULL(fb.op_date, NOW())),IFNULL(wo.pf_date,NOW())))delayDate,
+(SELECT xm FROM qx_czy  WHERE czyid=wo.p_optid) optname,
+(SELECT NAME FROM p_code  WHERE code_type='bussType' AND lang=#appLang#  AND VALUE=pln.buss_type)bussType,
+(SELECT NAME FROM p_code  WHERE code_type='planStatus' AND lang=#appLang#  AND VALUE=pln.status)statusname
+
+<include refid="planStsRep.getPlanSts"/>
+<include refid="common.pagingBottom"/>
+</select>
+
+<select id="getPlanStsCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+select count(*)
+<include refid="planStsRep.getPlanSts"/>
+</select>
+</sqlMap>

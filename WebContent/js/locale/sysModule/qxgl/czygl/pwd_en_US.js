@@ -1,0 +1,10 @@
+czygl_add_name_null='The name can not be empty!';
+czygl_pwd_old_null = 'The old password can not be empty!';
+czygl_pwd_new_null = 'The new password can not be empty!';
+czygl_pwd_pwd_wrong = 'Two passwords do not match!';
+czygl_pwd_confirm = 'Are you sure want to change your information?';
+czygl_add_yxdz_null="The e-mail adress error!";
+pwd_1 = 'Weak';
+pwd_2 = 'Medium';
+pwd_3 = 'Strength';
+czygl_pwd_logger='Change personal information';

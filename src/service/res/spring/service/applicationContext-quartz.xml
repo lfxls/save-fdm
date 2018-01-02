@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd"
+	default-lazy-init="true">
+	<description>Quartz任务配置</description>
+	<!-- 线程池 -->
+	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="2" />
+		<property name="keepAliveSeconds" value="240" />
+		<property name="maxPoolSize" value="5" />
+		<property name="queueCapacity" value="25" />
+	</bean>
+	
+	<!--安装反馈 -->
+	<bean id="insFbJob" class="cn.hexing.ami.service.main.insMgt.InsFbJob">
+		
+	</bean>
+	
+	<!--勘察反馈 -->
+	<bean id="srvyFbJob" class="cn.hexing.ami.service.main.srvyMgt.SrvyFbJob">
+		
+	</bean>
+	
+	<!--加密狗和license监控判断-->
+	<!-- <bean id="softDogTask" class="cn.hexing.ami.quartz.BeanInvokingJobDetailFactoryBean"> -->
+		<!--调用的类 -->
+		<!-- <property name="targetBean" value="licenseJob" /> -->
+		<!--调用类中的方法 -->
+		<!-- <property name="targetMethod" value="monitorSoftDog" />
+	</bean>-->
+	
+	<!--安装反馈任务-->
+	<bean id="insFbTask" class="cn.hexing.ami.quartz.BeanInvokingJobDetailFactoryBean">
+		<!--调用的类 -->
+		<property name="targetBean" value="insFbJob" />
+		<!--调用类中的方法 -->
+		<property name="targetMethod" value="insFeedback" />
+	</bean>
+	
+	<!--勘察反馈任务-->
+	<bean id="srvyFbTask" class="cn.hexing.ami.quartz.BeanInvokingJobDetailFactoryBean">
+		<!--调用的类 -->
+		<property name="targetBean" value="srvyFbJob" />
+		<!--调用类中的方法 -->
+		<property name="targetMethod" value="srvyFeedback" />
+	</bean>
+	
+	<!--01安装反馈-->
+	<bean id="T01-insFbTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="insFbTask" />
+		<property name="cronExpression" value="0 0/30 * * * ?" />
+	</bean>
+	
+	<!--02勘察反馈-->
+	<bean id="T02-srvyFbTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="srvyFbTask" />
+		<property name="cronExpression" value="0 0/30 * * * ?" />
+	</bean>
+	
+	<!--06数据导出-->
+	<!--  <bean id="T06-dataExpTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="dataExpTask" />
+		<property name="cronExpression" value="0 0/5 * * * ?" />
+	</bean>-->
+	<!--07加密狗和license监控判断-->
+	<!-- <bean id="T07-softDogTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="softDogTask" />
+		<property name="cronExpression" value="0 */5 * * * ?" />
+	</bean>-->
+	
+</beans>

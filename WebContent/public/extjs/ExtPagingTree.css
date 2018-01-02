@@ -1,0 +1,117 @@
+.first {
+	background-image:url(resources/images/default/grid/page-first.gif);
+}
+.prev {
+	background-image:url(resources/images/default/grid/page-prev.gif) ;
+}
+.next {
+	background-image:url(resources/images/default/grid/page-next.gif);
+}
+.last {
+	background-image:url(resources/images/default/grid/page-last.gif);
+}
+.refresh {
+	background-image:url(resources/images/default/grid/refresh.gif);
+}
+.bdz {
+	background-image:url(resources/icons/fam/connect.gif);
+}
+
+.dw {
+	background:url(../images/icons/node-icons.png) -37px 0px no-repeat !important;
+}
+
+.x-tree-node-icon{
+	background:url(../images/icons/node-icons.png) -37px -18px no-repeat !important;
+}
+dwxl {
+	background:url(../images/icons/node-icons.png) -37px 0px no-repeat !important;
+}
+.xl{
+	background:url(../images/icons/node-icons.png) -1px -54px no-repeat !important;
+}
+.tq {
+	background:url(../images/icons/node-icons.png) -1px -108px no-repeat !important;
+}
+.byq {
+	background:url(../images/icons/node-icons.png) -1px -36px no-repeat !important;
+}
+.yh {
+	background:url(../images/icons/node-icons.png) -1px 0px no-repeat !important;
+}
+.sb_yx {
+	background:url(../images/icons/node-icons.png) -19px -72px no-repeat !important;
+}
+.sb_td {
+	background:url(../images/icons/node-icons.png) -19px -90px no-repeat !important;
+}
+.sb_24 {
+	background:url(../images/icons/node-icons.png) -1px -72px no-repeat !important;
+}
+.sb_ty {
+	background:url(../images/icons/node-icons.png) -19px -54px no-repeat !important;
+}
+.sb_dz {
+	background:url(../images/icons/node-icons.png) -1px -18px no-repeat !important;
+}
+.sb_dt {
+	background:url(../images/icons/node-icons.png) -19px -18px no-repeat !important;
+}
+.sb_cc {
+	background:url(../images/icons/node-icons.png) -19px 0px no-repeat !important;
+}
+.sb_gz {
+	background:url(../images/icons/node-icons.png) -19px -36px no-repeat !important;
+}
+.bj_ol {
+	background:url(../images/icons/node-icons.png) -19px -108px no-repeat !important;
+}
+.jzq {
+	background:url(../images/icons/node-icons.png) -1px -90px no-repeat !important;
+}
+.bj {
+	background:url(../images/icons/node-icons.png) -19px -108px no-repeat !important;
+}
+
+
+.jg {
+	background:url(../images/icons/node-icons.png) -37px 0px no-repeat !important;
+}
+.czy {
+	background-image:url(resources/icons/fam/user_suit.gif) !important;
+}
+.op {
+	background-image:url(resources/icons/fam/user.gif) !important;
+}
+.opa {
+	background-image:url(resources/icons/fam/user_add.gif) !important;
+}
+.opb {
+	background-image:url(resources/icons/fam/user_delete.gif) !important;
+}
+.gnd {
+	background-image:url(resources/icons/fam/cog_edit.png) !important;
+}
+.t_program {
+	background:url(../images/icons/node-icons.png) -37px -36px !important;
+}
+.t_version {
+	background:url(../images/icons/node-icons.png) -37px -55px !important;
+}
+.jm {
+	background-image:url(resources/icons/fam/user.gif) !important;
+}
+.hy {
+	background-image:url(resources/icons/fam/plugin.gif) !important;
+}
+.sbqz {
+	background-image:url(resources/icons/fam/folder_wrench.png) !important;
+}
+
+.icon-refresh{
+	width:16px;
+	height:16px;
+	display:inline-block;
+	float:left;
+	background:url(../images/icons/node-icons.png) -37px -109px no-repeat !important;
+}

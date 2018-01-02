@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="tokenMgt">
+
+	<!-- 插入Token信息(已经存在Token的表计新增token的序号在原来sort最大值基础上+1) -->
+	<insert id="insertTokenNormal" parameterClass="java.util.HashMap">
+	<!-- 	<selectKey resultClass="java.lang.String" keyProperty="tid">
+			SELECT nextval('S_TOKEN')
+		</selectKey> -->
+		insert into token
+		(tid, msn, cno, orderid, token,
+		sort,
+		upt_date, status)
+		values
+		(#tid#, #msn#, #cno#, #orderid#, #token#,
+		IFNULL((SELECT MAX(t.sort)+1 FROM token t WHERE t.msn = #msn#),'1'),
+		Now(), '-2')
+	</insert>
+
+	<!-- 插入Token信息(第一次新增token的序号初始化为1) -->
+	<insert id="insertTokenFirst" parameterClass="java.util.HashMap">
+		<!-- <selectKey resultClass="java.lang.String" keyProperty="tid">
+			SELECT nextval('S_TOKEN')
+		</selectKey> -->
+		insert into token
+		(tid, msn, cno, orderid, token,
+		sort,
+		upt_date, status)
+		values
+		(#tid#, #msn#, #cno#, #orderid#, #token#,
+		'1',
+		Now(), '-2')
+	</insert>
+
+	<!-- 更新Token信息 -->
+	<update id="updateToken" parameterClass="java.util.HashMap">
+		update token
+		set msn = #msn#,
+		cno = #cno#,
+		orderid = #orderid#,
+		token =
+		#token#,
+		<isNotEmpty property="sort">
+			sort = #sort#,
+		</isNotEmpty>
+		<isNotEmpty property="status">
+			status = #status#,
+		</isNotEmpty>
+		upt_date = Now()
+		where tid = #tid#
+	</update>
+
+	<!-- 删除Token信息 -->
+	<delete id="deleteToken" parameterClass="java.util.HashMap">
+		delete from token
+		where
+		tid = #tid#
+	</delete>
+
+	<!-- 判断Token是否已经存在 -->
+	<select id="existsToken" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		select 1 from token
+		where token = #token#
+		<isNotEmpty property="tid">
+			and tid != #tid#
+		</isNotEmpty>
+	</select>
+
+	<!-- 在没有TID的情况下，校验token是否已经存在 -->
+	<select id="impExistToken" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		select 1 from token
+		where token = #token#
+		and msn != #msn# <!-- and tid != #tid# -->
+	</select>
+
+	<!-- Token管理界面，获取Token列表 -->
+	<select id="getTokenListQuery" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		<include refid='common.pagingTop' />
+		select t.tid, t.msn, t.cno, t.orderid,
+		CONCAT(SUBSTRING(t.token,1,4),
+		'-', SUBSTRING(t.token,5,4), '-', SUBSTRING(t.token,9,4), '-',
+		SUBSTRING(t.token,13,4), '-', SUBSTRING(t.token,17,4)) token,
+		t.sort,
+		date_format(t.upt_date, '%Y-%m-%d') upt_date,
+		t.status as tokenSts,
+		(select c.name
+		from p_code c
+		where c.code_type = 'tokenSts'
+		and c.lang =
+		#appLang#
+		and c.value = t.status) status
+		from token t
+		where 1=1
+		<isNotEmpty property="msn">
+			AND t.msn like concat('%',#msn#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="cno">
+			AND t.cno like concat('%',#cno#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="orderid">
+			AND t.orderid like
+			concat('%',#orderid#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="status">
+			AND t.status = #status#
+		</isNotEmpty>
+		order by t.msn asc, t.sort desc
+		<include refid='common.pagingBottom' />
+	</select>
+
+	<!-- Token管理界面，获取Token总数 -->
+	<select id="getTokenListCount" resultClass="int">
+		select count(t.tid)
+		from token t
+		where 1=1
+		<isNotEmpty property="msn">
+			AND t.msn like concat('%',#msn#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="cno">
+			AND t.cno like concat('%',#cno#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="orderid">
+			AND t.orderid like
+			concat('%',#orderid#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="status">
+			AND t.status = #status#
+		</isNotEmpty>
+	</select>
+
+	<!-- 查询库中是否已经存在该表 -->
+	<select id="existsMeterSort" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		select 1 from token
+		where msn = #msn#
+	</select>
+
+	<!-- 已经存在Token的表计新增token的序号在原来sort最大值基础上+1 -->
+	<!-- <update id="insertSortNormal" parameterClass="java.util.HashMap"> update 
+		token t1 set t1.sort = ( (select max(t.sort) from token t where t.msn=#msn#)+1 
+		) where t1.tid = #tid# </update> -->
+
+	<!-- 第一次新增token的序号初始化为1 -->
+	<!-- <update id="insertSortFirst" parameterClass="java.util.HashMap"> update 
+		token set sort = '1' where msn = #msn# </update> -->
+
+	<!-- 获得所有的Token -->
+	<select id="getAllToken" resultClass="cn.hexing.ami.dao.common.pojo.pre.Token">
+		select tid, msn, cno,
+		orderid, token, sort, upt_date, status
+		from token
+		where status != '00'
+		and status != '02'
+		ORDER BY msn, sort
+	</select>
+	<!-- 获得操作员所有的Token -->
+	<select id="getPARTToken" resultClass="cn.hexing.ami.dao.common.pojo.pre.Token">
+		select tid, msn, cno,
+		orderid, token, sort, upt_date, status
+		from token
+		where status != '00'
+		and status != '02'
+		AND EXISTS (
+		SELECT
+		*
+		from ins_pln_meter,ins_wo
+		WHERE ins_pln_meter.N_MSN = token.msn AND ins_pln_meter.WOID=ins_wo.WOID
+		AND ins_wo.STATUS !=  '6' AND ins_wo.STATUS != '4'
+		AND ins_wo.P_OPTID =#optid#
+		)
+		ORDER BY msn, sort
+	</select>
+
+	<!-- 接口调用，更新Token -->
+	<update id="uptToken" parameterClass="cn.hexing.ami.dao.common.pojo.pre.Token">
+		update token
+		set status =
+		#status#
+		where msn = #msn#
+		and token = #token#
+	</update>
+
+	<!-- 查询Token执行状态 -->
+	<select id="queryStatus" parameterClass="java.util.HashMap"
+		resultClass="java.lang.String">
+		select status
+		from token
+		where tid = #tid#
+	</select>
+
+	<!-- 编辑Token获取信息 -->
+	<select id="getToken" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		select tid, msn, cno, orderid, token, sort, upt_date,
+		status
+		from token
+		where tid = #tid#
+	</select>
+
+	<!-- 新增token，param里面没有tid,需从数据库中查询 -->
+	<select id="qyTid" parameterClass="java.lang.String"
+		resultClass="java.lang.String">
+		select tid
+		from token
+		where token = #token#
+	</select>
+
+	<!-- 删除token，param里面没有token，需从数据库中查询 -->
+	<select id="qyToken" parameterClass="java.util.HashMap"
+		resultClass="java.lang.String">
+		select token
+		from token
+		where tid = #tid#
+	</select>
+
+	<!-- 删除token，param里面没有msn，需从数据库中查询 -->
+	<select id="qyMsn" parameterClass="java.util.HashMap"
+		resultClass="java.lang.String">
+		select msn
+		from token
+		where tid = #tid#
+	</select>
+	<select id="getTid" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		SELECT nextval('S_TOKEN')
+	</select>
+	
+	<update id="updTokenSequence" parameterClass="java.util.HashMap">
+		UPDATE SEQUENCE SET CURRENT_VALUE = #currValue#
+		WHERE NAME='S_TOKEN'
+	</update>
+	
+	<select id="getMSNByToken" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		SELECT MSN
+		FROM TOKEN
+		WHERE TOKEN = #token#
+	</select>
+</sqlMap>

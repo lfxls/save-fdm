@@ -1,0 +1,10 @@
+czygl_add_name_null='请输入姓名';
+czygl_pwd_old_null = '原密码不能为空';
+czygl_pwd_new_null = '新密码不能为空';
+czygl_pwd_pwd_wrong = '两次密码不一致';
+czygl_pwd_confirm = '确认修改信息';
+czygl_add_yxdz_null="邮箱地址不正确";
+pwd_1 = '弱';
+pwd_2 = '中';
+pwd_3 = '强';
+czygl_pwd_logger='修改个人信息';

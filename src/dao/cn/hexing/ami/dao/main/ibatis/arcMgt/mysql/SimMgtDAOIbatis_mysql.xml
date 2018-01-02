@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+	
+<sqlMap namespace="simMgt">
+
+	<!-- 插入sim卡信息 -->
+	<insert id="insertSim" parameterClass="java.util.HashMap">
+		insert into ar_sim
+			(simno, simsn, msp)
+		values
+			(#simno#, #simsn#, #msp#)
+	</insert>
+	
+	<!-- 修改sim卡信息 -->
+	<update id="updateSim" parameterClass="java.util.HashMap">
+		update ar_sim
+			set simsn = #simsn#, msp = #msp#
+		where simno = #simno#
+	</update>
+	
+	<!-- 删除sim卡信息 -->
+	<delete id="deleteSim" parameterClass="java.util.HashMap">
+		delete from ar_sim
+			where simno = #simno#
+	</delete>
+	
+	<!-- 根据sim卡号判断sim卡是否已经存在 -->
+	<select id="existsSim" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select 1 from ar_sim
+			where simno = #simno#
+	</select>
+	
+	<!-- sim卡管理界面，获取sim卡列表 -->
+	<select id="getSimListQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<include refid='common.pagingTop'/>
+			select sim.simno, sim.simsn, sim.msp as txfwsLs,
+				(select c.name 
+					from p_code c 
+				where c.code_type = 'txfwsLs' 
+					and c.lang = #appLang# 
+					and c.value = sim.msp) msp
+			from ar_sim sim
+				where 1=1
+				<isNotEmpty property="simno"> 
+				and sim.simno like concat('%', #simno#, '%')
+				</isNotEmpty>
+				<isNotEmpty property="simsn"> 
+				and sim.simsn like concat('%', #simsn#, '%')
+				</isNotEmpty> 				
+		<include refid='common.pagingBottom'/>
+	</select>
+	
+	<!-- sim卡管理界面，获取sim卡总数 -->
+	<select id="getSimListCount" resultClass="int">
+		select count(sim.simno)
+			from ar_sim sim
+				where 1=1
+				<isNotEmpty property="simno"> 
+				and sim.simno like concat('%', #simno#, '%')
+				</isNotEmpty>
+				<isNotEmpty property="simsn"> 
+				and sim.simsn like concat('%', #simsn#, '%')
+				</isNotEmpty>
+	</select>
+	
+	<!-- sim卡选择界面，获取sim卡列表 -->
+	<select id="simSelQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<include refid='common.pagingTop'/>
+			select sim.simno, sim.simsn, sim.msp as txfwsLs,
+				(select c.name 
+					from p_code c 
+				where c.code_type = 'txfwsLs' 
+					and c.lang = #appLang# 
+					and c.value = sim.msp) msp
+			from ar_sim sim
+				where 1=1
+				<isNotEmpty property="simno"> 
+				and sim.simno like concat('%', #simno#, '%')
+				</isNotEmpty>
+				<isNotEmpty property="simsn"> 
+				and sim.simsn like concat('%', #simsn#, '%')
+				</isNotEmpty> 				
+		<include refid='common.pagingBottom'/>
+	</select>
+	
+	<!-- sim卡选择界面，获取sim卡总数 -->
+	<select id="simSelCount" resultClass="int">
+		select count(sim.simno)
+			from ar_sim sim
+				where 1=1
+				<isNotEmpty property="simno"> 
+				and sim.simno like concat('%', #simno#, '%')
+				</isNotEmpty>
+				<isNotEmpty property="simsn"> 
+				and sim.simsn like concat('%', #simsn#, '%')
+				</isNotEmpty>
+	</select>
+	
+	<!-- SIM卡被设备使用不能删除 -->
+	<select id="queryMeterUsingSim" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		select 1 from ar_sim sim inner join ar_meter meter
+			where sim.simno = meter.simno
+				and sim.simno = #simno#
+	</select>
+	
+	<!-- 编辑SIM获取信息 -->
+	<select id="getSim" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select simno, simsn, msp
+			from ar_sim
+		where simno = #simno#
+	</select>
+	
+</sqlMap>

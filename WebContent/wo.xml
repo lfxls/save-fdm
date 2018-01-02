@@ -1,0 +1,3930 @@
+<R>
+	<C>1</C>
+	<MSG></MSG>
+	<WOS />
+	<BASIC>
+		<B>
+			<PCS>
+				<PC TYPE="0" LANG="en_US" NAME="Installation" VALUE="0">bussType</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Replacement" VALUE="1">bussType</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Remove" VALUE="2">bussType</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="新装" VALUE="0">bussType</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="更换" VALUE="1">bussType</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="拆回" VALUE="2">bussType</PC>
+				<PC TYPE="0" LANG="en_US" NAME="NORMAL" VALUE="0">bussTypes</PC>
+				<PC TYPE="0" LANG="en_US" NAME="TOKEN" VALUE="1">bussTypes</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="普通" VALUE="0">bussTypes</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="TOKEN" VALUE="1">bussTypes</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Line" VALUE="0">chartType</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Bar" VALUE="1">chartType</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="折线图" VALUE="0">chartType</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="柱状图" VALUE="1">chartType</PC>
+				<PC TYPE="0" LANG="en_US" NAME="HXE360" VALUE="0">clModel</PC>
+				<PC TYPE="0" LANG="en_US" NAME="HXE370" VALUE="1">clModel</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="HXE360" VALUE="0">clModel</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="HXE370" VALUE="1">clModel</PC>
+				<PC TYPE="0" LANG="en_US" NAME="1/1" VALUE="1/1">ct</PC>
+				<PC TYPE="0" LANG="en_US" NAME="100/5" VALUE="100/5">ct</PC>
+				<PC TYPE="0" LANG="en_US" NAME="120/5" VALUE="120/5">ct</PC>
+				<PC TYPE="0" LANG="en_US" NAME="15/5" VALUE="15/5">ct</PC>
+				<PC TYPE="0" LANG="en_US" NAME="150/5" VALUE="150/5">ct</PC>
+				<PC TYPE="0" LANG="en_US" NAME="20/5" VALUE="20/5">ct</PC>
+				<PC TYPE="0" LANG="en_US" NAME="200/5" VALUE="200/5">ct</PC>
+				<PC TYPE="0" LANG="en_US" NAME="25/5" VALUE="25/5">ct</PC>
+				<PC TYPE="0" LANG="en_US" NAME="250/5" VALUE="250/5">ct</PC>
+				<PC TYPE="0" LANG="en_US" NAME="30/5" VALUE="30/5">ct</PC>
+				<PC TYPE="0" LANG="en_US" NAME="40/5" VALUE="40/5">ct</PC>
+				<PC TYPE="0" LANG="en_US" NAME="5/5" VALUE="5/5">ct</PC>
+				<PC TYPE="0" LANG="en_US" NAME="50/5" VALUE="50/5">ct</PC>
+				<PC TYPE="0" LANG="en_US" NAME="60/5" VALUE="60/5">ct</PC>
+				<PC TYPE="0" LANG="en_US" NAME="75/5" VALUE="75/5">ct</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="1/1" VALUE="1/1">ct</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="100/5" VALUE="100/5">ct</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="120/5" VALUE="120/5">ct</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="15/5" VALUE="15/5">ct</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="150/5" VALUE="150/5">ct</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="20/5" VALUE="20/5">ct</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="200/5" VALUE="200/5">ct</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="25/5" VALUE="25/5">ct</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="250/5" VALUE="250/5">ct</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="30/5" VALUE="30/5">ct</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="40/5" VALUE="40/5">ct</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="5/5" VALUE="5/5">ct</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="50/5" VALUE="50/5">ct</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="60/5" VALUE="60/5">ct</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="75/5" VALUE="75/5">ct</PC>
+				<PC TYPE="0" LANG="en_US" NAME="New Customer" VALUE="0">custStatus
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Running" VALUE="1">custStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Log-off" VALUE="2">custStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="新开户" VALUE="0">custStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="已装表" VALUE="1">custStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="注销" VALUE="2">custStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Enabled" VALUE="0">czyzt</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Disabled" VALUE="1">czyzt</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Locked" VALUE="2">czyzt</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="在职" VALUE="0">czyzt</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="注销" VALUE="1">czyzt</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="锁定" VALUE="2">czyzt</PC>
+				<PC TYPE="0" LANG="en_US" NAME="YES" VALUE="0">dataInitSts</PC>
+				<PC TYPE="0" LANG="en_US" NAME="NO" VALUE="1">dataInitSts</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="是" VALUE="0">dataInitSts</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="否" VALUE="1">dataInitSts</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Interface Synchronization" VALUE="0">
+					dataSrc</PC>
+				<PC TYPE="0" LANG="en_US" NAME="FDM Input" VALUE="1">dataSrc</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Site Feedback" VALUE="2">dataSrc</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="接口同步" VALUE="0">dataSrc</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="FDM录入" VALUE="1">dataSrc</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="现场反馈" VALUE="2">dataSrc</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Day" VALUE="0">datetype</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Month" VALUE="1">datetype</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="日" VALUE="0">datetype</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="月" VALUE="1">datetype</PC>
+				<PC TYPE="0" LANG="en_US" NAME="HXE330" VALUE="0">dcuModel</PC>
+				<PC TYPE="0" LANG="en_US" NAME="HXE350" VALUE="1">dcuModel</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="HXE330" VALUE="0">dcuModel</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="HXE350" VALUE="1">dcuModel</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Meter" VALUE="0">devType</PC>
+				<PC TYPE="0" LANG="en_US" NAME="DCU" VALUE="1">devType</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Collector" VALUE="2">devType</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="表" VALUE="0">devType</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="集中器" VALUE="1">devType</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="采集器" VALUE="2">devType</PC>
+				<PC TYPE="0" LANG="en_US" NAME="English" VALUE="en_US">dlyy</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="中文" VALUE="zh_CN">dlyy</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Work Order Dispatch" VALUE="0">fbDataType
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Customer Dispatch" VALUE="1">fbDataType
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Local Dispatch" VALUE="2">fbDataType
+				</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="工单派发" VALUE="0">fbDataType</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="用户派发" VALUE="1">fbDataType</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="现场派发" VALUE="2">fbDataType</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Unsynchronization" VALUE="0">fbStatus
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Synchronization" VALUE="1">fbStatus
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Synchronization Fail" VALUE="2">fbStatus
+				</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="待同步" VALUE="0">fbStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="已同步" VALUE="1">fbStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="同步失败" VALUE="2">fbStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="HT380A" VALUE="01">HHUModel</PC>
+				<PC TYPE="0" LANG="en_US" NAME="HT380B" VALUE="02">HHUModel</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="Idata90" VALUE="01">HHUModel</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="Idata95" VALUE="02">HHUModel</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Enabled" VALUE="01">HHUStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Disabled" VALUE="02">HHUStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Remove" VALUE="03">HHUStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="在用" VALUE="01">HHUStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="禁用" VALUE="02">HHUStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="维修" VALUE="03">HHUStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Enabled" VALUE="0">insteamsts</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Disbanded" VALUE="1">insteamsts</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="正常" VALUE="0">insteamsts</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="解散" VALUE="1">insteamsts</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Energy" VALUE="dl">item_sort</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Power Quality " VALUE="dwzl">item_sort
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Load" VALUE="fh">item_sort</PC>
+				<PC TYPE="0" LANG="en_US" NAME="GPRS Parameters" VALUE="gprs">item_sort
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Day Freeze" VALUE="rdj">item_sort</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Instantaneous" VALUE="ssl">item_sort
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Month Freeze " VALUE="ydj">item_sort
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Prepaid" VALUE="yff">item_sort</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="电量" VALUE="dl">item_sort</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="电网质量" VALUE="dwzl">item_sort</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="负荷" VALUE="fh">item_sort</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="GPRS参数" VALUE="gprs">item_sort</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="日冻结" VALUE="rdj">item_sort</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="瞬时量" VALUE="ssl">item_sort</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="月冻结" VALUE="ydj">item_sort</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="预付费" VALUE="yff">item_sort</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Serious" VALUE="0">level</PC>
+				<PC TYPE="0" LANG="en_US" NAME="General " VALUE="1">level</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="严重" VALUE="0">level</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="一般" VALUE="1">level</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Star" VALUE="1">MF</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Hexing" VALUE="14">MF</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Inhe" VALUE="2">MF</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="思达" VALUE="1">MF</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="海兴" VALUE="14">MF</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="银河" VALUE="2">MF</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Postpaid Mode" VALUE="0">mode</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Prepaid Mode" VALUE="1">mode</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="后付费模式" VALUE="0">mode</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="预付费模式" VALUE="1">mode</PC>
+				<PC TYPE="0" LANG="en_US" NAME="XML data parsing exception"
+					VALUE="101">msg</PC>
+				<PC TYPE="0" LANG="en_US" NAME="XML root node dose not exist"
+					VALUE="1011">msg</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Feedback data not right" VALUE="1012">msg
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Node[HID] dose not exist" VALUE="1013">msg
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Node[HID] value can not be empty"
+					VALUE="1014">msg</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Invalid node[HID] value" VALUE="1015">msg
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Node[ID] dose not exist" VALUE="1016">msg
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Node[ID] value can not be empty"
+					VALUE="1017">msg</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Invalid operator" VALUE="1018">msg</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Node[RID] does not exist" VALUE="1019">msg
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Data storage error" VALUE="102">msg
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Node[RID] value can not be empty"
+					VALUE="1020">msg</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Node[PWD] does not exist" VALUE="1021">msg
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Node[PWD] value can not be empty"
+					VALUE="1022">msg</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Invalid node[ID,HID,RID] value"
+					VALUE="1023">msg</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Decrypt failed" VALUE="1024">msg</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Operator password encrypt failed"
+					VALUE="1025">msg</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Invalid operator id or password "
+					VALUE="1026">msg</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Invalid node[C] value " VALUE="1027">msg
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Node[WO] does not exist" VALUE="1028">msg
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Node[WO] value can not be empty"
+					VALUE="1029">msg</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Work Order ID dose not exist"
+					VALUE="1030">msg</PC>
+				<PC TYPE="0" LANG="en_US"
+					NAME="Revoked or unDispatched work order can not feedback" VALUE="1031">msg
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Node[MS] does not exist" VALUE="1032">msg
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Invalid plan id" VALUE="1033">msg</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Upload photo failed" VALUE="1034">msg
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Node does not exist" VALUE="1035">msg
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Node value can not be empty"
+					VALUE="1036">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="XML数据解析异常" VALUE="101">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="XML根节点不存在" VALUE="1011">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="反馈数据不正确" VALUE="1012">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="节点[HID]不存在" VALUE="1013">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="节点[HID]值不能为空" VALUE="1014">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="无效的节点[HID]值" VALUE="1015">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="节点[ID]不存在" VALUE="1016">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="节点[ID]值不能为空" VALUE="1017">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="无效操作员" VALUE="1018">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="节点[RID]不存在" VALUE="1019">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="数据存储错误" VALUE="102">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="节点[RID]值不能为空" VALUE="1020">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="节点[PWD]不存在" VALUE="1021">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="节点[PWD]值不能为空" VALUE="1022">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="无效节点[ID,HID,RID]值" VALUE="1023">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="解密失败" VALUE="1024">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="操作员密码加密失败" VALUE="1025">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="无效的操作员ID或密码" VALUE="1026">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="无效的节点[C]的值" VALUE="1027">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="节点[WO]不存在" VALUE="1028">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="节点[WO]值不能为空" VALUE="1029">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="工单号不存在" VALUE="1030">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="已撤销和已分配工单不能反馈" VALUE="1031">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="节点[MS]不存在" VALUE="1032">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="无效的安装计划id" VALUE="1033">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="上传图片失败" VALUE="1034">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="节点不存在" VALUE="1035">msg</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="节点值不能为空" VALUE="1036">msg</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Warehousing" VALUE="0">mStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Installed" VALUE="1">mStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Remove and Take Back" VALUE="2">mStatus
+				</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="入库" VALUE="0">mStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="装出" VALUE="1">mStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="拆回" VALUE="2">mStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="GPRS Meter" VALUE="0">mType</PC>
+				<PC TYPE="0" LANG="en_US" NAME="PLC Meter" VALUE="1">mType</PC>
+				<PC TYPE="0" LANG="en_US" NAME="485 Meter" VALUE="2">mType</PC>
+				<PC TYPE="0" LANG="en_US" NAME="offline Meter" VALUE="3">mType</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="GPRS表" VALUE="0">mType</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="PLC表" VALUE="1">mType</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="485表" VALUE="2">mType</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="离线表" VALUE="3">mType</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Unhandled" VALUE="0">planStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Assigned" VALUE="1">planStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Dispatched" VALUE="2">planStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Successed" VALUE="3">planStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Abnormal" VALUE="4">planStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Failed" VALUE="5">planStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="未处理" VALUE="0">planStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="已分配" VALUE="1">planStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="已派工" VALUE="2">planStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="成功" VALUE="3">planStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="异常" VALUE="4">planStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="失败" VALUE="5">planStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Enable" VALUE="0">pmStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Disable" VALUE="1">pmStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="启用" VALUE="0">pmStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="禁用" VALUE="1">pmStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Read" VALUE="0">pmType</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Set" VALUE="1">pmType</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Test" VALUE="2">pmType</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="召测" VALUE="0">pmType</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="设置" VALUE="1">pmType</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="测试" VALUE="2">pmType</PC>
+				<PC TYPE="0" LANG="en_US" NAME="1/1" VALUE="1/1">pt</PC>
+				<PC TYPE="0" LANG="en_US" NAME="100/5" VALUE="100/5">pt</PC>
+				<PC TYPE="0" LANG="en_US" NAME="120/5" VALUE="120/5">pt</PC>
+				<PC TYPE="0" LANG="en_US" NAME="15/5" VALUE="15/5">pt</PC>
+				<PC TYPE="0" LANG="en_US" NAME="150/5" VALUE="150/5">pt</PC>
+				<PC TYPE="0" LANG="en_US" NAME="20/5" VALUE="20/5">pt</PC>
+				<PC TYPE="0" LANG="en_US" NAME="200/5" VALUE="200/5">pt</PC>
+				<PC TYPE="0" LANG="en_US" NAME="25/5" VALUE="25/5">pt</PC>
+				<PC TYPE="0" LANG="en_US" NAME="250/5" VALUE="250/5">pt</PC>
+				<PC TYPE="0" LANG="en_US" NAME="30/5" VALUE="30/5">pt</PC>
+				<PC TYPE="0" LANG="en_US" NAME="40/5" VALUE="40/5">pt</PC>
+				<PC TYPE="0" LANG="en_US" NAME="5/5" VALUE="5/5">pt</PC>
+				<PC TYPE="0" LANG="en_US" NAME="60/5" VALUE="60/5">pt</PC>
+				<PC TYPE="0" LANG="en_US" NAME="75/5" VALUE="75/5">pt</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="1/1" VALUE="1/1">pt</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="100/5" VALUE="100/5">pt</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="120/5" VALUE="120/5">pt</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="15/5" VALUE="15/5">pt</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="150/5" VALUE="150/5">pt</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="20/5" VALUE="20/5">pt</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="200/5" VALUE="200/5">pt</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="25/5" VALUE="25/5">pt</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="250/5" VALUE="250/5">pt</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="30/5" VALUE="30/5">pt</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="40/5" VALUE="40/5">pt</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="5/5" VALUE="5/5">pt</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="60/5" VALUE="60/5">pt</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="75/5" VALUE="75/5">pt</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Successed" VALUE="0">result</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Failed" VALUE="1">result</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="成功" VALUE="0">result</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="失败" VALUE="1">result</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Running" VALUE="0">tfStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Disabled" VALUE="1">tfStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Removed" VALUE="2">tfStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="Running" VALUE="0">tfStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="Disabled" VALUE="1">tfStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="Removed" VALUE="2">tfStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Unhandled" VALUE="-2">tokenSts</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Token Processing Successful"
+					VALUE="00">tokenSts</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Token Interpretation Error"
+					VALUE="01">tokenSts</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Token Used" VALUE="02">tokenSts</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Token Expired" VALUE="03">tokenSts
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Key Expired" VALUE="04">tokenSts</PC>
+				<PC TYPE="0" LANG="en_US"
+					NAME="Recharge Value Exceed the Accumulate Amount Limit" VALUE="05">tokenSts
+				</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Key Type Don't Allow Recharge"
+					VALUE="06">tokenSts</PC>
+				<PC TYPE="0" LANG="en_US"
+					NAME="If input the 1st modifed key Token, then input is not the 2nd modified key TOKEN."
+					VALUE="08">tokenSts</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Key Type shouldn't change to 3."
+					VALUE="09">tokenSts</PC>
+				<PC TYPE="0" LANG="en_US"
+					NAME="If the parent key type is not the initial one, the child key type can't be changed to initial key."
+					VALUE="10">tokenSts</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="未处理" VALUE="-2">tokenSts</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="Token处理成功" VALUE="00">tokenSts</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="Token解析错误" VALUE="01">tokenSts</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="TOKEN已用过" VALUE="02">tokenSts</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="TOKEN过期" VALUE="03">tokenSts</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="密钥过期" VALUE="04">tokenSts</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="充值数值超囤积限额" VALUE="05">tokenSts</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="密钥类型不允许充值" VALUE="06">tokenSts</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="输入第一串修改密钥TOKEN后，接着输入的不是第二串修改密钥TOKEN"
+					VALUE="08">tokenSts</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="密钥类型不能改为3" VALUE="09">tokenSts</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="如果父密钥类型不是初始化密钥，则子密钥类型不能改为初始化密钥"
+					VALUE="10">tokenSts</PC>
+				<PC TYPE="0" LANG="en_US" NAME="China Unicom" VALUE="01">txfwsLs</PC>
+				<PC TYPE="0" LANG="en_US" NAME="China Mobile" VALUE="02">txfwsLs</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="中移动" VALUE="01">txfwsLs</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="中连通" VALUE="02">txfwsLs</PC>
+				<PC TYPE="0" LANG="en_US" NAME="1P" VALUE="0">wiring</PC>
+				<PC TYPE="0" LANG="en_US" NAME="3P3W" VALUE="1">wiring</PC>
+				<PC TYPE="0" LANG="en_US" NAME="3P4W" VALUE="2">wiring</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="单相" VALUE="0">wiring</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="三相三线" VALUE="1">wiring</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="三相四线" VALUE="2">wiring</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Unhandled" VALUE="0">woStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Assigned" VALUE="1">woStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Dispatched" VALUE="2">woStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Revoking" VALUE="3">woStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Revoked" VALUE="4">woStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Feedbacked" VALUE="5">woStatus</PC>
+				<PC TYPE="0" LANG="en_US" NAME="Completed" VALUE="6">woStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="未处理" VALUE="0">woStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="已分配" VALUE="1">woStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="已派工" VALUE="2">woStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="待撤销" VALUE="3">woStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="已撤销" VALUE="4">woStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="已反馈" VALUE="5">woStatus</PC>
+				<PC TYPE="0" LANG="zh_CN" NAME="已完成" VALUE="6">woStatus</PC>
+			</PCS>
+		</B>
+		<A>
+			<MMS>
+				<MM>
+					<FAC>14</FAC>
+					<MOD>HXE100</MOD>
+				</MM>
+				<MM>
+					<FAC>14</FAC>
+					<MOD>HXE110</MOD>
+				</MM>
+				<MM>
+					<FAC>14</FAC>
+					<MOD>HXE300</MOD>
+				</MM>
+				<MM>
+					<FAC>2</FAC>
+					<MOD>INH100</MOD>
+				</MM>
+				<MM>
+					<FAC>2</FAC>
+					<MOD>INH110</MOD>
+				</MM>
+				<MM>
+					<FAC>2</FAC>
+					<MOD>INH300</MOD>
+				</MM>
+				<MM>
+					<FAC>1</FAC>
+					<MOD>STA100</MOD>
+				</MM>
+				<MM>
+					<FAC>1</FAC>
+					<MOD>STA110</MOD>
+				</MM>
+				<MM>
+					<FAC>1</FAC>
+					<MOD>STA300</MOD>
+				</MM>
+			</MMS>
+			<TFS>
+				<TF TYPE="0">
+					<ID>13935</ID>
+					<N>TF301-01</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>13937</ID>
+					<N>TF101-01</N>
+					<ADDR>Left bank County, Left bank, Khujand</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>13940</ID>
+					<N>TF201-01</N>
+					<ADDR>Left bank County, Left bank, Khujand</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>13942</ID>
+					<N>TF201-02</N>
+					<ADDR>Left bank County, Left bank, Khujand</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>13944</ID>
+					<N>TF201-03</N>
+					<ADDR>Left bank County, Left bank, Khujand</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>13947</ID>
+					<N>TF601-01</N>
+					<ADDR>Right bank County, Right bank, Khujand</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>13949</ID>
+					<N>TF701-01</N>
+					<ADDR>Right bank County, Right bank, Khujand</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>13951</ID>
+					<N>TF701-02</N>
+					<ADDR>Right bank County, Right bank, Khujand</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>13953</ID>
+					<N>TF701-03</N>
+					<ADDR>Right bank County, Right bank, Khujand</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>13964</ID>
+					<N>TF001</N>
+					<ADDR>hous23</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14024</ID>
+					<N>TF201-0301</N>
+					<ADDR>HE</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14082</ID>
+					<N>中安小区变1</N>
+					<ADDR>实施</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14106</ID>
+					<N>MD_hx_trans_001</N>
+					<ADDR>left county, north street, Tananarive</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14108</ID>
+					<N>MD_hx_tran_002</N>
+					<ADDR>left county, north street, Tananarive</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14225</ID>
+					<N>TFNO.002</N>
+					<ADDR>Khujand country , Khujand city , Khujand provice</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14286</ID>
+					<N>TF A1</N>
+					<ADDR>TF A1</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14287</ID>
+					<N>TF A2</N>
+					<ADDR>TF A2</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14288</ID>
+					<N>TF B1</N>
+					<ADDR>TF B1</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14289</ID>
+					<N>TF B2</N>
+					<ADDR>TF B2</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14293</ID>
+					<N>TF C1</N>
+					<ADDR>TF C1</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14294</ID>
+					<N>TF C2</N>
+					<ADDR>TF C2</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14297</ID>
+					<N>DC</N>
+					<ADDR>DC</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14300</ID>
+					<N>GPRS</N>
+					<ADDR>GPRS TESING</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14302</ID>
+					<N>TF V1</N>
+					<ADDR>TF V1</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14304</ID>
+					<N>TF V2</N>
+					<ADDR>TF V2</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14306</ID>
+					<N>aaaa</N>
+					<ADDR>aaaa</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14321</ID>
+					<N>wel1byq</N>
+					<ADDR>wel1byq</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14363</ID>
+					<N>11</N>
+					<ADDR>11</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14445</ID>
+					<N>TF1</N>
+					<ADDR>TF1</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14485</ID>
+					<N>顺丰</N>
+					<ADDR>顺丰</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14501</ID>
+					<N>TF002</N>
+					<ADDR>TF002</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14521</ID>
+					<N>TF2</N>
+					<ADDR>TF2</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14572</ID>
+					<N>123</N>
+					<ADDR>12</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14592</ID>
+					<N>haixng001</N>
+					<ADDR>haixng001</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14595</ID>
+					<N>tangji001-100</N>
+					<ADDR>tangji001-100</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14599</ID>
+					<N>b1</N>
+					<ADDR>hangzhou</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14624</ID>
+					<N>BR001-1</N>
+					<ADDR>BR001-1</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14635</ID>
+					<N>BR001-2</N>
+					<ADDR>HZHX</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14644</ID>
+					<N>BR001</N>
+					<ADDR>HZ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14646</ID>
+					<N>BR02</N>
+					<ADDR>HZ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14649</ID>
+					<N>BR002</N>
+					<ADDR>HZ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14663</ID>
+					<N>TF100</N>
+					<ADDR>TF100</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14689</ID>
+					<N>test_tran</N>
+					<ADDR>12</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14725</ID>
+					<N>TRANSF 1#</N>
+					<ADDR>TA-TR-001</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14750</ID>
+					<N>HaiX001</N>
+					<ADDR>moganshanlu</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14805</ID>
+					<N>567</N>
+					<ADDR>shl</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14824</ID>
+					<N>t_ppp</N>
+					<ADDR>hangzhou gongshuqu moganshanlu</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14828</ID>
+					<N>wyy1</N>
+					<ADDR>wyytf</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14830</ID>
+					<N>wyy2</N>
+					<ADDR>wyy2</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14831</ID>
+					<N>wyy3</N>
+					<ADDR>wyytq</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>14843</ID>
+					<N>sdtf1</N>
+					<ADDR>sdtf1</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15073</ID>
+					<N>1024 # 1</N>
+					<ADDR>45</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15111</ID>
+					<N>Demo Transformer</N>
+					<ADDR>test0101</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15122</ID>
+					<N>22222</N>
+					<ADDR>2222</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15145</ID>
+					<N>0811BYQ</N>
+					<ADDR>3310104</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15920</ID>
+					<N>ТП-168</N>
+					<ADDR>НАСОСНАЯ СТАНЦИЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15921</ID>
+					<N>ТП-216</N>
+					<ADDR>ЗООВЕТСНАБ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15922</ID>
+					<N>ТП-257</N>
+					<ADDR>МАГАЗИН ХУРШЕД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15923</ID>
+					<N>ТП-179</N>
+					<ADDR>МАГАЗИН ХУРШЕД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15924</ID>
+					<N>ТП-24</N>
+					<ADDR>ПАХТАКОР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15925</ID>
+					<N>ТП-21</N>
+					<ADDR>СКОРАЯ ПОМОЩ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15926</ID>
+					<N>ТП-119</N>
+					<ADDR>САЙФИНАЧОТ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15927</ID>
+					<N>ТП-23</N>
+					<ADDR>ОБЛАСТНОЙ РОДДОМ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15928</ID>
+					<N>ТП-28</N>
+					<ADDR>УВК</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15929</ID>
+					<N>ТП-260</N>
+					<ADDR>ПРОИЗВОДСТВЕННЫЙ ЦЕХ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15930</ID>
+					<N>ТП-262</N>
+					<ADDR>ПРОИЗВОДСТВЕННЫЙ ЦЕХ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15931</ID>
+					<N>ТП-118</N>
+					<ADDR>АВТОСЕРВИС</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15932</ID>
+					<N>ТП-141</N>
+					<ADDR>УЛ. Р.НАБИЕВА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15933</ID>
+					<N>ТП-9</N>
+					<ADDR>МЕБЕЛЬНАЯ ФАБРИКА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15934</ID>
+					<N>ТП-68</N>
+					<ADDR>УПП СЛЕПЫХ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15935</ID>
+					<N>ТП-25а</N>
+					<ADDR>СП САМО</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15936</ID>
+					<N>ТП-77</N>
+					<ADDR>УЛ. РАДИЩЕВА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15937</ID>
+					<N>ТП-84</N>
+					<ADDR>УЛ. РАДИЩЕВА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15938</ID>
+					<N>ТП-80</N>
+					<ADDR>ГРЕНЗАВОД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15939</ID>
+					<N>ТП-46</N>
+					<ADDR>НАСОСНАЯ СТАНЦИЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15940</ID>
+					<N>ТП-23а</N>
+					<ADDR>ОБЛАСТНОЙ РОДДОМ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15941</ID>
+					<N>ТП-236</N>
+					<ADDR>ТЕКСТИЛЬИМПЕКС</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15942</ID>
+					<N>ТП-10</N>
+					<ADDR>ШКОЛА 3</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15943</ID>
+					<N>ТП-18</N>
+					<ADDR>АТС 6</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15944</ID>
+					<N>ТП-185</N>
+					<ADDR>ФАБРИКА ИНДПОШИВА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15945</ID>
+					<N>ТП-48</N>
+					<ADDR>КОТЕЛЬНАЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15946</ID>
+					<N>ТП-129</N>
+					<ADDR>ТЕЛКОМ ТЕХНОЛОДЖИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15947</ID>
+					<N>ТП-116</N>
+					<ADDR>ГОСТИНИЦА ВАТАН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15948</ID>
+					<N>ТП-124</N>
+					<ADDR>ХФТУТ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15949</ID>
+					<N>ТП-105</N>
+					<ADDR>УЛ. К. ХУЧАНДИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15950</ID>
+					<N>ТП-90</N>
+					<ADDR>ОБЛВОТХОЗ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15951</ID>
+					<N>ТП-107</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15952</ID>
+					<N>ТП-78</N>
+					<ADDR>ХУЧАНДАТЛАС</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15953</ID>
+					<N>ТП-641</N>
+					<ADDR>АВТОЗАПРАВКА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15954</ID>
+					<N>ТП-772</N>
+					<ADDR>НАСОС</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15955</ID>
+					<N>ТП-548</N>
+					<ADDR>ПМК В 20 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15956</ID>
+					<N>ТП-570</N>
+					<ADDR>СКЛАД УВД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15957</ID>
+					<N>ТП-86</N>
+					<ADDR>АВТОТРЕСТ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15958</ID>
+					<N>ТП-74</N>
+					<ADDR>УЛ. ШАРК</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15959</ID>
+					<N>ТП-60</N>
+					<ADDR>УЛ. ЛЕНИНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15960</ID>
+					<N>ТП-197</N>
+					<ADDR>УЛ. ЛЕНИНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15961</ID>
+					<N>ТП-131</N>
+					<ADDR>РЕСТОРАН ДУШАНБЕ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15962</ID>
+					<N>ТП-132</N>
+					<ADDR>ФИЗМАТ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15963</ID>
+					<N>ТП-33</N>
+					<ADDR>УЛ. ЗАГОРОДНАЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15964</ID>
+					<N>ТП-85</N>
+					<ADDR>ГОРОДСКАЯ БОЛЬНИЦА 2</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15965</ID>
+					<N>ТП-140</N>
+					<ADDR>ШКОЛА 17</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15966</ID>
+					<N>ТП-123</N>
+					<ADDR>УЛ. ХОДЖЕНТСКАЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15967</ID>
+					<N>ТП -64</N>
+					<ADDR>СЕБЗОР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15968</ID>
+					<N>ТП-15</N>
+					<ADDR>СЕБЗОР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15969</ID>
+					<N>ТП-67</N>
+					<ADDR>ШКОЛА 16</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15970</ID>
+					<N>ТП-178</N>
+					<ADDR>УЛ. БЕДИЛ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15971</ID>
+					<N>ТП-111</N>
+					<ADDR>ГАЗОЗАПРАВКА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15972</ID>
+					<N>ТП-204</N>
+					<ADDR>УЛ. ТЕКСТИЛЬШИКОВ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15973</ID>
+					<N>ТП-205</N>
+					<ADDR>БОФАНДА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15974</ID>
+					<N>ТП</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15975</ID>
+					<N>ТП-127</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15976</ID>
+					<N>ТП-237</N>
+					<ADDR>МЕЛНИЦА ЧП САЛИМОВ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15977</ID>
+					<N>ТП-35</N>
+					<ADDR>СУ-5</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15978</ID>
+					<N>ТП-50</N>
+					<ADDR>ГОРОДСКАЯ БОЛЬНИЦА 1</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15979</ID>
+					<N>ТП-267</N>
+					<ADDR>ГОРБОЛНИЦА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15980</ID>
+					<N>ТП-239</N>
+					<ADDR>ООО КУЛОЛГАРИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15981</ID>
+					<N>ТП-137</N>
+					<ADDR>КЕРАМИЧЕСКИЙ ЦЕХ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15982</ID>
+					<N>ТП-83</N>
+					<ADDR>НАСОСНАЯ СТАНЦИЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15983</ID>
+					<N>ТП-157</N>
+					<ADDR>КАЗКОМЕРЦБАНК</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15984</ID>
+					<N>ТП-182</N>
+					<ADDR>ДОРВИН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15985</ID>
+					<N>ТП-54</N>
+					<ADDR>КВАРТАЛ БАХОР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15986</ID>
+					<N>ТП-22</N>
+					<ADDR>БАНК ЭСХАТА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15987</ID>
+					<N>ТП-125</N>
+					<ADDR>ОНКОЛОГИЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15988</ID>
+					<N>ТП-209</N>
+					<ADDR>ГОСТИНИЦА СУГД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15989</ID>
+					<N>ТП-72</N>
+					<ADDR>НАСОСНАЯ СТАНЦИЯ 3</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15990</ID>
+					<N>ТП-203</N>
+					<ADDR>ДОМ КУЛЬТУРЫ ИМ. РУДАКИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15991</ID>
+					<N>ТП-154а</N>
+					<ADDR>ШКОЛА 2</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15992</ID>
+					<N>ТП-154</N>
+					<ADDR>РЕНЗАЧИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15993</ID>
+					<N>ТП-156</N>
+					<ADDR>УЛ ГАЙРАТ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15994</ID>
+					<N>ТП-34</N>
+					<ADDR>УЛ ЛЕНИНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15995</ID>
+					<N>ТП-88</N>
+					<ADDR>АГРОПОМ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15996</ID>
+					<N>ТП-780</N>
+					<ADDR>АНТИКОРПЦИОННОЕ ВЕДОМСТВО</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15997</ID>
+					<N>ТП-536</N>
+					<ADDR>ТГУ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15998</ID>
+					<N>ТП-762</N>
+					<ADDR>ХУРАМШАХР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>15999</ID>
+					<N>ТП-665</N>
+					<ADDR>ОБЛСТАТ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16000</ID>
+					<N>ТП-543</N>
+					<ADDR>УКС ОБЛАСТИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16001</ID>
+					<N>ТП-584</N>
+					<ADDR>АО БАРК</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16002</ID>
+					<N>ТП-609</N>
+					<ADDR>ООО ХУРОСОН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16003</ID>
+					<N>ТП-647</N>
+					<ADDR>20 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16004</ID>
+					<N>ТП-549</N>
+					<ADDR>КОТЕЛЬНАЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16005</ID>
+					<N>ТП-713</N>
+					<ADDR>12 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16006</ID>
+					<N>ТП-784</N>
+					<ADDR>12 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16007</ID>
+					<N>ТП-741</N>
+					<ADDR>13 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16008</ID>
+					<N>ТП-668</N>
+					<ADDR>13 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16009</ID>
+					<N>ТП-697</N>
+					<ADDR>13 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16010</ID>
+					<N>ТП-685</N>
+					<ADDR>13 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16011</ID>
+					<N>ТП-659</N>
+					<ADDR>13 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16012</ID>
+					<N>ТП-671</N>
+					<ADDR>13 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16013</ID>
+					<N>ТП-672</N>
+					<ADDR>13 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16014</ID>
+					<N>Обход и осмотр присоединений по линии Л-6-10</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16015</ID>
+					<N>ТП-673</N>
+					<ADDR>13 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16016</ID>
+					<N>ТП-677</N>
+					<ADDR>13 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16017</ID>
+					<N>ТП-655</N>
+					<ADDR>13 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16018</ID>
+					<N>ТП-654</N>
+					<ADDR>13 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16019</ID>
+					<N>ТП-663</N>
+					<ADDR>13 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16020</ID>
+					<N>ТП-650</N>
+					<ADDR>13 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16021</ID>
+					<N>ТП-883</N>
+					<ADDR>1-2 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16022</ID>
+					<N>ТП-884</N>
+					<ADDR>1-2 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16023</ID>
+					<N>ТП-885</N>
+					<ADDR>1-2 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16024</ID>
+					<N>ТП-864</N>
+					<ADDR>РАВЗАНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16025</ID>
+					<N>ТП-580</N>
+					<ADDR>ТАКСОПАРК</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16026</ID>
+					<N>ТП-601</N>
+					<ADDR>ТСН ХОДЖЕНТ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16027</ID>
+					<N>ТП-711</N>
+					<ADDR>УВК</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16028</ID>
+					<N>ТП-807</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16029</ID>
+					<N>ТП-893</N>
+					<ADDR>19 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16030</ID>
+					<N>ТП-653</N>
+					<ADDR>19 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16031</ID>
+					<N>ТП-651</N>
+					<ADDR>19 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16032</ID>
+					<N>ТП-631</N>
+					<ADDR>ШКОЛА 22</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16033</ID>
+					<N>ТП-652</N>
+					<ADDR>19 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16034</ID>
+					<N>ТП-638</N>
+					<ADDR>18 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16035</ID>
+					<N>ТП-550</N>
+					<ADDR>ХГУ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16036</ID>
+					<N>ТП-563</N>
+					<ADDR>20 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16037</ID>
+					<N>ТП-662</N>
+					<ADDR>20 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16038</ID>
+					<N>ТП-537</N>
+					<ADDR>ДОМ ПЕЧАТИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16039</ID>
+					<N>ТП-813</N>
+					<ADDR>19 МКР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16040</ID>
+					<N>ТП-833</N>
+					<ADDR>КАССА БОНИТА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16041</ID>
+					<N>ТП-829</N>
+					<ADDR>ЧП РАСУЛОВ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16042</ID>
+					<N>ТП-824</N>
+					<ADDR>ФОНД СОРОС</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16043</ID>
+					<N>ТП-722</N>
+					<ADDR>ТГУ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16044</ID>
+					<N>ТП-761</N>
+					<ADDR>ИМОН ИНТЕРНЕШНЛ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16045</ID>
+					<N>ТП-694</N>
+					<ADDR>ОБЩЕЖИТИЕ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16046</ID>
+					<N>ТП-879</N>
+					<ADDR>ОАО ФАРХУНДА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16047</ID>
+					<N>ТП-554</N>
+					<ADDR>ОАО ХУБЧАМ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16048</ID>
+					<N>ТП-789</N>
+					<ADDR>ООО ИЗЗАТ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16049</ID>
+					<N>ТП-742</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16050</ID>
+					<N>ТП-799</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16051</ID>
+					<N>ТП-681</N>
+					<ADDR>АВТОБАЗА МИНТОРГА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16052</ID>
+					<N>ТП-823</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16053</ID>
+					<N>ТП-696</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16054</ID>
+					<N>ТП-715</N>
+					<ADDR>ООО САХО</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16055</ID>
+					<N>ТП-619</N>
+					<ADDR>ОБЛАСТНОЕ ГАИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16056</ID>
+					<N>ТП-805</N>
+					<ADDR>МИЛИЦЕЙСКАЯ ШКОЛА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16057</ID>
+					<N>ТП-600</N>
+					<ADDR>РПБ ХГЭС</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16058</ID>
+					<N>ТП-853</N>
+					<ADDR>КАФЕ НАСИБА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16059</ID>
+					<N>ТП-768</N>
+					<ADDR>8 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16060</ID>
+					<N>ТП-895</N>
+					<ADDR>12 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16061</ID>
+					<N>ТП-713</N>
+					<ADDR>12 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16062</ID>
+					<N>ТП-786</N>
+					<ADDR>ХОРОИ ХУЧАНД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16063</ID>
+					<N>ТП-756</N>
+					<ADDR>8 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16064</ID>
+					<N>ТП-767</N>
+					<ADDR>8 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16065</ID>
+					<N>ТП-749</N>
+					<ADDR>8 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16066</ID>
+					<N>ТП-719</N>
+					<ADDR>12 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16067</ID>
+					<N>ТП-689</N>
+					<ADDR>12 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16068</ID>
+					<N>ТП-745а</N>
+					<ADDR>СПОРТКОМПЛЕКС</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16069</ID>
+					<N>ТП-198</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16070</ID>
+					<N>ТП-798</N>
+					<ADDR>СП САНО</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16071</ID>
+					<N>ТП-806</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16072</ID>
+					<N>ТП-777</N>
+					<ADDR>ЗОНА ОТДЫХА ЭСХАТА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16073</ID>
+					<N>ТП-740</N>
+					<ADDR>ДЕХКАНСКОЕ ХОЗЯЙСТВО</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16074</ID>
+					<N>ТП-522</N>
+					<ADDR>ООН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16075</ID>
+					<N>ТП-521</N>
+					<ADDR>СКВАЖИНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16076</ID>
+					<N>ТП-561</N>
+					<ADDR>ИК</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16077</ID>
+					<N>ТП-588</N>
+					<ADDR>СИЗО -2</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16078</ID>
+					<N>ТП-723</N>
+					<ADDR>СТОМОТОЛОГИЯ 12 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16079</ID>
+					<N>ТП-904</N>
+					<ADDR>АЗС</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16080</ID>
+					<N>ТП-751</N>
+					<ADDR>ТСЕЛ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16081</ID>
+					<N>ТП-830</N>
+					<ADDR>ИНФЕКЦИОННАЯ БОЛЬНИЦА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16082</ID>
+					<N>ТП-756</N>
+					<ADDR>8 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16083</ID>
+					<N>ТП-712</N>
+					<ADDR>12 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16084</ID>
+					<N>ТП-701</N>
+					<ADDR>12 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16085</ID>
+					<N>ТП-703</N>
+					<ADDR>12 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16086</ID>
+					<N>ТП-717</N>
+					<ADDR>12 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16087</ID>
+					<N>ТП-538</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16088</ID>
+					<N>ТП-515</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16089</ID>
+					<N>ТП-815</N>
+					<ADDR>НАСОС</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16090</ID>
+					<N>ТП-817</N>
+					<ADDR>НАСОС</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16091</ID>
+					<N>ТП-803</N>
+					<ADDR>ТОРГОВЫЙ ЦЕНТР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16092</ID>
+					<N>ТП-127</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16093</ID>
+					<N>ТП-814</N>
+					<ADDR>НАСОСНАЯ СТАНЦИЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16094</ID>
+					<N>ТП-546</N>
+					<ADDR>ЧАСТНЫЕ ДАЧИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16095</ID>
+					<N>ТП-747</N>
+					<ADDR>КОЛХОЗ Р.НАБИЕВА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16096</ID>
+					<N>ТП-755</N>
+					<ADDR>ДЕХКАНСКОЕ ХОЗЯЙСТВО МАНУЧЕХР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16097</ID>
+					<N>ТП-860</N>
+					<ADDR>СОЦИАЦИЯ ЖЕНШИН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16098</ID>
+					<N>ТП-782</N>
+					<ADDR>БАХТ СОХТМОН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16099</ID>
+					<N>ТП-642</N>
+					<ADDR>ДАЧА КАРДИОЛОГИЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16100</ID>
+					<N>ТП-526</N>
+					<ADDR>СКВАЖИНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16101</ID>
+					<N>ТП-692</N>
+					<ADDR>ДАЧА КАРДИОЛОГИЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16102</ID>
+					<N>ТП-158</N>
+					<ADDR>КОНСЕРВНЫЙ ЦЕХ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16103</ID>
+					<N>ТП-113</N>
+					<ADDR>КОНДИТЕРСКИЙ ЦЕХ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16104</ID>
+					<N>ТП-801</N>
+					<ADDR>3 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16105</ID>
+					<N>ТП-800</N>
+					<ADDR>3 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16106</ID>
+					<N>ТП-868</N>
+					<ADDR>РЫНОК СУГДИЁН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16107</ID>
+					<N>ТП-867</N>
+					<ADDR>МОЛОЧНЫЙ КОМБИНАТ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16108</ID>
+					<N>ТП-</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16109</ID>
+					<N>ТП-ГВА</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16110</ID>
+					<N>ТП-ГВА</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16111</ID>
+					<N>ТП-н/ст</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16112</ID>
+					<N>ТП-П/я</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16113</ID>
+					<N>ТП-566а</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16114</ID>
+					<N>ТП-ПМК</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16115</ID>
+					<N>ТП-525</N>
+					<ADDR>ОБОДКОРИ ХУЧАНД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16116</ID>
+					<N>ТП-835</N>
+					<ADDR>КОЛБАСНЫЙ ЦЕХ ТЕМУРИЕН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16117</ID>
+					<N>ТП-821</N>
+					<ADDR>ШКОЛА 21</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16118</ID>
+					<N>ТП-848</N>
+					<ADDR>ТОРГОВЫЙ ЦЕНТР 34 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16119</ID>
+					<N>ТП-520</N>
+					<ADDR>АВТОВОКЗАЛ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16120</ID>
+					<N>ТП-878</N>
+					<ADDR>31 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16121</ID>
+					<N>ТП-624</N>
+					<ADDR>31 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16122</ID>
+					<N>ТП-627</N>
+					<ADDR>33 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16123</ID>
+					<N>ТП-557</N>
+					<ADDR>33 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16124</ID>
+					<N>ТП-558</N>
+					<ADDR>33 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16125</ID>
+					<N>ТП-596</N>
+					<ADDR>34 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16126</ID>
+					<N>ТП-840</N>
+					<ADDR>33 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16127</ID>
+					<N>ТП-552</N>
+					<ADDR>33 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16128</ID>
+					<N>ТП-738</N>
+					<ADDR>28 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16129</ID>
+					<N>ТП-764</N>
+					<ADDR>28 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16130</ID>
+					<N>ТП-560</N>
+					<ADDR>28 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16131</ID>
+					<N>ТП-565</N>
+					<ADDR>ПТУ 27 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16132</ID>
+					<N>ТП-683</N>
+					<ADDR>27 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16133</ID>
+					<N>ТП-571</N>
+					<ADDR>27 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16134</ID>
+					<N>ТП-104</N>
+					<ADDR>27 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16135</ID>
+					<N>ТП-542</N>
+					<ADDR>ТАБАЧНАЯ ФАБРИКА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16136</ID>
+					<N>ТП-788</N>
+					<ADDR>ЧАШМА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16137</ID>
+					<N>ТП-646</N>
+					<ADDR>ЗАВОД АЛМОС</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16138</ID>
+					<N>ТП-611</N>
+					<ADDR>34 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16139</ID>
+					<N>ТП-643</N>
+					<ADDR>34 МКР. РЫНОК БАРАКАТ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16140</ID>
+					<N>ТП-613</N>
+					<ADDR>34 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16141</ID>
+					<N>ТП-614</N>
+					<ADDR>34 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16142</ID>
+					<N>ТП-797</N>
+					<ADDR>ПРОМЗОНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16143</ID>
+					<N>ТП-730</N>
+					<ADDR>ПРОМЗОНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16144</ID>
+					<N>ТП-579</N>
+					<ADDR>СПМК-29</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16145</ID>
+					<N>ТП-661</N>
+					<ADDR>ЛОЦ ВАЗ, ALL, Ху？анд, Ху？анд</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16146</ID>
+					<N>ТП-846</N>
+					<ADDR>СВП</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16147</ID>
+					<N>ТП-744</N>
+					<ADDR>УЛ 50 ЛЕТ СССР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16148</ID>
+					<N>707</N>
+					<ADDR>КАСКАД, ALL, Ху？анд, Ху？анд</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16149</ID>
+					<N>ТП-581</N>
+					<ADDR>БАЗА МИНТОРГА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16150</ID>
+					<N>ТП-729</N>
+					<ADDR>БАЗА УПП СЛЕПЫХ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16151</ID>
+					<N>ТП-841</N>
+					<ADDR>ОАО ПОЕВАР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16152</ID>
+					<N>ТП-876</N>
+					<ADDR>ШИРИНИХОИ 333</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16153</ID>
+					<N>ТП-531</N>
+					<ADDR>29 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16154</ID>
+					<N>ТП-532</N>
+					<ADDR>29 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16155</ID>
+					<N>ТП-795</N>
+					<ADDR>ЧАШМА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16156</ID>
+					<N>ТП-670</N>
+					<ADDR>ЧАШМА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16157</ID>
+					<N>ТП-734</N>
+					<ADDR>ЧАШМА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16158</ID>
+					<N>ТП-731</N>
+					<ADDR>ШКОЛА ЧАШМА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16159</ID>
+					<N>ТП-794</N>
+					<ADDR>ЧАШМА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16160</ID>
+					<N>ТП-793</N>
+					<ADDR>ЧАШМА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16161</ID>
+					<N>ТП-874</N>
+					<ADDR>ПРОМЗОНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16162</ID>
+					<N>ТП-679</N>
+					<ADDR>АВТОДРОМ ПРОМЗОНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16163</ID>
+					<N>ТП-872</N>
+					<ADDR>ПРОМЗОНА СКЛАД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16164</ID>
+					<N>ТП-743</N>
+					<ADDR>СПЕЦАВТОБАЗА 12</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16165</ID>
+					<N>ТП-706</N>
+					<ADDR>ХАБИТАТ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16166</ID>
+					<N>ТП-582</N>
+					<ADDR>32 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16167</ID>
+					<N>ТП-557</N>
+					<ADDR>33 МКР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16168</ID>
+					<N>ТП-620</N>
+					<ADDR>32 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16169</ID>
+					<N>ТП-585</N>
+					<ADDR>32 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16170</ID>
+					<N>ТП-621</N>
+					<ADDR>32 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16171</ID>
+					<N>ТП-622</N>
+					<ADDR>32 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16172</ID>
+					<N>ТП-865</N>
+					<ADDR>29 МКР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16173</ID>
+					<N>ТП-891</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16174</ID>
+					<N>ТП-Заправка Ором</N>
+					<ADDR>ул. Сирдаринская</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16175</ID>
+					<N>ТП-874</N>
+					<ADDR>ПРОМЗОНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16176</ID>
+					<N>ТП-819</N>
+					<ADDR>КОНСУЛЬСТВО РОССИИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16177</ID>
+					<N>ТП-822</N>
+					<ADDR>ЮБТ ПРИНТ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16178</ID>
+					<N>ТП-605</N>
+					<ADDR>УЛ. Д.НАРОДОВ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16179</ID>
+					<N>ТП-530</N>
+					<ADDR>ВОЛЬЕР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16180</ID>
+					<N>ТП-825</N>
+					<ADDR>ТСЕЛ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16181</ID>
+					<N>ТП-738</N>
+					<ADDR>28 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16182</ID>
+					<N>ТП-765</N>
+					<ADDR>КОМПЛЕКС ТОХИР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16183</ID>
+					<N>ТП-774</N>
+					<ADDR>ПРОМЗОНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16184</ID>
+					<N>ТП-759</N>
+					<ADDR>ТОРГОВЫЙ ЦЕНТР ДОРО</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16185</ID>
+					<N>ТП-564</N>
+					<ADDR>ТРОЛЛЕЙБУСНЫЙ ПАРК</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16186</ID>
+					<N>ТП-879</N>
+					<ADDR>ООО ФАРХУНДА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16187</ID>
+					<N>ТП-871</N>
+					<ADDR>ЦЕХ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16188</ID>
+					<N>ТП-599</N>
+					<ADDR>СВПЗ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16189</ID>
+					<N>ТП-839</N>
+					<ADDR>ПРОМЗОНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16190</ID>
+					<N>ТП-854</N>
+					<ADDR>ПРОИЗВОДСТВЕННАЯ БАЗА ПРОМЗОНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16191</ID>
+					<N>ТП-849</N>
+					<ADDR>ООО КАСКАД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16192</ID>
+					<N>ТП-870</N>
+					<ADDR>ЯХМОСИ 33</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16193</ID>
+					<N>ТП-857</N>
+					<ADDR>ПРОМЗОНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16194</ID>
+					<N>ТП-666</N>
+					<ADDR>ПРОМЗОНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16195</ID>
+					<N>ТП-540</N>
+					<ADDR>ШВЕЙНАЯ ФАБРИКА АМИРИ СУГД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16196</ID>
+					<N>ТП-603</N>
+					<ADDR>ПРЯНИКИ ЯГОДКА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16197</ID>
+					<N>ТП-527</N>
+					<ADDR>БАРС</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16198</ID>
+					<N>ТП-790</N>
+					<ADDR>СКВАЖИНА ПРОМЗОНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16199</ID>
+					<N>ТП-850</N>
+					<ADDR>ЧДММ ХАРИФ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16200</ID>
+					<N>ТП-539</N>
+					<ADDR>КСММ ЛЕНИНОБОД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16201</ID>
+					<N>ТП-705</N>
+					<ADDR>СОРТСЕМОВОЩ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16202</ID>
+					<N>ТП-838</N>
+					<ADDR>ПРОМЗОНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16203</ID>
+					<N>ТП-852</N>
+					<ADDR>КОНДИТЕРСКИЙ ЦЕХ АБДУЛЛОЕВ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16204</ID>
+					<N>ТП-578</N>
+					<ADDR>СМНУ-6</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16205</ID>
+					<N>ТП-556</N>
+					<ADDR>ЧП МИРЗОЕВ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16206</ID>
+					<N>ТП-875</N>
+					<ADDR>ПРОМЗОНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16207</ID>
+					<N>ТП-732</N>
+					<ADDR>ВЕТБАКЛАБОРАТОРИЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16208</ID>
+					<N>ТП-534</N>
+					<ADDR>ПРОМБАЗА СУЛТОН КАРПЕТС</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16209</ID>
+					<N>ТП-890</N>
+					<ADDR>ПРОМЗОНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16210</ID>
+					<N>ТП-533</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16211</ID>
+					<N>ТП-604</N>
+					<ADDR>СУВОРОВСКОЕ УЧИЛИЩЕ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16212</ID>
+					<N>ТП-598</N>
+					<ADDR>ЯГОДКА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16213</ID>
+					<N>ТП-779</N>
+					<ADDR>ДИАГНОСТИЧЕСКИЙ ЦЕНТР 31 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16214</ID>
+					<N>ТП-593</N>
+					<ADDR>31 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16215</ID>
+					<N>ТП-625</N>
+					<ADDR>31 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16216</ID>
+					<N>ТП-708</N>
+					<ADDR>РЕСТОРАН ДУСТИ АМИРХОН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16217</ID>
+					<N>ТП-586</N>
+					<ADDR>КОТЕЛЬНАЯ 31 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16218</ID>
+					<N>ТП-587</N>
+					<ADDR>31 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16219</ID>
+					<N>ТП-612</N>
+					<ADDR>34 МКР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16220</ID>
+					<N>ТП-808</N>
+					<ADDR>ПИВЗАВОД БАРС</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16221</ID>
+					<N>ТП-656</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16222</ID>
+					<N>ТП-746</N>
+					<ADDR>АРХСТРОЙ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16223</ID>
+					<N>ТП-664</N>
+					<ADDR>МОСТОСТРОЙ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16224</ID>
+					<N>ТП-576</N>
+					<ADDR>БОТАНИЧЕСКИЙ САД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16225</ID>
+					<N>ТП-831</N>
+					<ADDR>ДОМ АМИД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16226</ID>
+					<N>ТП-818</N>
+					<ADDR>ФОНТАН РАКЕТА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16227</ID>
+					<N>ТР-0001</N>
+					<ADDR>А.АХМЕДОВ , ХУ？АНД, СУГД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16228</ID>
+					<N>ТП-856</N>
+					<ADDR>34 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16229</ID>
+					<N>ТП-844</N>
+					<ADDR>УЛ. СИРДАРИНСКАЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16230</ID>
+					<N>ТП-699а</N>
+					<ADDR>НАВРУЗГОХ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16231</ID>
+					<N>ТП-735</N>
+					<ADDR>АЗС УЛ. СИРДАРИНСКАЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16232</ID>
+					<N>ТП-859</N>
+					<ADDR>УЛ СИРДАРИНСКАЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16233</ID>
+					<N>ТП-173</N>
+					<ADDR>ХИМЧИСТКА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16234</ID>
+					<N>ТП-618</N>
+					<ADDR>ГАРАЖИ ВОЛГА, ALL, Ху？анд, Ху？анд</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16235</ID>
+					<N>ТП-269</N>
+					<ADDR>ДОМ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16236</ID>
+					<N>ТП-223</N>
+					<ADDR>ЧАСТНОЕ ПРЕДПРИЯТИЕ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16237</ID>
+					<N>ТП-114</N>
+					<ADDR>ДЕТСКАЯ БОЛЬНИЦА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16238</ID>
+					<N>ТП-96</N>
+					<ADDR>УВД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16239</ID>
+					<N>ТП-147</N>
+					<ADDR>УЛ. ФИРДАВСИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16240</ID>
+					<N>ТП-146</N>
+					<ADDR>УЛ. ФИРДАВСИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16241</ID>
+					<N>ТП-781</N>
+					<ADDR>ТЕЛЕФИДЕНИЕ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16242</ID>
+					<N>ТП-95</N>
+					<ADDR>КАФЕ ХУШБАХТИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16243</ID>
+					<N>ТП-207</N>
+					<ADDR>КНБ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16244</ID>
+					<N>ТП-149</N>
+					<ADDR>КООПЕРАТОР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16245</ID>
+					<N>ТП-143</N>
+					<ADDR>МАГАЗИН АНИС</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16246</ID>
+					<N>ТП-183</N>
+					<ADDR>СТРОЙТРЕСТ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16247</ID>
+					<N>ТП-215</N>
+					<ADDR>МАГАЗИН ТЫСЯЧА МЕЛОЧЕЙ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16248</ID>
+					<N>ТП-130</N>
+					<ADDR>МАГАЗИН ДУСТИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16249</ID>
+					<N>ТП-230</N>
+					<ADDR>ПАНЧШАНБЕ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16250</ID>
+					<N>ТП-134</N>
+					<ADDR>МАГАЗИН ЗАФАР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16251</ID>
+					<N>ТП-166</N>
+					<ADDR>МАГАЗИН АБДУЛАЗИЗ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16252</ID>
+					<N>ТП-253</N>
+					<ADDR>АКСЕСБАНК</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16253</ID>
+					<N>ТП-98</N>
+					<ADDR>ДОМ ПРОФСОЮЗОВ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16254</ID>
+					<N>ТП-233</N>
+					<ADDR>УЛ. ЛЕНИНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16255</ID>
+					<N>ТП-264</N>
+					<ADDR>ЛИМОНАДНЫЙ ЦЕХ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16256</ID>
+					<N>ТП-228</N>
+					<ADDR>ФИРМА БАРС</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16257</ID>
+					<N>ТП-47</N>
+					<ADDR>МОРОЖЕННЫЙ ЦЕХ ПУЛЧУКУР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16258</ID>
+					<N>ТП-126</N>
+					<ADDR>ГОЛДЕН ГРЕН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16259</ID>
+					<N>ТП-252</N>
+					<ADDR>ЧАЙХАНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16260</ID>
+					<N>ТП-121</N>
+					<ADDR>БЕЛЫЙ ДОМ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16261</ID>
+					<N>ТП-38</N>
+					<ADDR>ПРЕЗИДЕНТСКИЙ ДЕТСАД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16262</ID>
+					<N>ТП-3</N>
+					<ADDR>ФИЗЛЕЧЕБНИЦА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16263</ID>
+					<N>ТП-2</N>
+					<ADDR>КАРДИОЛОГИЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16264</ID>
+					<N>ТП-698</N>
+					<ADDR>НАВРУЗГОХ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16265</ID>
+					<N>ТП-13</N>
+					<ADDR>МЕДУЧИЛИЩЕ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16266</ID>
+					<N>ТП-214</N>
+					<ADDR>УЛ. ВОЙКОВА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16267</ID>
+					<N>ТП-29</N>
+					<ADDR>ЦЕНТР ПЕРЕЛИВАНИЯ КРОВИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16268</ID>
+					<N>ТП-31</N>
+					<ADDR>6 ОТДЕЛ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16269</ID>
+					<N>ТП-75а</N>
+					<ADDR>ПУЛЧУКУР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16270</ID>
+					<N>ТП-75</N>
+					<ADDR>ПУЛЧУКУР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16271</ID>
+					<N>ТП-32</N>
+					<ADDR>НАСОСНАЯ СТАНЦИЯ 1</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16272</ID>
+					<N>ТП-152</N>
+					<ADDR>ХЛЕБЗАВОД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16273</ID>
+					<N>ТП-151</N>
+					<ADDR>ООО УМЕД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16274</ID>
+					<N>ТП-43</N>
+					<ADDR>РСУ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16275</ID>
+					<N>ТП-172</N>
+					<ADDR>СКВАЖИНА ЗЕЛЕНСТРОЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16276</ID>
+					<N>ТП-221</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16277</ID>
+					<N>ТП-180</N>
+					<ADDR>ТГУК</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16278</ID>
+					<N>ТП-99</N>
+					<ADDR>УЛ. Х. РАЧАБ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16279</ID>
+					<N>ТП-70</N>
+					<ADDR>УЛ. Х.КАРИМ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16280</ID>
+					<N>ТП-81</N>
+					<ADDR>ШКОЛА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16281</ID>
+					<N>ТП-81а</N>
+					<ADDR>ШКОЛА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16282</ID>
+					<N>ТП-Парник</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16283</ID>
+					<N>ТП-184</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16284</ID>
+					<N>ТП-ПТФ</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16285</ID>
+					<N>ТП-112</N>
+					<ADDR>ДЕХКАНСКОЕ ХОЗЯСТВО Р. НАБИЕВА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16286</ID>
+					<N>ТП-212</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16287</ID>
+					<N>ТП-188</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16288</ID>
+					<N>ТП-217</N>
+					<ADDR>ПАС АВИЦЕННА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16289</ID>
+					<N>ТП-62</N>
+					<ADDR>ШКОЛА 26</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16290</ID>
+					<N>ТП-56</N>
+					<ADDR>УЛ. ВАНЦЕТИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16291</ID>
+					<N>ТП-195</N>
+					<ADDR>УЛ. ГАГАРИНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16292</ID>
+					<N>ТП-100</N>
+					<ADDR>АВТОРЕМЗАВОД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16293</ID>
+					<N>ТП-200</N>
+					<ADDR>ГАРАЖ ХУКУМАТИ ОБЛАСТИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16294</ID>
+					<N>ТП-57</N>
+					<ADDR>КВАРТАЛ БАХОР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16295</ID>
+					<N>ТП-222</N>
+					<ADDR>ЛИМОНАДНЫЙ ЦЕХ БАХОР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16296</ID>
+					<N>ТП-181</N>
+					<ADDR>УЛ. ХОСИЛОТ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16297</ID>
+					<N>ТП-199</N>
+					<ADDR>УЛ. УРУЧНАЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16298</ID>
+					<N>ТП-110</N>
+					<ADDR>СКВАЖИНА ЗЕЛЕНСТРОЙ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16299</ID>
+					<N>ТП-136</N>
+					<ADDR>АРТЕЛЬ 1 МАЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16300</ID>
+					<N>ТП-224</N>
+					<ADDR>ГОСТИНИЦА ЭХСОН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16301</ID>
+					<N>ТП-87</N>
+					<ADDR>ШКОЛА 6</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16302</ID>
+					<N>ТП-37а</N>
+					<ADDR>ПТУ-44</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16303</ID>
+					<N>ТП-37</N>
+					<ADDR>ПТУ-44</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16304</ID>
+					<N>ТП-53</N>
+					<ADDR>ОЗОДА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16305</ID>
+					<N>ТП-171</N>
+					<ADDR>БАДРИ МУНИР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16306</ID>
+					<N>ТП-79</N>
+					<ADDR>ПАНЧШАНБЕ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16307</ID>
+					<N>ТП-160</N>
+					<ADDR>ПАНЧШАНБЕ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16308</ID>
+					<N>ТП-174</N>
+					<ADDR>ПАНЧШАНБЕ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16309</ID>
+					<N>ТП-4</N>
+					<ADDR>ГУЛИ ЧАХОН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16310</ID>
+					<N>ТП-52</N>
+					<ADDR>ГОРОДСКАЯ ПРОКУРАТУРА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16311</ID>
+					<N>ТП-92</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16312</ID>
+					<N>ТП</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16313</ID>
+					<N>ТП-97</N>
+					<ADDR>УЛ. ПРОЖЕВАЛЬСКИЙ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16314</ID>
+					<N>ТП-69</N>
+					<ADDR>УЛ. Ч. ЗОКИР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16315</ID>
+					<N>ТП-89</N>
+					<ADDR>УЛ. ЛЕНИНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16316</ID>
+					<N>ТП-16</N>
+					<ADDR>ШКОЛА 12</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16317</ID>
+					<N>ТП-8</N>
+					<ADDR>УЛ. ЛЕНИНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16318</ID>
+					<N>ТП-186</N>
+					<ADDR>ХФТУТ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16319</ID>
+					<N>ТП-155</N>
+					<ADDR>НАЛОГОВЫЙ КОМИТЕТ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16320</ID>
+					<N>ТП-55</N>
+					<ADDR>ТГУК</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16321</ID>
+					<N>ТП-36</N>
+					<ADDR>УЛ. А. ШУКУХИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16322</ID>
+					<N>ТП-145а</N>
+					<ADDR>УЛ. ШАРК</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16323</ID>
+					<N>ТП</N>
+					<ADDR>ОФИС ЭОКНОМ.ЗОНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16324</ID>
+					<N>ТП</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16325</ID>
+					<N>ТП</N>
+					<ADDR>ООО ЗАМ-ЗАМ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16326</ID>
+					<N>ТП-843</N>
+					<ADDR>ООО РАВЗАНА ПЛАСТИК</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16327</ID>
+					<N>ТП-866</N>
+					<ADDR>ПРОМЗОНА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16328</ID>
+					<N>ТП-858</N>
+					<ADDR>ОАО ЗАРФИШОН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16329</ID>
+					<N>ТП-898</N>
+					<ADDR>ОАО СТАР ПЛАСТ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16330</ID>
+					<N>ТП-845</N>
+					<ADDR>ОАО НЕКОН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16331</ID>
+					<N>ТП-Бинокор</N>
+					<ADDR>БИНОКОР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16332</ID>
+					<N>ТП-ЛЭМУ</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16333</ID>
+					<N>ТП-834</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16334</ID>
+					<N>ТП-101</N>
+					<ADDR>УЛ. ТЕАТРАЛЬНАЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16335</ID>
+					<N>ТП-103</N>
+					<ADDR>ХУКУМАТ ОБЛАСТИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16336</ID>
+					<N>ТП-82</N>
+					<ADDR>ГОСТИНИЦА ЛЕНИНАБАД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16337</ID>
+					<N>ТП-201</N>
+					<ADDR>ХУКУМАТ ОБЛАСТИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16338</ID>
+					<N>ТП-122</N>
+					<ADDR>ОРИЕНБАНК</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16339</ID>
+					<N>ТП-96а</N>
+					<ADDR>УВД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16340</ID>
+					<N>ТП-20</N>
+					<ADDR>ОБУВНАЯ ФАБРИКА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16341</ID>
+					<N>ТП-115</N>
+					<ADDR>ДЕТСАД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16342</ID>
+					<N>ТП-39</N>
+					<ADDR>ПАРК ИМ. К.ХУЧАНДИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16343</ID>
+					<N>ТП-117</N>
+					<ADDR>УЛ. Р. НАБИЕВА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16344</ID>
+					<N>ТП-109</N>
+					<ADDR>УЛ. К. ХУЧАНДИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16345</ID>
+					<N>ТП-255</N>
+					<ADDR>УЛ. Т.АСИРИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16346</ID>
+					<N>ТП-94</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16347</ID>
+					<N>ТП-63</N>
+					<ADDR>УЛ. РАХИМБОЕВА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16348</ID>
+					<N>ТП-194</N>
+					<ADDR>УЛ. РАХИМБОЕВА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16349</ID>
+					<N>ТП-142</N>
+					<ADDR>ООО ХАЙДАРЧОН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16350</ID>
+					<N>ТП-106</N>
+					<ADDR>АВТОБАЗА ОБЛЗДРАВА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16351</ID>
+					<N>ТП-66</N>
+					<ADDR>ТЕАТР ИМ. К.ХУЧАНДИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16352</ID>
+					<N>ТП-153а</N>
+					<ADDR>ШКОЛА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16353</ID>
+					<N>ТП-19</N>
+					<ADDR>СУД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16354</ID>
+					<N>ТП-40</N>
+					<ADDR>УЛ. НАРИМАНОВА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16355</ID>
+					<N>ТП-153</N>
+					<ADDR>УЛ. РЕВОЛЮЦИИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16356</ID>
+					<N>ТП-42</N>
+					<ADDR>РСУ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16357</ID>
+					<N>ТП-189</N>
+					<ADDR>СКЛАД БАРАКАТ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16358</ID>
+					<N>ТП-108</N>
+					<ADDR>КОЛБАСНЫЙ ЦЕХ ДЖАВОНИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16359</ID>
+					<N>ТП-240</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16360</ID>
+					<N>ТП-71</N>
+					<ADDR>УЛ. К.ЦЕТКИН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16361</ID>
+					<N>ТП-148</N>
+					<ADDR>ЗАВОД АЛМОС</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16362</ID>
+					<N>ТП-128</N>
+					<ADDR>ЗАННАТ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16363</ID>
+					<N>ТП-192</N>
+					<ADDR>МЕБЕЛЬНАЯ ФАБРИКА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16364</ID>
+					<N>ТП-162</N>
+					<ADDR>КОЛБАСНЫЙ ЦЕХ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16365</ID>
+					<N>ТП-25</N>
+					<ADDR>СП САМО</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16366</ID>
+					<N>ТП-575</N>
+					<ADDR>УЛ. 80 ЛЕТ ДУШАНБЕ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16367</ID>
+					<N>ТП-759</N>
+					<ADDR>ДОРО ИНВЕСТ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16368</ID>
+					<N>ТП-757</N>
+					<ADDR>УЛ. 80 ЛЕТ ДУШАНБЕ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16369</ID>
+					<N>ТП-693</N>
+					<ADDR>ЗОНА ОТДЫХА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16370</ID>
+					<N>ТП-541</N>
+					<ADDR>НАСОСНАЯ СТАНЦИЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16371</ID>
+					<N>ТП-691</N>
+					<ADDR>З.О. ХГЭС</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16372</ID>
+					<N>ТП-855</N>
+					<ADDR>ЧАЙХАНА БОГИ ИРАМ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16373</ID>
+					<N>ТП-753</N>
+					<ADDR>ДЮСШ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16374</ID>
+					<N>ТП-811</N>
+					<ADDR>БАССЕЙН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16375</ID>
+					<N>ТП-769</N>
+					<ADDR>ДОМ М.ТЭКО</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16376</ID>
+					<N>ТП-714</N>
+					<ADDR>19 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16377</ID>
+					<N>ТП-804</N>
+					<ADDR>19 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16378</ID>
+					<N>ТП-636</N>
+					<ADDR>18 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16379</ID>
+					<N>ТП-640</N>
+					<ADDR>18 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16380</ID>
+					<N>ТП-634</N>
+					<ADDR>18 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16381</ID>
+					<N>ТП-633</N>
+					<ADDR>18 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16382</ID>
+					<N>ТП-639</N>
+					<ADDR>18 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16383</ID>
+					<N>ТП-632</N>
+					<ADDR>18 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16384</ID>
+					<N>ТП-837</N>
+					<ADDR>УЛ. Д. НАРОДОВ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16385</ID>
+					<N>ТП-832</N>
+					<ADDR>УЛ. Д. НАРОДОВ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16386</ID>
+					<N>ТП-886</N>
+					<ADDR>БАЛЬНИЦА УЛ. МИРА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16387</ID>
+					<N>ТП-725</N>
+					<ADDR>УЛ. Д. НАРОДОВ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16388</ID>
+					<N>ТП-562</N>
+					<ADDR>УЛ. Д. НАРОДОВ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16389</ID>
+					<N>ТП-583</N>
+					<ADDR>УЛ. МИРА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16390</ID>
+					<N>ТП-594</N>
+					<ADDR>БЕШКАПА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16391</ID>
+					<N>ТП-820</N>
+					<ADDR>РЕСТОРАН ГУЛШАН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16392</ID>
+					<N>ТП-744</N>
+					<ADDR>УЛ. 50 ЛЕТ СССР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16393</ID>
+					<N>ТП-667</N>
+					<ADDR>ЗЕЛЕНЫЙ БАЗАР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16394</ID>
+					<N>ТП-847</N>
+					<ADDR>СИ АШУРОВ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16395</ID>
+					<N>ТП-778</N>
+					<ADDR>УЛ. 50 ЛЕТ СССР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16396</ID>
+					<N>ТП-889</N>
+					<ADDR>ГОСТИНИЦА УЛ. МИРА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16397</ID>
+					<N>ТП-758</N>
+					<ADDR>УЛ. Д. НАРОДОВ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16398</ID>
+					<N>ТП-773</N>
+					<ADDR>УЛ. ЭРДЖИГИТОВА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16399</ID>
+					<N>ТП-623</N>
+					<ADDR>ПОЛИКЛИНИКА 4</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16400</ID>
+					<N>ТП-710</N>
+					<ADDR>ШКОЛА 14</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16401</ID>
+					<N>ТП-760</N>
+					<ADDR>ЗАО ТТ МОБАЙЛ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16402</ID>
+					<N>ТП-626</N>
+					<ADDR>ПЕДУЧИЛИЩЕ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16403</ID>
+					<N>ТП-592</N>
+					<ADDR>ШКОЛА 7</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16404</ID>
+					<N>ТП-851</N>
+					<ADDR>БАХТ СОХТМОН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16405</ID>
+					<N>ТП-648</N>
+					<ADDR>ТАМОЖНЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16406</ID>
+					<N>ТП-802</N>
+					<ADDR>УЛ. ГРИБОЕДОВА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16407</ID>
+					<N>ТП-590</N>
+					<ADDR>УЛ. ЖДАНОВА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16408</ID>
+					<N>ТП-595</N>
+					<ADDR>КИНОТЕАТР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16409</ID>
+					<N>ТП-551</N>
+					<ADDR>УЛ. Х. УСМОНОВА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16410</ID>
+					<N>ТП-880</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16411</ID>
+					<N>ТП-573</N>
+					<ADDR>РЕСТРАН ДЕЛЬФИН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16412</ID>
+					<N>ТП-745</N>
+					<ADDR>СТАДИОН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16413</ID>
+					<N>ТП-739</N>
+					<ADDR>УЛ. СИРДАРИНСКАЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16414</ID>
+					<N>ТП-568</N>
+					<ADDR>НАСОСНАЯ СТАНЦИЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16415</ID>
+					<N>ТП-602</N>
+					<ADDR>ООО МУХАНДИС</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16416</ID>
+					<N>ТП-718</N>
+					<ADDR>ООО КИМЬЁ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16417</ID>
+					<N>ТП-606</N>
+					<ADDR>ЧУМА БОЗОР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16418</ID>
+					<N>ТП-607</N>
+					<ADDR>ХУМО</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16419</ID>
+					<N>ТП-635</N>
+					<ADDR>18 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16420</ID>
+					<N>ТП-11</N>
+					<ADDR>ШКОЛА 4</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16421</ID>
+					<N>ТП-150</N>
+					<ADDR>ШКОЛА 4</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16422</ID>
+					<N>ТП-76</N>
+					<ADDR>АВЕСТО</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16423</ID>
+					<N>ТП-66</N>
+					<ADDR>ТЕАТР ИМ. К.ХУЧАНДИ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16424</ID>
+					<N>ТП-65</N>
+					<ADDR>КАФЕ БАРС</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16425</ID>
+					<N>ТП-191</N>
+					<ADDR>ГРАНД ОТЕЛЬ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16426</ID>
+					<N>ТП-44</N>
+					<ADDR>КРЕПОСТЬ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16427</ID>
+					<N>ТП-210</N>
+					<ADDR>КАФЕ САДБАРГ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16428</ID>
+					<N>ТП-229</N>
+					<ADDR>ГОСТИНИЦА ХЕСОН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16429</ID>
+					<N>ТП-6</N>
+					<ADDR>ДОМ БЫТА НАВРУЗ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16430</ID>
+					<N>ТП-1</N>
+					<ADDR>ЛЕНИНА 12</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16431</ID>
+					<N>ТП-145</N>
+					<ADDR>ХУКУМАТ НАСОСНАЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16432</ID>
+					<N>ТП-169</N>
+					<ADDR>ТИПОГРАФИЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16433</ID>
+					<N>ТП-167</N>
+					<ADDR>СТОМОТОЛОГИЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16434</ID>
+					<N>ТП-30</N>
+					<ADDR>ТЕЛЕКОМ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16435</ID>
+					<N>ТП-574</N>
+					<ADDR>УЛ. СЕВАСТОПОЛЬСКАЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16436</ID>
+					<N>ТП-544</N>
+					<ADDR>НАСОСНАЯ 18 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16437</ID>
+					<N>ТП-682</N>
+					<ADDR>АТС-2</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16438</ID>
+					<N>ТП-733</N>
+					<ADDR>ПОЛИКЛИНИКА 5</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16439</ID>
+					<N>ТП-791</N>
+					<ADDR>ПМК В 13 МКР.</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16440</ID>
+					<N>ТП-728</N>
+					<ADDR>АНТИНАРКОТИЧЕСКОЕ ВЕДОМСТВО</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16441</ID>
+					<N>ТП-702</N>
+					<ADDR>РТПЦ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16442</ID>
+					<N>ТП-776</N>
+					<ADDR>САНЭПИДЕМСТАНЦИЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16443</ID>
+					<N>ТП-658</N>
+					<ADDR>ОБЛАСТНАЯ БОЛЬНИЦА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16444</ID>
+					<N>ТП-528</N>
+					<ADDR>СПИРТ ЗАВОД ММК</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16445</ID>
+					<N>ТП-833</N>
+					<ADDR>ЗАВОД САЙХУН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16446</ID>
+					<N>ТП-816</N>
+					<ADDR>ГОРОДСКОЙ РОДДОМ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16447</ID>
+					<N>ТП-684</N>
+					<ADDR>ОБЛАСТНАЯ БОЛЬНИЦА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16448</ID>
+					<N>ТП-678</N>
+					<ADDR>ОБЛАСТНАЯ БОЛЬНИЦА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16449</ID>
+					<N>ТП-629</N>
+					<ADDR>ОБЛАСТНАЯ ПРОКУРАТУРА</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16450</ID>
+					<N>ТП-727</N>
+					<ADDR>МОЛОЧНАЯ КУХНЯ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16451</ID>
+					<N>ТП-708</N>
+					<ADDR>РЕСТОРАН ДУСТИ АМИРХОН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16452</ID>
+					<N>ТП-569</N>
+					<ADDR>ЗАВОД ДУСТИ АМИРХОН</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16453</ID>
+					<N>ТП-896</N>
+					<ADDR>ТОРГОВЫЙ ЦЕНТР</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16484</ID>
+					<N>ТР-0001</N>
+					<ADDR>А.АХМЕДОВ , ХУ？АНД, СУГД</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16508</ID>
+					<N>20150906_trf1</N>
+					<ADDR>20150906_trf1</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16509</ID>
+					<N>20150906_trf2</N>
+					<ADDR>20150906_trf2</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16510</ID>
+					<N>20150906_trf3</N>
+					<ADDR>20150906_trf3</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16511</ID>
+					<N>20150906_trf4</N>
+					<ADDR>20150906_trf4</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16522</ID>
+					<N>20150906_trf5</N>
+					<ADDR>20150906_trf5</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16563</ID>
+					<N>20150911_traf</N>
+					<ADDR>20150911_traf</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16602</ID>
+					<N>TRANSFORMER1</N>
+					<ADDR>HZ</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16625</ID>
+					<N>T-9-23</N>
+					<ADDR>hangzhou</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16641</ID>
+					<N>123a</N>
+					<ADDR>123a</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16684</ID>
+					<N>byqtest3</N>
+					<ADDR>byqtest3</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16703</ID>
+					<N>2212213</N>
+					<ADDR>23都是暂时的</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16804</ID>
+					<N>byq1</N>
+					<ADDR>byq1</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16863</ID>
+					<N>xcxByq001</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16881</ID>
+					<N>xcxByq002</N>
+					<ADDR>xcxByq002</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16905</ID>
+					<N>tf111</N>
+					<ADDR>tf111</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>16906</ID>
+					<N>tf222</N>
+					<ADDR>hangzhounew</ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>79</ID>
+					<N>TF008</N>
+					<ADDR></ADDR>
+				</TF>
+				<TF TYPE="0">
+					<ID>80</ID>
+					<N>TFhexing</N>
+					<ADDR></ADDR>
+				</TF>
+			</TFS>
+		</A>
+		<P>
+			<VI TYPE="0">
+				<ID>1#0.0.96.1.146.255#2</ID>
+				<DT>Ascs</DT>
+				<OT></OT>
+				<LS>
+					<L LANG="en_US">Meter Version No.</L>
+					<L LANG="zh_CN">电表内控版本号</L>
+				</LS>
+			</VI>
+			<V ID="FS34CJBLSTDE00101V01(16051823)" MM="HXE300">
+				<C TYPE="0">
+					<IS TYPE="0">
+						<ID>3#1.0.1.8.0.255#2</ID>
+						<DT>U32</DT>
+						<OT>R</OT>
+						<L>-3</L>
+						<UT>kWh</UT>
+						<CTPT>3</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">Total Active Energy(+)</L>
+							<L LANG="zh_CN" TYPE="1">正向有功总电能</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>3#1.0.1.8.1.255#2</ID>
+						<DT>U32</DT>
+						<OT>R</OT>
+						<L>-3</L>
+						<UT>kWh</UT>
+						<CTPT>3</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">T1 Active Energy(+)</L>
+							<L LANG="zh_CN" TYPE="1">正向有功电能T1</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>3#1.0.1.8.2.255#2</ID>
+						<DT>U32</DT>
+						<OT>R</OT>
+						<L>-3</L>
+						<UT>kWh</UT>
+						<CTPT>3</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">T2 Active Energy(+)</L>
+							<L LANG="zh_CN" TYPE="1">正向有功电能T2</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>3#1.0.31.7.0.255#2</ID>
+						<DT>U16</DT>
+						<OT>R</OT>
+						<L>-2</L>
+						<UT>A</UT>
+						<CTPT>1</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">Current in Phase L1</L>
+							<L LANG="zh_CN" TYPE="1">A相电流</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>3#1.0.32.7.0.255#2</ID>
+						<DT>U16</DT>
+						<OT>R</OT>
+						<L>-2</L>
+						<UT>V</UT>
+						<CTPT>2</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">Voltage in Phase L1</L>
+							<L LANG="zh_CN" TYPE="1">A相电压</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>3#1.0.51.7.0.255#2</ID>
+						<DT>U16</DT>
+						<OT>R</OT>
+						<L>-2</L>
+						<UT>A</UT>
+						<CTPT>1</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">Current in Phase L2</L>
+							<L LANG="zh_CN" TYPE="1">B相电流</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>3#1.0.52.7.0.255#2</ID>
+						<DT>U16</DT>
+						<OT>R</OT>
+						<L>-2</L>
+						<UT>V</UT>
+						<CTPT>2</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">Voltage in Phase L2</L>
+							<L LANG="zh_CN" TYPE="1">B相电压</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>3#1.0.71.7.0.255#2</ID>
+						<DT>U16</DT>
+						<OT>R</OT>
+						<L>-2</L>
+						<UT>A</UT>
+						<CTPT>1</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">Current in Phase L3</L>
+							<L LANG="zh_CN" TYPE="1">C相电流</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>3#1.0.72.7.0.255#2</ID>
+						<DT>U16</DT>
+						<OT>R</OT>
+						<L>-2</L>
+						<UT>V</UT>
+						<CTPT>2</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">Voltage in Phase L3</L>
+							<L LANG="zh_CN" TYPE="1">C相电压</L>
+						</LS>
+					</IS>
+				</C>
+				<C TYPE="1">
+					<IS TYPE="0">
+						<ID>3#1.0.12.35.0.255#2</ID>
+						<DT>U16</DT>
+						<OT>W</OT>
+						<V>220</V>
+						<L>0</L>
+						<UT>V</UT>
+						<BT>0</BT>
+						<CTPT>0</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">Threshold of Voltage Swell</L>
+							<L LANG="zh_CN" TYPE="1">过压阀值</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>41#0.11.25.0.0.255#2</ID>
+						<DT>Octs_ascii</DT>
+						<OT>W</OT>
+						<V>8080</V>
+						<L>0</L>
+						<UT></UT>
+						<BT>0</BT>
+						<CTPT>0</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">PORT</L>
+							<L LANG="zh_CN" TYPE="1">端口</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>45#0.11.25.4.0.255#2</ID>
+						<DT>Octs_ascii</DT>
+						<OT>W</OT>
+						<V>CNCT</V>
+						<L>0</L>
+						<UT></UT>
+						<BT>0</BT>
+						<CTPT>0</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">APN</L>
+							<L LANG="zh_CN" TYPE="1">APN</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>45#0.11.25.4.0.255#5</ID>
+						<DT>Octs_ascii</DT>
+						<OT>W</OT>
+						<V>192.168.1.1</V>
+						<L>0</L>
+						<UT></UT>
+						<BT>0</BT>
+						<CTPT>0</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">System IP</L>
+							<L LANG="zh_CN" TYPE="1">系统IP</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>3#1.0.12.35.0.255#2</ID>
+						<DT>U16</DT>
+						<OT>W</OT>
+						<V>220</V>
+						<L>0</L>
+						<UT>V</UT>
+						<BT>0</BT>
+						<CTPT>0</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">Threshold of Voltage Swell</L>
+							<L LANG="zh_CN" TYPE="1">过压阀值</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>41#0.11.25.0.0.255#2</ID>
+						<DT>Octs_ascii</DT>
+						<OT>W</OT>
+						<V>8080</V>
+						<L>0</L>
+						<UT></UT>
+						<BT>0</BT>
+						<CTPT>0</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">PORT</L>
+							<L LANG="zh_CN" TYPE="1">端口</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>45#0.11.25.4.0.255#2</ID>
+						<DT>Octs_ascii</DT>
+						<OT>W</OT>
+						<V>CNCT</V>
+						<L>0</L>
+						<UT></UT>
+						<BT>0</BT>
+						<CTPT>0</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">APN</L>
+							<L LANG="zh_CN" TYPE="1">APN</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>45#0.11.25.4.0.255#5</ID>
+						<DT>Octs_ascii</DT>
+						<OT>W</OT>
+						<V>192.168.1.1</V>
+						<L>0</L>
+						<UT></UT>
+						<BT>0</BT>
+						<CTPT>0</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">System IP</L>
+							<L LANG="zh_CN" TYPE="1">系统IP</L>
+						</LS>
+					</IS>
+				</C>
+			</V>
+			<V ID="FM12CHDLTTDE01101V01(16051609)" MM="HXE100">
+				<C TYPE="0">
+					<IS TYPE="0">
+						<ID>1#0.0.96.1.146.255#2</ID>
+						<DT>Ascs</DT>
+						<OT>R</OT>
+						<L>0</L>
+						<UT></UT>
+						<CTPT>0</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">Meter Version No.</L>
+							<L LANG="zh_CN" TYPE="1">电表内控版本号</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>3#1.0.1.8.0.255#2</ID>
+						<DT>U32</DT>
+						<OT>R</OT>
+						<L>-3</L>
+						<UT>kWh</UT>
+						<CTPT>3</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">Total Active Energy(+)</L>
+							<L LANG="zh_CN" TYPE="1">正向有功总电能</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>3#1.0.1.8.1.255#2</ID>
+						<DT>U32</DT>
+						<OT>R</OT>
+						<L>-3</L>
+						<UT>kWh</UT>
+						<CTPT>3</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">T1 Active Energy(+)</L>
+							<L LANG="zh_CN" TYPE="1">正向有功电能T1</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>3#1.0.1.8.2.255#2</ID>
+						<DT>U32</DT>
+						<OT>R</OT>
+						<L>-3</L>
+						<UT>kWh</UT>
+						<CTPT>3</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">T2 Active Energy(+)</L>
+							<L LANG="zh_CN" TYPE="1">正向有功电能T2</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>3#1.0.1.8.3.255#2</ID>
+						<DT>U32</DT>
+						<OT>R</OT>
+						<L>-3</L>
+						<UT>kWh</UT>
+						<CTPT>3</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">T3 Active Energy(+)</L>
+							<L LANG="zh_CN" TYPE="1">正向有功电能T3</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>3#1.0.1.8.4.255#2</ID>
+						<DT>U32</DT>
+						<OT>R</OT>
+						<L>-3</L>
+						<UT>kWh</UT>
+						<CTPT>3</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">T4 Active Energy(+)</L>
+							<L LANG="zh_CN" TYPE="1">正向有功电能T4</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>3#1.0.31.7.0.255#2</ID>
+						<DT>U16</DT>
+						<OT>R</OT>
+						<L>-2</L>
+						<UT>A</UT>
+						<CTPT>1</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">Current in Phase L1</L>
+							<L LANG="zh_CN" TYPE="1">A相电流</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>3#1.0.32.7.0.255#2</ID>
+						<DT>U16</DT>
+						<OT>R</OT>
+						<L>-2</L>
+						<UT>V</UT>
+						<CTPT>2</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">Voltage in Phase L1</L>
+							<L LANG="zh_CN" TYPE="1">A相电压</L>
+						</LS>
+					</IS>
+				</C>
+				<C TYPE="1">
+					<IS TYPE="0">
+						<ID>1#1.0.129.129.2.255#2</ID>
+						<DT>Octs_hex</DT>
+						<OT>W</OT>
+						<V></V>
+						<L>0</L>
+						<UT></UT>
+						<BT>1</BT>
+						<CTPT>0</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">Token Issue</L>
+							<L LANG="zh_CN" TYPE="1">Token下发</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>3#1.0.12.31.0.255#2</ID>
+						<DT>U16</DT>
+						<OT>W</OT>
+						<V>56</V>
+						<L>0</L>
+						<UT>V</UT>
+						<BT>0</BT>
+						<CTPT>0</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">Threshold of Voltage Sag</L>
+							<L LANG="zh_CN" TYPE="1">失压阀值</L>
+						</LS>
+					</IS>
+					<IS TYPE="0">
+						<ID>3#1.0.12.35.0.255#2</ID>
+						<DT>U16</DT>
+						<OT>W</OT>
+						<V>345</V>
+						<L>0</L>
+						<UT>V</UT>
+						<BT>0</BT>
+						<CTPT>0</CTPT>
+						<LS>
+							<L LANG="en_US" TYPE="1">Threshold of Voltage Swell</L>
+							<L LANG="zh_CN" TYPE="1">过压阀值</L>
+						</LS>
+					</IS>
+				</C>
+				<C TYPE="2">
+					<TI TYPE="0">
+						<ID>02</ID>
+						<LV>0</LV>
+						<LS>
+							<L LANG="en_US" TYPE="1">Voltage Reverse Check</L>
+							<L LANG="en_US" TYPE="2">Voltage reverse happen</L>
+							<L LANG="zh_CN" TYPE="1">电压逆相序检测</L>
+							<L LANG="zh_CN" TYPE="2">电压逆相序发生</L>
+						</LS>
+						<IL>
+							<IS>
+								<ID>1#0.0.97.97.1.255#2</ID>
+								<DT>U32</DT>
+								<OT>R</OT>
+								<JW>2</JW>
+								<PF>1</PF>
+								<P1>30</P1>
+								<P2>0</P2>
+								<L>0</L>
+								<UT></UT>
+								<CTPT>0</CTPT>
+								<LS />
+							</IS>
+						</IL>
+					</TI>
+					<TI TYPE="0">
+						<ID>03</ID>
+						<LV>0</LV>
+						<LS>
+							<L LANG="en_US" TYPE="1">Voltage Sag Check</L>
+							<L LANG="en_US" TYPE="2">Voltage sag happen</L>
+							<L LANG="zh_CN" TYPE="1">电压越上限检测</L>
+							<L LANG="zh_CN" TYPE="2">电压越上限发生</L>
+						</LS>
+						<IL>
+							<IS>
+								<ID>3#1.0.12.31.0.255#2</ID>
+								<DT>U16</DT>
+								<OT>R</OT>
+								<JW>3</JW>
+								<PF>2</PF>
+								<P1>3#1.0.32.7.0.255#2</P1>
+								<P2></P2>
+								<L>0</L>
+								<UT>V</UT>
+								<CTPT>0</CTPT>
+								<LS />
+							</IS>
+							<IS>
+								<ID>3#1.0.32.7.0.255#2</ID>
+								<DT>U16</DT>
+								<OT>R</OT>
+								<JW>0</JW>
+								<PF></PF>
+								<P1></P1>
+								<P2></P2>
+								<L>-2</L>
+								<UT>V</UT>
+								<CTPT>2</CTPT>
+								<LS />
+							</IS>
+						</IL>
+					</TI>
+				</C>
+			</V>
+		</P>
+		<T>
+			<M MSN="1">
+				<MT TYPE="0">
+					<ID>78</ID>
+					<S>1</S>
+					<T>11111111111111111111</T>
+				</MT>
+			</M>
+			<M MSN="201606163333">
+				<MT TYPE="0">
+					<ID>76</ID>
+					<S>1</S>
+					<T>00000000000000000012</T>
+				</MT>
+				<MT TYPE="0">
+					<ID>77</ID>
+					<S>2</S>
+					<T>00000000000000000013</T>
+				</MT>
+			</M>
+		</T>
+	</BASIC>
+</R>

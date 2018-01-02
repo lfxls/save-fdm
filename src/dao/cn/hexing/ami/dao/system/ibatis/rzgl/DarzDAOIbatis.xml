@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="darz">
+
+	 
+ 	 <!-- 取根菜单 -->
+ 	 <select id="getRootMenu" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 	 	SELECT CDID BM, CDMC MC FROM QX_CD CD WHERE CD.SFGJD = '1' AND LANG = #lang# AND SFXS = '1'
+ 	 </select>
+ 	 
+ 	 <!-- 取二级菜单 -->
+ 	 <select id="getMenu" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 	 	SELECT CDID BM, CDMC MC FROM QX_CD CD WHERE CD.SJCDID = #root# AND LANG = #lang#  AND SFXS = '1'
+ 	 </select>
+ 	 
+ 	   <sql id="darz">
+		  FROM RZ_FWXX RZ, QX_CD CD, QX_CZ CZ, QX_CZLB LB, QX_QY DW, QX_CZY CZY
+		 WHERE RZ.CDID = CD.CDID
+		   AND RZ.CZID = CZ.CZID(+)
+		   AND CZ.CZLBID = LB.CZLBID(+)
+		   AND RZ.CZYID = CZY.CZYID(+)
+		   AND RZ.DWDM = DW.DWDM
+		   AND LB.LANG(+) = #lang#
+		   AND CZ.LANG(+) = #lang#
+		   AND CD.LANG = #lang#
+		   and RZ.XTID = #xtid#
+		   <isNotEmpty property="menuId">
+		   	 	<!--AND RZ.CDID LIKE SUBSTR(#menuId#,0,2) || '%'-->
+		   	 	AND RZ.CDID in (select cdid
+				  from qx_cd
+				 where sfyjd = '1' and lang = #lang#
+				 start with cdid = #menuId#
+				connect by prior cdid = sjcdid)
+		   </isNotEmpty>
+		   <isNotEmpty property="czyId">
+		   	    AND (RZ.CZYID like '%'||#czyId#||'%' or CZY.XM like '%'||#czyId#||'%')
+		   </isNotEmpty>
+		   <isNotEmpty property="rznr">
+		   	    AND RZ.RZNR like '%' || #rznr# || '%'
+		   </isNotEmpty>
+		   AND RZ.CZSJ > TO_DATE(#kssj#,'yyyy-mm-dd')
+		   AND RZ.CZSJ &lt; TO_DATE(#jssj#,'yyyy-mm-dd') + 1
+ 	 </sql>
+ 	 
+ 	 <!-- 日志查询 -->
+ 	 <select id="darzCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+ 	 	SELECT COUNT(RZ.CZID) 
+ 	 	 <include refid='darz.darz'/>
+ 	 </select>
+ 	 
+ 	 <select id="darzQuery" remapResults="true" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 	 	<include refid='common.pagingTop'/>
+	 	   SELECT DW.DWMC,
+	 	       CD.CDID,
+		       CZY.XM || '(' || RZ.CZYID || ')' AS CZY,
+		       CD.CDMC,
+		       LB.CZLBMC CZLB,
+		       CZ.CZMC,
+		       TO_CHAR(RZ.CZSJ, 'YYYY-MM-DD HH24:MI:SS') AS CZSJ,
+		       RZ.RZNR
+			<include refid='darz.darz'/>
+			order by rz.czsj desc
+		 <include refid='common.pagingBottom'/>
+		 <include refid="common.pagingSort"/>
+ 	 </select>
+ 	 
+</sqlMap>
+
+	
+

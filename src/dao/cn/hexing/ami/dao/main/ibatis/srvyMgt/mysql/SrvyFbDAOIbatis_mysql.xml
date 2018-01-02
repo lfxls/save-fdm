@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+	
+<sqlMap namespace="srvyFb">
+    <!-- 勘察反馈  -->
+	<sql id="querySrvyFb">
+	   FROM INS_FB_SRVY FB
+	   		LEFT JOIN INS_PLN_SRVY P ON FB.PID = P.PID 
+            LEFT JOIN AR_CUSTOMER C ON FB.CNO = C.CNO
+            LEFT JOIN QX_QY QY ON C.UID = QY.DWDM
+            LEFT JOIN QX_CZY CZY ON FB.OPTID = CZY.CZYID
+            LEFT JOIN INS_TEAM TM ON CZY.TID = TM.TNO
+            WHERE 1 = 1 
+          	<isNotEmpty property="cno">
+		 	AND FB.CNO LIKE CONCAT('%',#cno#,'%')
+	  		</isNotEmpty>
+			<isNotEmpty property="status">
+			AND FB.STATUS = #status#
+			</isNotEmpty>
+	  		<isNotEmpty property="bussType">
+		 	AND FB.SRVY_TYPE = #bussType#
+	  		</isNotEmpty>
+	  		<isNotEmpty property="plnStatus">
+		 	AND P.STATUS = #plnStatus#
+	  		</isNotEmpty>
+	  		<isNotEmpty property="pid">
+		 	AND FB.PID LIKE CONCAT('%',#pid#,'%') 
+	  		</isNotEmpty>
+			ORDER BY FB.FB_DATE DESC
+    </sql>
+  
+  	<select id="querySrvyFbCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(FB.PID) 
+		<include refid='srvyFb.querySrvyFb'/>
+	</select>
+	
+	<select id="querySrvyFbQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true" >
+	    <include refid='common.pagingTop'/>
+	      SELECT FB.PID, FB.DATA_TYPE DTYPE, FB.LAT, FB.LON, FB.CABLE_LEN, FB.CABLE_TYPE,
+	      		 FB.WIRING, FB.C_BREAKER, FB.CNAME R_CNAME,FB.ADDR R_ADDR,FB.PHONE R_PHONE, FB.P_NATURE, FB.P_STATUS,
+	      		 FB.P_N_NUM, FB.P_E_NUM, FB.REMARK, FB.OPTID OPTID, FB.STATUS, FB.SRVY_TYPE,
+	      		 DATE_FORMAT(FB.OP_DATE,'%Y-%m-%d %H:%i:%s') OPDATE,
+	   			 DATE_FORMAT(FB.FB_DATE,'%Y-%m-%d %H:%i:%s') FBDATE,
+	      		 P.CNO, P.WOID WOID, P.STATUS PLNSTATUS, C.CNAME, C.ADDR, 
+	      		 C.PHONE, C.UID, QY.DWMC UNAME, CZY.XM, TM.TNO, TM.TNAME,
+	      		 CONCAT('cable_type','_',#appLang#,'_',FB.CABLE_TYPE) CABTNAME,
+	      		 CONCAT('wiring','_',#appLang#,'_',FB.WIRING) WIRNAME,
+	      		 CONCAT('c_breaker','_',#appLang#,'_',FB.C_BREAKER) CBRKNAME,
+	      		 CONCAT('p_nature','_',#appLang#,'_',FB.P_NATURE) PNATNAME,
+	      		 CONCAT('p_status','_',#appLang#,'_',FB.P_STATUS) PSTANAME,
+	      		 CONCAT('p_n_num','_',#appLang#,'_',FB.P_N_NUM) PNNUMNAME,
+	      		 CONCAT('p_e_num','_',#appLang#,'_',FB.P_E_NUM) PENUMNAME,
+	      		 CONCAT('planStatus','_',#appLang#,'_',P.STATUS) PLNSTNAME,
+	      		 CONCAT('fbStatus','_',#appLang#,'_',FB.STATUS) DTNAME,
+	      		 CONCAT('bussType','_',#appLang#,'_',FB.SRVY_TYPE) BTNAME
+ 		<include refid='srvyFb.querySrvyFb'/>
+		<include refid='common.pagingBottom'/>
+		<include refid="common.pagingSort"/>
+	</select>
+	
+	<!-- 插入勘察计划反馈数据 -->
+   	<insert id="insSrvyFB" parameterClass="java.util.HashMap">
+   		REPLACE INTO INS_FB_SRVY(PID,DATA_TYPE,SRVY_TYPE,CNO,CNAME,ADDR,
+   		PHONE,LAT,LON,CABLE_LEN,CABLE_TYPE,WIRING,C_BREAKER,P_NATURE,
+   		P_STATUS,P_N_NUM,P_E_NUM,REMARK,OPTID,OP_DATE,OP_STS,FB_DATE)
+   		VALUES(#S#,#DATA_TYPE#,#BT#,#CNO#,#CNAME#,#ADDR#,#PHO#,#LGT#,
+   		#LAT#,#CL#,#CT#,#CM#,#CB#,#PN#,#PS#,#PNN#,#PEN#,
+   		#RM#,#OPT#,#DT#,#STS#,NOW())
+    </insert>
+    
+    <select id="getSrvyFbData" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+    	SELECT FB.PID, FB.CNO, FB.CABLE_TYPE, FB.CABLE_LEN, PLN.WOID WOID,
+    	CASE WHEN FB.C_BREAKER = '0'
+    		 THEN 
+    		 	'1'
+    		 ELSE 
+    		 	'0'
+    	END CBNUM
+    	FROM INS_FB_SRVY FB
+    	LEFT JOIN INS_PLN_SRVY PLN ON FB.PID = PLN.PID
+    	WHERE FB.STATUS
+    	<iterate prepend="IN" open="(" close=")" property="status" conjunction=",">
+			#status[]#
+		</iterate>
+    </select>
+    
+    <update id="updSrvyFb" parameterClass="java.util.HashMap">
+    	<isEmpty property="tCharge">
+    		UPDATE INS_FB_SRVY SET STATUS=#status#, TOL_CHARGE=NULL
+    		WHERE PID=#pid#
+    	</isEmpty>
+    	<isNotEmpty property="tCharge">
+    		UPDATE INS_FB_SRVY SET STATUS=#status#, TOL_CHARGE=#tCharge#
+    		WHERE PID=#pid#
+    	</isNotEmpty>
+    </update>
+    <update id="updCustomerAr" parameterClass="java.util.HashMap">
+        
+		UPDATE AR_CUSTOMER SET CNAME=#rname#,ADDR=#raddr#,PHONE=#rphone# WHERE CNO=#cno#
+    </update>
+    <update id="updSurPlnAr" parameterClass="java.util.HashMap">
+        UPDATE INS_PLN_SRVY SET CNAME=#rname#,ADDR=#raddr#,PHONE=#rphone# WHERE  PID=#pid#;
+    </update>
+    <select id="getFbAr" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+    	select fb.cname, fb.addr, fb.phone from ins_fb_srvy fb where fb.pid=#pid#
+    </select>
+</sqlMap>

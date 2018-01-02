@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<!-- 档案管理 -->
+    <package name="arcMgt" namespace="/main/arcMgt" extends="struts-base">
+         <!-- 用户管理-->
+        <action name="custMgt" class="custMgtAction">
+            <result>/jsp/mainModule/arcMgt/custMgt/custMgt.jsp</result>
+            <result name="initCust">/jsp/mainModule/arcMgt/custMgt/cust_edit.jsp</result>
+            <result name="initimport">/jsp/mainModule/arcMgt/custMgt/cust_imp.jsp</result>
+        </action>
+        
+        <!-- 表计管理-->
+        <action name="meterMgt" class="meterMgtAction">
+            <result>/jsp/mainModule/arcMgt/meterMgt/meterMgt.jsp</result>
+            <result name="initMeter">/jsp/mainModule/arcMgt/meterMgt/meter_edit.jsp</result>
+            <result name="initimport">/jsp/mainModule/arcMgt/meterMgt/meter_imp.jsp</result>
+        </action>
+        
+        <!--档案导入-->
+        <action name="dataImp" class="dataImpAction">
+        </action>
+        
+        <!-- 表型管理 -->
+         <action name="modelMgt" class="modelMgtAction">
+         <result>/jsp/mainModule/arcMgt/modelMgt/modelMgt.jsp</result>
+         <result name="initModel">/jsp/mainModule/arcMgt/modelMgt/model_edit.jsp </result>
+        </action>
+        
+        <!-- SIM卡管理 -->
+        <action name="simMgt" class="simMgtAction">
+         <result>/jsp/mainModule/arcMgt/simMgt/simMgt.jsp</result>
+         <result name="simMgt_edit">/jsp/mainModule/arcMgt/simMgt/sim_edit.jsp</result>
+         <result name="initSimSel">/jsp/mainModule/arcMgt/simMgt/simSel.jsp</result>
+        </action> 
+        
+        <!-- HHU管理 -->
+        <action name="hhuMgt" class="hhuMgtAction">
+         <result>/jsp/mainModule/arcMgt/hhuMgt/hhuMgt.jsp</result>
+         <result name="hhuMgt_edit">/jsp/mainModule/arcMgt/hhuMgt/hhu_edit.jsp</result>
+        </action>
+        
+        <!-- 变压器管理 -->
+        <action name="transfMgt" class="transfMgtAction">
+         <result>/jsp/mainModule/arcMgt/transfMgt/transfMgt.jsp</result>
+         <result name="transfMgt_edit">/jsp/mainModule/arcMgt/transfMgt/transf_edit.jsp</result>
+         <result name="initTransfSel">/jsp/mainModule/arcMgt/transfMgt/transfSel.jsp</result>
+        </action>
+        
+    </package>
+    
+    <!-- 安装管理 -->
+    <package name="insMgt" namespace="/main/insMgt" extends="struts-base">
+         <!-- 安装计划-->
+        <action name="insPlan" class="insPlanAction">
+            <result>/jsp/mainModule/insMgt/plan/meterPlan.jsp</result>
+            <result name="dcuPlan">/jsp/mainModule/insMgt/plan/dcuPlan.jsp</result>
+            <result name="colPlan">/jsp/mainModule/insMgt/plan/colPlan.jsp</result>
+            <result name="meterPlan_op">/jsp/mainModule/insMgt/plan/meterPlan_op.jsp</result>
+            <result name="dcuPlan_op">/jsp/mainModule/insMgt/plan/dcuPlan_op.jsp</result>
+            <result name="colPlan_op">/jsp/mainModule/insMgt/plan/colPlan_op.jsp</result>
+            <result name="selCust">/jsp/mainModule/insMgt/plan/selCust.jsp</result>
+            <result name="selTf">/jsp/mainModule/insMgt/plan/selTf.jsp</result>
+            <result name="selMeter">/jsp/mainModule/insMgt/plan/selMeter.jsp</result>
+            <result name="selDcu">/jsp/mainModule/insMgt/plan/selDcu.jsp</result>
+            <result name="selCol">/jsp/mainModule/insMgt/plan/selCol.jsp</result>
+            <result name="mInsPlnImp">/jsp/mainModule/insMgt/plan/meterInsPlan_imp.jsp</result>
+            <result name="dInsPlnImp">/jsp/mainModule/insMgt/plan/dcuInsPlan_imp.jsp</result>
+            <result name="cInsPlnImp">/jsp/mainModule/insMgt/plan/colInsPlan_imp.jsp</result>
+        </action>
+        
+        <!-- 无序安装计划-->
+        <action name="insUnPlan" class="insUnPlanAction">
+            <result>/jsp/mainModule/insMgt/unPlan/meterUnPlan.jsp</result>
+            <result name="dcuInsP">/jsp/mainModule/insMgt/unPlan/dcuUnPlan.jsp</result>
+            <result name="colInsP">/jsp/mainModule/insMgt/unPlan/colUnPlan.jsp</result>
+            <result name="dispCust">/jsp/mainModule/insMgt/unPlan/dispatchCust.jsp</result>
+            <result name="dispTf">/jsp/mainModule/insMgt/unPlan/dispatchTf.jsp</result>
+            <result name="cust">/jsp/mainModule/insMgt/unPlan/selCust.jsp</result>
+            <result name="tf">/jsp/mainModule/insMgt/unPlan/selTf.jsp</result>
+        </action>
+        
+        <!-- 安装工单-->
+        <action name="insOrder" class="insOrderAction">
+            <result>/jsp/mainModule/insMgt/order/orderMgt.jsp</result>
+            <result name="create_wo">/jsp/mainModule/insMgt/order/order.jsp</result>
+            <result name="sel_mInsP">/jsp/mainModule/insMgt/order/selMInsPlan.jsp</result>
+            <result name="add_mInsP">/jsp/mainModule/insMgt/order/createMInsPlan.jsp</result>
+            <result name="sel_dInsP">/jsp/mainModule/insMgt/order/selDInsPlan.jsp</result>
+            <result name="add_dInsP">/jsp/mainModule/insMgt/order/createDInsPlan.jsp</result>
+            <result name="sel_cInsP">/jsp/mainModule/insMgt/order/selCInsPlan.jsp</result>
+            <result name="add_cInsP">/jsp/mainModule/insMgt/order/createCInsPlan.jsp</result>
+            <result name="selPOP">/jsp/mainModule/insMgt/order/selPOP.jsp</result>
+        	 <result name="selMeter">/jsp/mainModule/insMgt/order/selMeter.jsp</result>
+        	 <result name="sel_surP">/jsp/mainModule/insMgt/order/selSurPlan.jsp</result>
+            <result name="add_surP">/jsp/mainModule/insMgt/order/createSurPlan.jsp</result>
+        </action>
+        
+        <!--安装反馈-->
+        <action name="insFb" class="insFbAction">
+        	<result name="meterFb">/jsp/mainModule/insMgt/fb/meterFb.jsp</result>
+        	<result name="dcuFb">/jsp/mainModule/insMgt/fb/dcuFb.jsp</result>
+        	<result name="colFb">/jsp/mainModule/insMgt/fb/colFb.jsp</result>
+        	<result name="meter_photo">/jsp/mainModule/insMgt/fb/photo.jsp</result>
+        	<result name="meter_readP">/jsp/mainModule/insMgt/fb/readParam.jsp</result>
+        	<result name="meter_testP">/jsp/mainModule/insMgt/fb/testParam.jsp</result>
+        	<result name="meter_setP">/jsp/mainModule/insMgt/fb/setParam.jsp</result>
+        	<result name="photo_preview">/jsp/mainModule/insMgt/fb/photoPreview.jsp</result>
+        </action>
+        
+        <!-- 工单操作日志 -->
+        <action name="orderLog" class="orderLogAction">
+        	<result>/jsp/mainModule/insMgt/orderLog/orderLog.jsp</result>
+        </action>
+        
+         <!-- 安装计划操作日志 -->
+        <action name="planLog" class="planLogAction">
+        	<result>/jsp/mainModule/insMgt/planLog/planLog.jsp</result>
+        </action>
+        
+        <!-- 工单查询 -->
+        <action name="orderQuery" class="orderQueryAction">
+        	<result>/jsp/mainModule/insMgt/query/orderQuery.jsp</result>
+        </action>
+        
+         <!-- 安装计划查询 -->
+        <action name="planQuery" class="planQueryAction">
+        	<result>/jsp/mainModule/insMgt/query/planQuery.jsp</result>
+        </action>
+        
+        <action name="energyQuery" class="energyQueryAction">
+        	<result>/jsp/mainModule/insMgt/query/energyQuery.jsp</result>
+        	<result name="selTf">/jsp/mainModule/insMgt/query/selTf.jsp</result>
+        </action>
+        
+        
+    </package>
+    
+    <!-- 勘察管理 -->
+    <package name="srvyMgt" namespace="/main/srvyMgt" extends="struts-base">
+    	<!-- 勘探计划 -->
+        <action name="surPlan" class="surPlanAction">
+        	<result>/jsp/mainModule/srvyMgt/plan/surPlan.jsp</result>
+        	<result name="surPlan_op">/jsp/mainModule/srvyMgt/plan/surPlan_op.jsp</result>
+        	<result name="surPlnImp">/jsp/mainModule/srvyMgt/plan/surPlan_imp.jsp</result>
+        </action>
+    	<!-- 勘探反馈 -->
+        <action name="srvyFb" class="srvyFbAction">
+        	<result>/jsp/mainModule/srvyMgt/fb/srvyFb.jsp</result>
+        </action>
+    </package>
+
+    <!-- Prepay管理 -->
+    <package name="preMgt" namespace="/main/preMgt" extends="struts-base">
+         <!-- Token管理-->
+        <action name="tokenMgt" class="tokenMgtAction">
+            <result>/jsp/mainModule/preMgt/tokenMgt/tokenMgt.jsp</result>
+            <result name="tokenMgt_edit">/jsp/mainModule/preMgt/tokenMgt/token_edit.jsp</result>
+            <result name="tokenImp">/jsp/mainModule/preMgt/tokenMgt/token_imp.jsp</result>
+        </action>        
+    </package>
+    
+    <!-- GIS -->
+    <package name="gis" namespace="/main/gis" extends="struts-base">
+         <!-- Map -->
+        <action name="map" class="mapAction">
+            <result>/jsp/mainModule/gis/map.jsp</result>
+        </action>        
+    </package>
+    
+</struts>

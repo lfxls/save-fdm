@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+>
+	<!-- 用户管理 -->
+	<bean id="custMgtManager" class="cn.hexing.ami.service.main.arcMgt.CustMgtManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 表计管理 -->
+	<bean id="meterMgtManager" class="cn.hexing.ami.service.main.arcMgt.MeterMgtManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 档案导入 -->
+	<bean id="dataImpManager" class="cn.hexing.ami.service.main.arcMgt.DataImpManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+
+	<!-- 表型管理-->
+	<bean id="modelMgtManager" class="cn.hexing.ami.service.main.arcMgt.ModelMgtManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+
+	<!-- HHU数据更新服务 -->
+	<bean id="hhuServiceManager" class="cn.hexing.ami.service.main.hhuService.DataUpdateManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+
+	<!-- 安装计划 -->
+	<bean id="insPlanManager" class="cn.hexing.ami.service.main.insMgt.InsPlanManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 无序安装计划 -->
+	<bean id="insUnPlanManager" class="cn.hexing.ami.service.main.insMgt.InsUnPlanManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 安装工单 -->
+	<bean id="insOrderManager" class="cn.hexing.ami.service.main.insMgt.InsOrderManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 安装反馈 -->
+	<bean id="insFbManager" class="cn.hexing.ami.service.main.insMgt.InsFbManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- SIM卡管理 -->
+	<bean id="simMgtManager" class="cn.hexing.ami.service.main.arcMgt.SimMgtManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- HHU管理 -->
+	<bean id="hhuMgtManager" class="cn.hexing.ami.service.main.arcMgt.HhuMgtManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 变压器管理 -->
+	<bean id="transfMgtManager" class="cn.hexing.ami.service.main.arcMgt.TransfMgtManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- Token管理 -->
+	<bean id="tokenMgtManager" class="cn.hexing.ami.service.main.preMgt.TokenMgtManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 工单操作日志 -->
+	<bean id="orderLogManager" class="cn.hexing.ami.service.main.insMgt.OrderLogManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 安装计划操作日志 -->
+	<bean id="planLogManager" class="cn.hexing.ami.service.main.insMgt.PlanLogManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 工单查询 -->
+	<bean id="orderQueryManager" class="cn.hexing.ami.service.main.insMgt.OrderQueryManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 安装计划查询 -->
+	<bean id="planQueryManager" class="cn.hexing.ami.service.main.insMgt.PlanQueryManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- GIS -->
+	<bean id="mapManager" class="cn.hexing.ami.service.main.gis.MapManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 电量查询 -->
+	<bean id="energyQueryManager" class="cn.hexing.ami.service.main.insMgt.EnergyQueryManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 勘探计划 -->
+	<bean id="surPlanManager" class="cn.hexing.ami.service.main.srvyMgt.SurPlanManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 勘探反馈 -->
+	<bean id="srvyFbManager" class="cn.hexing.ami.service.main.srvyMgt.SrvyFbManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+</beans>

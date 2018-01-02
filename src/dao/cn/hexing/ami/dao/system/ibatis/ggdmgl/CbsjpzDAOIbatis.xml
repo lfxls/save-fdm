@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="cbsjpz">
+	
+	<!--抄表数据配置 -->
+	<sql id="cbpz">
+		  from p_cbsj_pz pz, p_cbsj_sjx sjx
+		 where pz.dlx = sjx.dlx
+		   and pz.sjx = sjx.sjx
+		   and pz.dlx = #dlx#
+		   and pz.xlx = #xlx#
+		   and sjx.lang = #appLang#
+ 		order by pxbm
+ 	</sql>
+	<select id="cbpzCount" parameterClass="java.util.HashMap"
+		resultClass="java.lang.Integer">
+		select count(pz.sjx)
+		<include refid='cbsjpz.cbpz' />
+	</select>	
+	<select id="cbpzQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<include refid='common.pagingTop' />
+		select pz.sjx,
+		       sjx.sjxmc,
+		       pz.dlx,
+		       pz.xlx,
+		       pz.dw,
+		       pz.width,
+		       (select name
+		          from p_code p
+		         where pz.xctpt = p.value(+)
+		           and p.code_type = 'cctpt'
+		           and p.lang = #appLang#) xctpt,		       
+		       (select name
+		          from p_code p
+		         where pz.sfxs = p.value(+)
+		           and p.code_type = 'sfxm'
+		           and p.lang = #appLang#) sfxs,
+		       pz.format,
+		       pz.pxbm,
+		       pz.txid,
+		       (select txmc
+		          from p_cbsj_tx tx
+		         where pz.dlx = tx.dlx(+)
+		           and pz.txid = tx.txid(+)
+		           and tx.lang = #appLang#) txmc
+		<include refid='cbsjpz.cbpz' />
+		<include refid='common.pagingBottom' />
+		<include refid="common.pagingSort" />
+	</select>
+	
+	<!--小类型下拉框 -->
+	<select id="xlxDrop" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select xlid bm, xlmc mc
+		  from p_cbsj_xl
+		 where dlx = #dlx#
+		   and lang = #appLang#
+		 order by pxbm
+	</select>
+	
+	<!--图形下拉框 -->
+	<select id="txDrop" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select txid bm, txmc mc from p_cbsj_tx where dlx=#dlx# and lang = #appLang#
+	</select>
+	
+	<sql id="selSjx">
+		  from p_cbsj_sjx t
+		 where t.dlx = #dlx#
+		   and t.lang = #appLang#
+		   and sjx not in (select sjx from p_cbsj_pz where dlx = #dlx#)	
+		  order by sjx
+	</sql>
+	<select id="selSjxCount" parameterClass="java.util.HashMap"
+		resultClass="java.lang.Integer">
+		select count(t.sjx)
+		<include refid='cbsjpz.selSjx' />
+	</select>
+	<select id="selSjxQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select t.sjx, t.sjxmc
+		<include refid='cbsjpz.selSjx' />
+	</select>
+		
+	<!--主表查询 -->
+	<sql id="sjx">
+		  from p_cbsj_sjx t
+		 where t.dlx = #dlx#
+		   and t.lang = #appLang#
+		  order by t.sjx
+	</sql>
+	<select id="sjxCount" parameterClass="java.util.HashMap"
+		resultClass="java.lang.Integer">
+		select count(t.sjx)
+		<include refid='cbsjpz.sjx' />
+	</select>
+	<select id="sjxQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true">
+		<include refid='common.pagingTop' />
+		select t.sjx,
+		       t.sjxmc,
+		       t.dlx,
+		       (select p.name
+		          from p_code p
+		         where p.code_type = 'cbsjpz'
+		           and p.lang = #appLang#
+		           and t.dlx = p.value) mc,
+		       case t.sjx
+		         when (select sjx
+		             from p_cbsj_pz pz
+		            where pz.dlx = t.dlx
+		              and pz.sjx = t.sjx) then
+		          (select t.name from p_code t where t.code_type='simksyzt' and value='1' and t.lang = 'en_US')
+		         else
+		          (select t.name from p_code t where t.code_type='simksyzt' and value='2' and t.lang = 'en_US')
+		       end isuse	           	
+		<include refid='cbsjpz.sjx' />
+		<include refid='common.pagingBottom' />
+		<include refid="common.pagingSort" />
+	</select>
+
+	<sql id="xlx">
+		  from p_cbsj_xl t
+		 where t.dlx = #dlx#
+		   and t.lang = #appLang#
+	</sql>
+	<select id="xlxCount" parameterClass="java.util.HashMap"
+		resultClass="java.lang.Integer">
+		select count(t.xlid)
+		<include refid='cbsjpz.xlx' />
+	</select>
+	<select id="xlxQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true">
+		<include refid='common.pagingTop' />
+		select t.xlid,
+		       t.xlmc,
+		       t.pxbm,
+		       t.dlx,
+		       (select p.name
+		          from p_code p
+		         where p.code_type = 'cbsjpz'
+		           and p.lang = #appLang#
+		           and t.dlx = p.value) mc
+		<include refid='cbsjpz.xlx' />
+		<include refid='common.pagingBottom' />
+		<include refid="common.pagingSort" />
+	</select>
+
+	<sql id="tx">
+		  from p_cbsj_tx t
+		 where t.dlx = #dlx#
+		   and t.lang = #appLang#
+	</sql>
+	<select id="txCount" parameterClass="java.util.HashMap"
+		resultClass="java.lang.Integer">
+		select count(t.txid)
+		<include refid='cbsjpz.tx' />
+	</select>
+	<select id="txQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true">
+		<include refid='common.pagingTop' />
+		select t.txid,
+		       t.txmc,
+		       t.dlx,
+		       (select p.name
+		          from p_code p
+		         where p.code_type = 'cbsjpz'
+		           and p.lang = #appLang#
+		           and t.dlx = p.value) mc,
+		       case t.txid
+		         when (select distinct txid
+		             from p_cbsj_pz pz
+		            where pz.dlx = t.dlx
+		              and pz.txid = t.txid) then
+		          (select t.name from p_code t where t.code_type='simksyzt' and value='1' and t.lang = 'en_US')
+		         else
+		          (select t.name from p_code t where t.code_type='simksyzt' and value='2' and t.lang = 'en_US')
+		       end isuse	           
+		<include refid='cbsjpz.tx' />
+		<include refid='common.pagingBottom' />
+		<include refid="common.pagingSort" />
+	</select>
+
+	<select id="getPz" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select t.sjx, sjx.sjxmc, t.dw, t.width, t.xctpt, t.sfxs, nvl(t.format, '') format, nvl(t.pxbm, '') pxbm, t.txid
+		  from p_cbsj_pz t, p_cbsj_sjx sjx
+		 where t.dlx = sjx.dlx
+		   and t.sjx = sjx.sjx
+		   AND t.dlx = #dlx#
+		   and sjx.sjx = #sjx#
+		   and sjx.lang = #appLang#
+	</select>
+	<select id="getSjx" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select t.sjx, t.sjxmc, t.lang
+		  from p_cbsj_sjx t
+		 where sjx = #sjx#
+		   and dlx = #dlx#
+		   and lang = #appLang#
+	</select>
+	<select id="getXlx" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select t.xlid, t.xlmc, t.pxbm, t.lang
+		  from p_cbsj_xl t
+		 where xlid = #xlid#
+		   and dlx = #dlx#
+		   and lang = #appLang#	
+	</select>
+	<select id="getTx" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select t.txid, t.txmc, t.lang
+		  from p_cbsj_tx t
+		 where txid =  #txid#
+		   and dlx = #dlx#
+		   and lang = #appLang#
+	</select>		
+	
+	<!--删除前确认是否使用 -->
+	<select id="isExists" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	<isEqual property="rwlx" compareValue="02">
+			select distinct sjx.sjx bm, sjx.sjxmc mc
+			  from p_cbsj_pz pz, p_cbsj_sjx sjx
+			 where pz.dlx = sjx.dlx
+			   and pz.sjx = sjx.sjx
+			   and pz.dlx = #dlx#
+			   and sjx.sjx = #sjx#
+			   and sjx.lang = #appLang#
+	 	</isEqual>		
+	 	<isEqual property="rwlx" compareValue="03">
+			select distinct xl.xlid bm, xl.xlmc mc
+			  from p_cbsj_pz pz, p_cbsj_xl xl
+			 where pz.dlx = xl.dlx
+			   and pz.xlx = xl.xlid
+			   and xl.dlx = #dlx#
+			   and xl.xlid = #xlid#
+			   and xl.lang = #appLang#
+	 	</isEqual>
+	 	<isEqual property="rwlx" compareValue="04">
+			select distinct tx.txid bm, tx.txmc mc
+			  from p_cbsj_pz pz, p_cbsj_tx tx
+			 where pz.dlx = tx.dlx
+			   and pz.txid = tx.txid
+			   and tx.dlx = #dlx#
+			   and tx.txid = #txid#
+			   and tx.lang = #appLang#
+	 	</isEqual>
+	</select>
+	
+	<!--添加操作 -->
+	<insert id="insPz" parameterClass="java.util.HashMap">
+		merge into p_cbsj_pz t
+		using (select #sjx#     sjx,
+		              #dw#      dw,
+		              #kd#      kd,
+		              #sfxs#    sfxs,
+		              #fmt#     fmt,
+		              #ctpt#    xctpt,
+		              #txid#    txid,
+		              #pxbm#    pxbm,
+		              #dlx#     dlx,
+		              #xlx#     xlx
+		         from dual) p
+		on (t.sjx = p.sjx and t.dlx = p.dlx and t.xlx = p.xlx and t.dlx = p.dlx)
+		when not matched then
+		  insert
+		    (t.dlx,
+		     t.xlx,
+		     t.sjx,
+		     t.dw,
+		     t.width,
+		     t.xctpt,
+		     t.sfxs,
+		     t.format,
+		     t.pxbm,
+		     t.txid)
+		  values
+		    (p.dlx,
+		     p.xlx,
+		     p.sjx,
+		     p.dw,
+		     p.kd,
+		     p.xctpt,
+		     p.sfxs,
+		     p.fmt,
+		     p.pxbm,
+		     p.txid)
+		when matched then
+		  update
+		     set t.dw     = p.dw,
+		         t.width  = p.kd,
+		         t.xctpt  = p.xctpt,
+		         t.sfxs   = p.sfxs,
+		         t.format = p.fmt,
+		         t.pxbm   = p.pxbm,
+		         t.txid   = p.txid
+	</insert>	
+	<insert id="insSjx" parameterClass="java.util.HashMap">
+		merge into p_cbsj_sjx t
+		using (select #sjx# sjx, #sjxmc# sjxmc, #xzyy# lang, #dlx# dlx from dual) p
+		on (t.sjx = p.sjx and t.lang = p.lang and t.dlx = p.dlx)
+		when not matched then
+		  insert
+		    (t.sjx, t.sjxmc, t.lang, t.dlx)
+		  values
+		    (p.sjx, p.sjxmc, p.lang, p.dlx)
+		when matched then
+		  update set t.sjxmc = p.sjxmc
+	</insert>
+	<insert id="insXlx" parameterClass="java.util.HashMap">
+		merge into p_cbsj_xl t
+		using (select #xlid#    xlid,
+		              #xlmc#    xlmc,
+		              #xzyy#    lang,
+		              #dlx#     dlx,
+		              #pxbm#    as pxbm
+		         from dual) p
+		on (t.xlid = p.xlid and t.lang = p.lang and t.dlx = p.dlx)
+		when not matched then
+		  insert
+		    (t.xlid, t.xlmc, t.lang, t.dlx, t.pxbm)
+		  values
+		    (p.xlid, p.xlmc, p.lang, p.dlx, p.pxbm)
+		when matched then
+		  update set t.xlmc = p.xlmc, t.pxbm = p.pxbm
+	</insert>
+	<insert id="insTxlx" parameterClass="java.util.HashMap">
+		merge into p_cbsj_tx t
+		using (select #txid# txid, #txmc# txmc, #xzyy# lang, #dlx# dlx from dual) p
+		on (t.txid = p.txid and t.lang = p.lang and t.dlx = p.dlx)
+		when not matched then
+		  insert
+		    (t.txid, t.txmc, t.lang, t.dlx)
+		  values
+		    (p.txid, p.txmc, p.lang, p.dlx)
+		when matched then
+		  update set t.txmc = p.txmc
+	</insert>
+	
+	<!--删除操作 -->
+	<delete id="delPz" parameterClass="java.util.HashMap">
+	 	delete from p_cbsj_pz where sjx=#sjx# and dlx=#dlx#
+	</delete>	
+	<delete id="delSjx" parameterClass="java.util.HashMap">
+	 	delete from p_cbsj_sjx where sjx=#sjx# and lang=#appLang# and dlx=#dlx#
+	</delete>
+	<delete id="delXlx" parameterClass="java.util.HashMap">
+	 	delete from p_cbsj_xl where xlid=#xlid# and lang=#appLang# and dlx=#dlx#
+	</delete>
+	<delete id="delTxlx" parameterClass="java.util.HashMap">
+	 	delete from p_cbsj_tx where txid=#txid# and lang=#appLang# and dlx=#dlx#
+	</delete>
+</sqlMap>

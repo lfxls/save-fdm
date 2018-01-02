@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="dlrz">
+ 	<sql id="dlrzList">
+		    from rz_dlxx dlxx
+		    <dynamic prepend="where">
+		    1=1 
+		    <isNotEmpty property="dept" >
+		    
+			and   dlxx.dwdm like concat(#dept#, '%')
+	 		 </isNotEmpty>
+	 		 <isNotEmpty property="czy" >
+			 and  dlxx.czyid like concat('%', #czy# ,'%')
+	 		 </isNotEmpty>
+	 		 <isNotEmpty property="ip" >
+			 and  dlxx.ip  like concat('%', #ip# ,'%')
+	 		 </isNotEmpty>
+	 		 <isNotEmpty property="kssj" >
+	 		 <![CDATA[
+			 and  dlxx.dlsj >= date_format(#kssj#, '%Y-%m-%d')
+			      ]]>
+			 </isNotEmpty>
+			 <isNotEmpty property="jssj" >
+			   <![CDATA[
+			and   dlxx.dlsj < date_add(#jssj#, interval 1 day)
+			   ]]>
+			 </isNotEmpty>
+			 <include refid='common.fwdwFilter' />
+		    </dynamic>
+			 order by dlxx.dlsj desc
+ 	</sql>
+ 	
+ 	<select id="dlrzListCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		select count(dlxx.czyid) 
+		<include refid='dlrz.dlrzList'/>
+	</select>
+	
+	<select id="dlrzListQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true" >
+	    <include refid='common.pagingTop'/>
+			select dlxx.czyid,
+		       ifnull((select xm from qx_czy where czyid = dlxx.czyid),'admin') as czyxm,
+		       dlxx.dwdm,
+		       (select dwmc from qx_qy where dlxx.dwdm = dwdm) as dwmc,
+		       date_format(dlxx.dlsj, '%Y-%m-%d %H:%i:%s') as dlsj,
+		       date_format(dlxx.tcsj, '%Y-%m-%d %H:%i:%s') as tcsj,
+		       dlxx.ip,
+		       dlxx.sid,
+		       dlxx.dwdm
+			<include refid='dlrz.dlrzList'/>
+		 <include refid='common.pagingBottom'/>
+		 <include refid="common.pagingSort"/>
+	</select>
+</sqlMap>

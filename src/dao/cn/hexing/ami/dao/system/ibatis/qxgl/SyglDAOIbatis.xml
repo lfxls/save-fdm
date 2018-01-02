@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="sygl">
+
+	<!-- 查询首页个数 --> 
+ 	<select id="syglCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+ 		select count(syid) from qx_sy where lang = #lang# and xtid =#xtid#
+ 	</select>
+ 	
+ 	<!-- 查询首页 --> 
+ 	<select id="syglQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 	 	<include refid='common.pagingTop'/>
+		select sy.syid,
+		       sy.url,
+		       sy.xtmr,
+		       sy.ms,
+		       sy.symc,
+		       sy.lang,
+		       (select name
+                 from p_code c
+                where sy.xtmr = c.value(+)
+                  and c.lang = #appLang#
+                  and c.code_type = 'sylx') as name
+		  from qx_sy sy
+		 where sy.lang = #lang#
+		 and sy.xtid = #xtid#
+		  order by sy.xtmr
+		 <include refid='common.pagingBottom'/>
+ 	</select>
+ 	
+	<!-- 查询首页记录 -->
+ 	<select id="getSyById" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.system.pojo.sygl.Sygl">
+ 	 	select syid, url, xtmr, ms, symc, lang from qx_sy 
+ 	 	 where syid = #syid# and lang = #lang#
+ 	</select>
+ 	<!-- 判断首页名称是否重复 -->
+ 	<select id="existingNm" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 	 	select 1 from qx_sy 
+ 	 	 where symc = #symc# and lang = #appLang#
+ 	</select>
+ 	
+	<!-- 插入首页 -->
+	<insert id="insSygl" parameterClass="java.util.HashMap">
+        insert into qx_sy
+           (syid, url, xtmr, ms, symc, lang, xtid)
+         values
+           (#syid#, #url#, #xtmr#, #ms#, #symc#, #lang#, #xtid#)
+	</insert>
+	
+	<!-- 更新非默认首页 -->
+	<update id="updXtmr" parameterClass="java.util.HashMap">
+		update qx_sy set xtmr = '02' where lang = #lang# and xtid=#xtid#
+	</update>
+	<!-- 更新首页 -->
+	<update id="updSygl" parameterClass="java.util.HashMap">
+		update qx_sy
+		   set url = #url#, xtmr = #xtmr#, ms = #ms#, symc = #symc#, lang = #lang#
+		 where syid = #syid#
+		   and lang = #lang#
+	</update>
+	
+	<!-- 删除首页 -->
+	<delete id="delSygl" parameterClass="java.util.HashMap">
+		delete from qx_sy where syid = #syid# and lang = #lang#
+	</delete>
+	<!-- 删除角色首页对应表 -->
+	<delete id="delJssy" parameterClass="java.util.HashMap">
+		delete from qx_jssy where syid = #syid#
+	</delete>
+	
+</sqlMap>

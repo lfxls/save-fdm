@@ -1,0 +1,218 @@
+*{margin:0;padding:0;}
+html,body{height:100%; font-size:13px;font-family: arial}
+ul{list-style-type: none;}
+a{text-decoration: none;}
+/* alice.table 脩霉脢陆脛拢驴茅 */
+.ui-table-container{
+	background: #fff;
+}
+.border-tr td{
+	border-bottom:1px solid #99bbe8 !important;
+}
+.ui-table {
+    border-collapse:collapse;
+    border:1px solid #99bbe8;
+    width:100%;
+    font-size: 12px;
+    text-align: left;   
+    background:#fff; 
+}
+.ui-table tr:nth-child(even),
+.ui-table-split /* 赂么脨脨禄禄脡芦脨搂鹿没 */,
+.ui-table-hover /* 脫脙脳梅卤铆赂帽脨脨hover脨搂鹿没 */ {    
+    background-color:#FBFBFB;
+}
+.ui-table tr {
+    color:#555;
+}
+.ui-table thead tr {
+    color:#333;
+}
+.ui-table thead {
+    color:#333;
+    background-color: #F6F6F6;    
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F8F8F8', endColorstr='#F2F2F2');
+    background: -webkit-gradient(linear, left top, left bottom, from(#F8F8F8), to(#F2F2F2));
+    background: -moz-linear-gradient(top, #F8F8F8, #F2F2F2);
+    background: -o-linear-gradient(top, #F8F8F8, #F2F2F2);
+    background: linear-gradient(top, #F8F8F8, #F2F2F2);
+}
+.ui-table th {
+	text-align:left;
+    padding:7px 9px;
+    border-bottom:1px solid #ccc;
+    font-weight: bold;   
+}
+.ui-table td {
+	text-align:left;
+    padding:8px 9px 7px;
+    border-bottom:1px solid #d9d9d9;
+}
+.ui-table th {
+    padding:7px 9px;
+}
+.ui-table tfoot td {
+    border-bottom:none;
+}
+
+/* 脦脼卤脽驴貌table录脫脡脧ui-table-noborder */
+.ui-table-noborder, .ui-table-noborder td, .ui-table-noborder tr, .ui-table-noborder th {
+    border:none;
+    outline:none;
+}
+.ui-table-noborder .ui-table-split, .ui-table-noborder .ui-table-hover {
+    background-color:#f7f7f7;
+}
+/* 碌卤table路脜脭脷脪禄赂枚脫脨卤脽驴貌碌脛脠脻脝梅脰脨脢卤拢卢卤脠脠莽ui-box拢卢脨猫脪陋脤铆录脫脌脿脙没ui-table-inbox脠楼碌么卤戮脡铆碌脛脥芒驴貌 */
+.ui-table-inbox {
+    border:none;
+    outline:none;
+}
+
+/*! endblock table style */
+
+#map{
+	height:100%;
+	background-image:url(../img/map.png);
+	background-repeat:no-repeat;
+	background-position: 0 0;
+}
+/*alarm*/
+.data{
+	color: #bf211d;
+}
+.alarm{
+	position: fixed;
+	right:10px;
+}
+.alarm-header{
+	background: #bf211d;
+	height: 20px;
+	padding:8px 8px 8px 15px;
+	font-size: 18px;
+	color: #fff;
+	overflow: hidden;
+	font-weight: bold;
+	cursor: pointer;
+}
+.alarm-header i{
+	display: block;
+	height: 20px;
+	width: 20px;
+	font-style: normal;
+	color: #bf211d;
+	font-size: 14px;
+	font-weight: bold;
+	background: #fff;
+	float: right;
+	line-height: 20px;
+	text-align: center;
+}
+.alarm-body{
+	border: 2px solid #bf211d;
+	background: #fff;
+}
+/*end alarm*/
+
+/*filter*/
+.filter-toggler{
+	position:absolute;
+	z-index:1002;
+	padding:8px;
+	background:#7864a7;
+	right:10px;
+	top:10px;
+	cursor:pointer;
+}
+
+.filter{
+	position: fixed;
+	right:10px;
+	top:10px;
+	display:none;
+	width:280px;
+}
+.filter-header{
+	background: #7864a7;
+	height: 20px;
+	padding:8px 8px 8px 15px;
+	font-size: 18px;
+	color: #fff;
+	font-weight: bold;
+	cursor: pointer;
+	overflow: hidden;
+}
+.filter-header .button, .filter-toggler .button{
+	display: block;
+	background: #7864a7;
+	height: 20px;
+	width: 20px;
+	font-style: normal;
+	font-size: 14px;
+	font-weight: bold;
+	background: #fff;
+	float: right;
+	line-height: 20px;
+	text-align: center;
+}
+.filter-header .button i, .filter-toggler .button i{
+	display: inline-block;
+	width: 4px;
+	height: 4px;
+	border:3px solid #7864a7;
+	border-radius: 20px;
+}
+.filter-body{
+	border:2px solid #7864a7;
+	background: #fff;
+}
+.filter-body ul li{
+	padding:8px 12px;
+	border-top: 1px dashed #ddd;
+	cursor: pointer;
+}
+.filter-body ul li:hover{
+	background: #f8f8f8;
+}
+.filter-body ul li i{
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	background: #ccc;
+	border-radius: 20px;
+	vertical-align: middle;
+	margin-top: -2px;
+	margin-right: 5px;
+}
+
+.filter-body ul li.active{
+	background: #f4f4f4;
+}
+.filter-body ul li.active i{
+	background: #7864a7;
+}
+.filter-body .btn-label{
+	padding:3px 8px;
+	background: #7c97bf;
+	color: #fff;
+	border-radius: 2px;
+	border:0;
+	float: right;
+	font-size: 12px;
+	margin-top: -3px;
+	margin-left:5px;
+	cursor: pointer;
+}
+/*end filter*/
+
+/*pop style*/
+.pop-detail th{
+	padding:2px 8px 2px 5px;
+	border-right:1px dotted #ccc;
+	font-weight:bold;
+	color:#333;
+}
+.pop-detail td{
+	padding:2px 5px 2px 8px;
+	color:#555;
+}

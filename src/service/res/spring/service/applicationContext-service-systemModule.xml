@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+>
+	<!-- 机构管理 -->
+	<bean id="jgglManager" class="cn.hexing.ami.service.system.qyjggl.JgglManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 安装队管理 -->
+	<bean id="insteamMgtManager" class="cn.hexing.ami.service.system.qyjggl.InsteamMgtManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 操作员管理 -->
+	<bean id="czyglManager" class="cn.hexing.ami.service.system.qxgl.CzyglManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 角色管理 -->
+	<bean id="jsglManager" class="cn.hexing.ami.service.system.qxgl.JsglManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 操作资源管理 -->
+	<bean id="czzyglManager" class="cn.hexing.ami.service.system.qxgl.CzzyglManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 首页管理 -->
+	<bean id="syglManager" class="cn.hexing.ami.service.system.qxgl.SyglManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 日志管理 -->
+	<bean id="darzManager" class="cn.hexing.ami.service.system.rzgl.DarzManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	<!-- 通讯日志管理 -->
+	<bean id="txrzManager" class="cn.hexing.ami.service.system.rzgl.TxrzManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	<!-- 掌机日志管理 -->
+	<bean id="hhuLogManager" class="cn.hexing.ami.service.system.rzgl.HhuLogManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 代码管理-->
+	<bean id="dmglManager" class="cn.hexing.ami.service.system.ggdmgl.DmglManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 系统配置 -->
+	<bean id="xtcsManager" class="cn.hexing.ami.service.system.ggdmgl.XtcsManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 登录日志管理 -->
+	<bean id="dlrzManager" class="cn.hexing.ami.service.system.rzgl.DlrzManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	<!--参数方案-->
+	<bean id="paramMgtManager" class="cn.hexing.ami.service.system.paramData.ParamMgtManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean> 
+</beans>

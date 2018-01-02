@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+    
+<!--系统管理-->
+<sqlMapConfig>
+    <settings useStatementNamespaces="true" />
+	<!-- 用户管理 -->
+    <sqlMap resource="cn/hexing/ami/dao/main/ibatis/arcMgt/mysql/CustMgtDAOIbatis_mysql.xml" />
+    <!-- 表计管理 -->
+    <sqlMap resource="cn/hexing/ami/dao/main/ibatis/arcMgt/mysql/MeterMgtDAOIbatis_mysql.xml" />
+    <!-- 档案导入 -->
+    <sqlMap resource="cn/hexing/ami/dao/main/ibatis/arcMgt/mysql/DataImpDAOIbatis_mysql.xml" />
+    <!-- 表型管理 -->
+    <sqlMap resource="cn/hexing/ami/dao/main/ibatis/arcMgt/mysql/ModelMgtDAOIbatis_mysql.xml" />
+    <!-- 安装计划 -->
+    <sqlMap resource="cn/hexing/ami/dao/main/ibatis/insMgt/mysql/InsPlanDAOIbatis_mysql.xml" />
+    <!-- 无序安装计划 -->
+    <sqlMap resource="cn/hexing/ami/dao/main/ibatis/insMgt/mysql/InsUnPlanDAOIbatis_mysql.xml" />
+    <!-- 安装工单 -->
+    <sqlMap resource="cn/hexing/ami/dao/main/ibatis/insMgt/mysql/InsOrderDAOIbatis_mysql.xml" />
+    <!-- 安装反馈 -->
+    <sqlMap resource="cn/hexing/ami/dao/main/ibatis/insMgt/mysql/InsFbDAOIbatis_mysql.xml" />
+    <!-- SIM卡管理 -->
+    <sqlMap resource="cn/hexing/ami/dao/main/ibatis/arcMgt/mysql/SimMgtDAOIbatis_mysql.xml" />
+    <!-- HHU管理 -->
+    <sqlMap resource="cn/hexing/ami/dao/main/ibatis/arcMgt/mysql/HhuMgtDAOIbatis_mysql.xml" />
+    <!-- 变压器管理 -->
+    <sqlMap resource="cn/hexing/ami/dao/main/ibatis/arcMgt/mysql/TransfMgtDAOIbatis_mysql.xml" />
+    <!-- Token管理 -->
+    <sqlMap resource="cn/hexing/ami/dao/main/ibatis/preMgt/mysql/TokenMgtDAOIbatis_mysql.xml" />
+    <sqlMap resource="cn/hexing/ami/dao/main/ibatis/hhuService/mysql/DataUpdateDAOIbatis_mysql.xml" />
+    
+    <!-- 工单操作日志 -->
+    <sqlMap resource="cn/hexing/ami/dao/main/ibatis/insMgt/mysql/OrderLogDAOIbatis_mysql.xml" />  
+    <!-- 安装计划操作日志 -->
+    <sqlMap resource="cn/hexing/ami/dao/main/ibatis/insMgt/mysql/PlanLogDAOIbatis_mysql.xml" />  
+    <!-- 工单查询 -->
+    <sqlMap resource="cn/hexing/ami/dao/main/ibatis/insMgt/mysql/OrderQueryDAOIbatis_mysql.xml" />  
+    <!-- 安装计划查询 -->
+    <sqlMap resource="cn/hexing/ami/dao/main/ibatis/insMgt/mysql/PlanQueryDAOIbatis_mysql.xml" />  
+   	<!-- map -->
+    <sqlMap resource="cn/hexing/ami/dao/main/ibatis/gis/MapDAOIbatis_mysql.xml" />  
+    <!-- 电量查询 -->
+    <sqlMap resource="cn/hexing/ami/dao/main/ibatis/insMgt/mysql/EnergyQueryDAOIbatis_mysql.xml" />
+  	
+  	<!-- 勘察计划 -->
+    <sqlMap resource="cn/hexing/ami/dao/main/ibatis/srvyMgt/mysql/SurPlanDAOIbatis_mysql.xml" />
+  	<!-- 勘察反馈 -->
+    <sqlMap resource="cn/hexing/ami/dao/main/ibatis/srvyMgt/mysql/SrvyFbDAOIbatis_mysql.xml" />
+    
+ 
+</sqlMapConfig>
+   

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="todo">
+	<insert id="insTodo" parameterClass="cn.hexing.ami.dao.common.pojo.Todo">
+		insert into todo_info
+		  (id,
+		   appid,
+		   originator,
+		   appuserid,
+		   apptodotype,
+		   apptodoid,
+		   url,
+		   tododesc,
+		   status,
+		   priority,
+		   activetime,
+		   rexpiretime,
+		   notice,
+		   remark)
+		values
+		  (S_TODO_INFO.NEXTVAL,
+		   #appid#,
+		   #originator#,
+		   #appuserid#,
+		   #apptodotype#,
+		   #apptodoid#,
+		   #url#,
+		   #tododesc#,
+		   #status#,
+		   #priority#,
+		   #activetime#,
+		   #rexpiretime#,
+		   #notice#,
+		   #remark#)		
+	</insert>
+	
+	<update id="updTodo" parameterClass="java.util.HashMap">
+		update todo_info t
+		   set t.status = #status#
+		 where t.appid = #appId#
+		   and t.apptodoid = #appTodoId#		
+	</update>
+	
+	<sql id="dcl">
+		  from todo_info t
+		 where t.appuserid like '%'|| #czyId# ||'%'
+		<isNotEmpty property="dbzt">
+			and t.status = #dbzt#
+		</isNotEmpty>		   
+		<isNotEmpty property="ywlx">
+			and t.apptodotype = #ywlx#
+		</isNotEmpty>	   
+	</sql>
+	
+	<select id="dclCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(t.apptodotype) 
+		<include refid='todo.dcl'/>	
+	</select>
+	<select id="dclQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<include refid='common.pagingTop'/>
+		select t.tododesc,
+		       t.apptodotype,
+		       (select name
+		          from p_code p
+		         where t.apptodotype = p.value
+		           and p.code_type = 'todotype'
+		           and p.lang = #appLang#) todomc, 
+		       t.originator,
+		       t.status,
+		       (select name
+		          from p_code p
+		         where t.status = p.value
+		           and p.code_type = 'db_zt'
+		           and p.lang = #appLang#) ztmc,
+		       to_char(t.activetime, 'yyyy-mm-dd hh:MM:ss') activetime,
+		       t.url
+		<include refid='todo.dcl'/>
+		 order by t.apptodotype, t.activetime desc
+		<include refid='common.pagingBottom'/>
+		<include refid="common.pagingSort"/>		   	
+	</select>
+	
+	<select id="fl" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select t.apptodotype,
+		       (select name
+		          from p_code p
+		         where t.apptodotype = p.value
+		           and p.code_type = 'todotype'
+		           and p.lang = #appLang#) todomc,
+		       count(t.apptodotype) cnt
+		  from todo_info t
+		 WHERE T.STATUS = '0'
+		   AND T.Appuserid like '%'|| #czyId# ||'%'
+		 group by t.apptodotype
+	</select>
+	
+	<select id="allCnt" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		select count(t.apptodotype) cnt
+		  from todo_info t
+		 WHERE T.STATUS = '0'
+		   AND T.Appuserid like '%'|| #czyId# ||'%'
+	</select>	
+ 	 	
+</sqlMap>

@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="dlmszd">
+	<!-- DLMS规约操作 -->
+	 	<!--新增-->
+	 	<select id="countDlmsSubByCode" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	 		select count(*) from DLMS_SUB where DLMS_SUB_PROTOCOL = #dlms_sub_protocol#
+	 	</select>
+	 	<insert id="inDlmsSub" parameterClass="java.util.HashMap">
+			insert into DLMS_SUB 
+				(DLMS_SUB_PROTOCOL,
+			    DLMS_SUB_NAME,
+			    REMARK,
+			    LANG,
+			    `STATUS`)
+			values
+			   	(#dlms_sub_protocol#,
+			    #dlms_sub_name#,
+			    #desc#,
+			    #lang#,
+			    #status#)
+	 	</insert>
+	 	<insert id="inDlmsRelation" parameterClass="java.util.HashMap">
+			insert into DLMS_RELATION
+				(DLMS_SUB_PROTOCOL,
+			    BASE_PROTOCOL)
+			values
+				(#dlms_sub_protocol#,
+			    #base_protocol#)
+	 	</insert>
+	 	
+	 	<!--修改-->
+	 	<update id="updDlmsSubStatus"  parameterClass="java.util.HashMap">
+		   	update DLMS_SUB SUB
+	       	set
+				SUB.STATUS = #status#
+	        where 
+	        	SUB.DLMS_SUB_PROTOCOL = #dlms_sub_protocol# 
+	 	</update>
+	 	<update id="diableAllDlmsSub"  parameterClass="java.util.HashMap">
+		   	update DLMS_SUB set STATUS = '0'
+	 	</update>
+		<update id="updDlmsSub"  parameterClass="java.util.HashMap">
+		   	update DLMS_SUB SUB
+	       	set
+				SUB.DLMS_SUB_NAME = #dlms_sub_name#, 
+				SUB.REMARK =  #desc#
+	        where 
+	        	SUB.DLMS_SUB_PROTOCOL = #dlms_sub_protocol# 
+	        	and SUB.LANG = #lang#
+	 	</update>
+	 	<!--删除-->
+	 		<!-- 删除规约相关的数据项分类 -->
+		 	<select id="countDlmsDataSort" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		 		select count(ITEM_SORT) from DLMS_DATA_SORT where DLMS_SUB_PROTOCOL = #dlms_sub_protocol#
+		 	</select>
+		 	<delete id="delDlmsDataSortByGy" parameterClass="java.util.HashMap">
+				delete from DLMS_DATA_SORT
+				where DLMS_SUB_PROTOCOL = #dlms_sub_protocol#
+		 	</delete>
+		 		<!-- 删除规约相关的继承关系 -->
+		 	<delete id="delDlmsRelation" parameterClass="java.util.HashMap">
+				delete from DLMS_RELATION
+				where DLMS_SUB_PROTOCOL = #dlms_sub_protocol# or BASE_PROTOCOL = #dlms_sub_protocol#
+		 	</delete>
+		 		<!-- 删除规约 -->
+		 	<delete id="delDlmsSub" parameterClass="java.util.HashMap">
+				delete from DLMS_SUB
+				where DLMS_SUB_PROTOCOL = #dlms_sub_protocol#
+		 	</delete>
+	 	<!-- 查询 -->
+	 	<select id="queryDlmsSub" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		 	select 
+			   allDlmsSub.DLMS_SUB_PROTOCOL,
+			   allDlmsSub.STATUS,
+			   IF(allDlmsSub_detail.DLMS_SUB_NAME is null,allDlmsSub.DLMS_SUB_PROTOCOL,allDlmsSub_detail.DLMS_SUB_NAME) DLMS_SUB_NAME,
+			   allDlmsSub_detail.REMARK,
+			   IF(allDlmsSub_detail.DLMS_SUB_PROTOCOL IS null,'0','1') LANG_EXIST_FLAG,
+			   relation.BASE_PROTOCOL,
+			   IF(baseDlmsSub.Dlms_Sub_Name is null,baseDlmsSub.DLMS_SUB_PROTOCOL,baseDlmsSub.Dlms_Sub_Name) BASE_PROTOCOL_NAME,
+			   allDlmsSub_detail.LANG
+			from (select distinct DLMS_SUB_PROTOCOL, STATUS ,#lang# LANG from DLMS_SUB) allDlmsSub
+			left join DLMS_SUB allDlmsSub_detail 
+			     on allDlmsSub.DLMS_SUB_PROTOCOL = allDlmsSub_detail.DLMS_SUB_PROTOCOL and allDlmsSub.LANG = allDlmsSub_detail.Lang
+			left join DLMS_RELATION relation 
+			     on allDlmsSub.DLMS_SUB_PROTOCOL = relation.DLMS_SUB_PROTOCOL
+			left join DLMS_SUB baseDlmsSub 
+			     on relation.BASE_PROTOCOL = baseDlmsSub.DLMS_SUB_PROTOCOL and allDlmsSub.LANG = baseDlmsSub.Lang
+			 where 1=1 
+			<isNotEmpty prepend="and" property="dlms_sub_protocol">
+				allDlmsSub.DLMS_SUB_PROTOCOL = #dlms_sub_protocol#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="status">
+				allDlmsSub.STATUS = #status#
+			</isNotEmpty>
+			order by allDlmsSub.DLMS_SUB_PROTOCOL
+ 		</select>
+ 		<select id="getParentDlmsSub" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+ 			select BASE_PROTOCOL from DLMS_RELATION where DLMS_SUB_PROTOCOL = #dlms_sub_protocol#
+ 		</select>
+ 		
+ 	<!-- DLMS数据项操作 -->
+ 		<!--新增-->
+ 		<select id="countDlmsParamsByID" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	 		select count(*) from DLMS_PARAMS  
+	 		where ITEM_ID = #item_id#
+	 		
+		</select>
+	 	<insert id="inDlmsParams" parameterClass="java.util.HashMap">
+			insert into DLMS_PARAMS(
+				ITEM_ID,
+			    DLMS_SUB_PROTOCOL,
+			    ITEM_SORT,
+			    CLASS_ID,
+			    OBIS,
+			    ATTRIBUTE_ID,
+			    SCALE,
+			    DLMS_DATA_TYPE,
+			    CALLING_DATA_TYPE,
+			    OPT_TYPE,
+			    ARRAY_STRUCT_LEN,
+			    ARRAY_STRUCT_ITEM,
+			    CUSTOMIZE_CLASS
+			)values (
+				#item_id#,
+			    #dlms_sub_protocol#,
+			    #item_sort#,
+			    #class_id#,
+			    #obis#,
+			    #attribute_id#,
+			    CASE SCALE WHEN #scale# THEN #scale#
+                ELSE NULL END,
+			    <!-- #scale#, -->
+			    
+			    #dlms_data_type#,
+			    #calling_data_type#,
+			    #opt_type#,
+			    #array_struct_len#,
+			    #array_struct_item#,
+			    #customize_class#
+			)
+	 	</insert>
+	 	<insert id="inDlmsParamsName" parameterClass="java.util.HashMap">
+	 		insert into DLMS_PARAMS_NAME(
+	 			ITEM_ID,
+	 			LANG,
+	 			ITEM_NAME
+	 		)values (
+	 			#item_id#,
+	 			#lang#,
+	 			#item_name#
+	 		)
+	 	</insert>
+	 	<!--修改-->
+		<update id="updDlmsParams"  parameterClass="java.util.HashMap">
+			update DLMS_PARAMS
+	       	set
+			    CLASS_ID = #class_id#,
+			    OBIS = #obis#,
+			    ATTRIBUTE_ID = #attribute_id#,
+			    SCALE = #SCALE#,
+			    DLMS_DATA_TYPE = #dlms_data_type#,
+			    CALLING_DATA_TYPE = #calling_data_type#,
+			    OPT_TYPE = #opt_type#,
+			    ARRAY_STRUCT_LEN = #array_struct_len#,
+			    ARRAY_STRUCT_ITEM = #array_struct_item#,
+			    CUSTOMIZE_CLASS = #customize_class#
+	        where 
+	        	ITEM_ID = #item_id#
+		</update>
+		<update id="updDlmsParamsName"  parameterClass="java.util.HashMap">
+			update DLMS_PARAMS_NAME
+	       	set
+			    ITEM_NAME = #item_name#
+	        where 
+	        	ITEM_ID = #item_id#
+	        	and LANG = #lang#
+		</update>
+		<!-- 删除 -->
+			<select id="countArrayStruct" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		 		select count(ITEM_ID) ownCout from DLMS_PARAMS 
+		 		where 
+		 			DLMS_SUB_PROTOCOL = #dlms_sub_protocol# 
+		 			and ARRAY_STRUCT_ITEM like concat('%',#base_attributes#,'%')
+		 	</select>
+		 	<delete id="delDlmsParams" parameterClass="java.util.HashMap">
+				delete DLMS_PARAMS where ITEM_ID = #item_id#
+		 	</delete>
+		 	<delete id="delDlmsParamsName" parameterClass="java.util.HashMap">
+				delete DLMS_PARAMS_NAME where ITEM_ID = #item_id#
+		 	</delete>
+		<!-- 查询 -->
+		<select id="dlmsParamsCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+			SELECT COUNT(params.DLMS_SUB_PROTOCOL) 
+			from DLMS_PARAMS params
+			left join (select * from DLMS_PARAMS_NAME where LANG = #lang#) names on params.ITEM_ID=names.ITEM_ID
+			where 
+				params.DLMS_SUB_PROTOCOL= #dlms_sub_protocol#
+				and params.ITEM_SORT = #item_sort#
+				<isNotEmpty prepend="AND" property="item_name">
+					names.ITEM_NAME like  concat('%',#item_name#,'%')
+				</isNotEmpty>
+		</select>
+	 	<select id="dlmsParamsQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 		select
+				params.ITEM_ID,
+        		names.ITEM_NAME,
+        		IF(names.ITEM_ID is null,'0','1') LANG_EXIST_FLAG,
+			    params.DLMS_SUB_PROTOCOL,
+			    params.ITEM_SORT,
+			    dataSort.ITEM_SORT_NAME,
+			    CLASS_ID,
+			    OBIS,
+			    ATTRIBUTE_ID,
+			    SCALE,
+			    DLMS_DATA_TYPE,
+          		IF(sjlx.name is null,DLMS_DATA_TYPE, sjlx.name) as DLMS_DATA_TYPE_NAME,
+          		OPT_TYPE,
+          		IF(czlx.name is null,OPT_TYPE,czlx.name) as OPT_TYPE_NAME,
+			    CALLING_DATA_TYPE,
+          		IF(dyfsjlx.name is null,CALLING_DATA_TYPE,czlx.name) as CALLING_DATA_TYPE_NAME,
+			    ARRAY_STRUCT_LEN,
+			    ARRAY_STRUCT_ITEM,
+			    CUSTOMIZE_CLASS
+			from
+				<isNotEmpty property="item_id">
+					(select * from DLMS_PARAMS where ITEM_ID = #item_id#) params
+				</isNotEmpty>
+				<isEmpty property="item_id">
+					DLMS_PARAMS params
+				</isEmpty>
+			left join (select * from DLMS_PARAMS_NAME where LANG = #lang#) names on params.ITEM_ID=names.ITEM_ID
+      		left join (select * from P_CODE where CODE_TYPE='dlms_sjlx' and LANG= #lang#) sjlx on sjlx.VALUE=params.DLMS_DATA_TYPE
+      		left join (select * from P_CODE where CODE_TYPE='dlms_czlx' and LANG= #lang#) czlx on czlx.VALUE=params.OPT_TYPE
+      		left join (select * from P_CODE where CODE_TYPE='dlms_dyfsjlx' and LANG= #lang#) dyfsjlx on dyfsjlx.VALUE=params.CALLING_DATA_TYPE
+      		left join (select * from DLMS_DATA_SORT where DLMS_SUB_PROTOCOL=#dlms_sub_protocol# and LANG=#lang#) dataSort on dataSort.ITEM_SORT=params.ITEM_SORT
+			where 1=1
+				<isNotEmpty prepend="AND" property="dlms_sub_protocol">
+					params.DLMS_SUB_PROTOCOL= #dlms_sub_protocol#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="item_sort">
+					params.ITEM_SORT = #item_sort#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="item_name">
+					names.ITEM_NAME like concat('%',#item_name#,'%')
+				</isNotEmpty>
+			order by params.ITEM_ID
+	 	</select>
+	 <!-- DLMS数据项分类操作 -->
+ 		<!--新增-->
+ 		<select id="countDlmsDataSortByCode" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	 		select count(*) from DLMS_DATA_SORT 
+	 		where 
+	 			DLMS_SUB_PROTOCOL = #dlms_sub_protocol#
+				and ITEM_SORT = #item_sort#
+	 	</select>
+ 		<insert id="inDlmsDataSort" parameterClass="java.util.HashMap">
+			insert into DLMS_DATA_SORT
+				(DLMS_SUB_PROTOCOL,
+			    ITEM_SORT,
+			    LANG,
+			    ITEM_SORT_NAME)
+			values
+				(#dlms_sub_protocol#,
+			    #item_sort#,
+			    #lang#,
+			    #item_sort_name#)
+	 	</insert>
+	 	
+	 	<!--修改-->
+		<update id="updDlmsDataSort"  parameterClass="java.util.HashMap">
+		   	update DLMS_DATA_SORT
+	       	set
+				ITEM_SORT_NAME = #item_sort_name#
+	        where 
+	        	DLMS_SUB_PROTOCOL = #dlms_sub_protocol# 
+	        	and LANG = #lang#
+	        	and ITEM_SORT = #item_sort#
+	 	</update>
+	 	<!-- 删除 -->
+ 			<select id="countDlmsParams" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		 		select count(ITEM_ID) from DLMS_PARAMS 
+		 		where 
+		 			DLMS_SUB_PROTOCOL = #dlms_sub_protocol# 
+		 			and ITEM_SORT = #item_sort#
+		 	</select>
+		 	<delete id="delDlmsDataSort" parameterClass="java.util.HashMap">
+				delete from DLMS_DATA_SORT
+				where 
+					DLMS_SUB_PROTOCOL = #dlms_sub_protocol#
+					and ITEM_SORT = #item_sort#
+		 	</delete>
+ 		<!-- 查询 -->
+	 	<select id="queryDlmsDataSort" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 		select 
+			   	allDlmsDataSort.ITEM_SORT,
+				IF(ITEM_SORT_NAME is null , allDlmsDataSort.ITEM_SORT,ITEM_SORT_NAME) as ITEM_SORT_NAME,
+				IF(allDlmsDataSort_detail.ITEM_SORT is null,'0','1') LANG_EXIST_FLAG
+			from 
+				(
+				select distinct ITEM_SORT, DLMS_SUB_PROTOCOL, #lang# LANG 
+				from DLMS_DATA_SORT 
+				where DLMS_SUB_PROTOCOL = #dlms_sub_protocol#
+					<isNotEmpty prepend="AND" property="item_sort">
+						ITEM_SORT = #item_sort#
+					</isNotEmpty>
+				) allDlmsDataSort
+			left join DLMS_DATA_SORT allDlmsDataSort_detail 
+			     on allDlmsDataSort.ITEM_SORT = allDlmsDataSort_detail.ITEM_SORT
+			     	and allDlmsDataSort.DLMS_SUB_PROTOCOL = allDlmsDataSort_detail.DLMS_SUB_PROTOCOL
+             		and allDlmsDataSort.LANG = allDlmsDataSort_detail.LANG
+	 	</select>
+	 	
+</sqlMap>
+
+	
+

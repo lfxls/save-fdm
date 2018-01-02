@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="archSyn">  
+	<select id="getUnSyMDCMeter" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT FB.N_MSN MSN, FB.O_MSN OMSN
+		FROM INS_FB_METER FB
+		WHERE FB.STATUS=#status#
+	</select>	
+	
+	<select id="getMeter" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT M.MSN MSN
+		FROM AR_METER M 
+		WHERE 1=1 
+		AND M.MSN
+		<iterate prepend="IN" open="(" close=")" property="msns"
+			conjunction=",">
+			#msns[]#
+		</iterate>
+	</select>
+	
+	<insert id="insMeter" parameterClass="java.util.HashMap">
+		INSERT INTO AR_METER(MSN,CNO,UID,TFID,MBOXID,M_TYPE,WIRING,MODE,STATUS,DATA_SRC,MATCODE)
+		VALUES(#msn#,#cno#,#uid#,#tfid#,#mBox#,#mType#,#wir#,#mMode#,#status#,#dataSrc#,#matCode#)
+	</insert>
+	
+	<update id="updMeter" parameterClass="java.util.HashMap">
+		UPDATE AR_METER SET MSN=#msn#
+			,CNO = #cno#, TFID = #tfid#
+		<isNotEmpty property="uid">
+			,UID = #uid#
+		</isNotEmpty>
+		<isNotEmpty property="mBox">
+			,MBOXID = #mBox#
+		</isNotEmpty>
+		<isNotEmpty property="mType">
+			,M_TYPE = #mType#
+		</isNotEmpty>
+		<isNotEmpty property="wir">
+			,WIRING = #wir#
+		</isNotEmpty>
+		<isNotEmpty property="mMode">
+			,MODE = #mMode#
+		</isNotEmpty>
+		<isNotEmpty property="status">
+			,STATUS = #status#
+		</isNotEmpty>
+		<isNotEmpty property="matCode">
+			,MATCODE = #matCode#
+		</isNotEmpty>
+		WHERE MSN=#msn#
+	</update>
+	
+	<select id="getCust" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT C.CNO CNO
+		FROM AR_CUSTOMER C
+		WHERE 1=1
+		AND C.CNO
+		<iterate prepend="IN" open="(" close=")" property="cnos"
+			conjunction=",">
+			#cnos[]#
+		</iterate>
+	</select>
+	
+	<insert id="insCust" parameterClass="java.util.HashMap">
+		INSERT INTO AR_CUSTOMER(CNO,CNAME,UID,ADDR,BILLING_DATE,PHONE,DATA_SRC,STATUS,DISP_STATUS)
+		VALUES(#cno#,#cname#,#uid#,#addr#,#bDate#,#phone#,#dataSrc#,'0','0')
+	</insert>
+	
+	<update id="updCust" parameterClass="java.util.HashMap">
+		UPDATE AR_CUSTOMER SET CNO=#cno#
+		<isNotEmpty property="cname">
+			,CNAME = #cname#
+		</isNotEmpty>
+		<isNotEmpty property="addr">
+			,ADDR = #addr#
+		</isNotEmpty>
+		<isNotEmpty property="bDate">
+			,BILLING_DATE = #bDate#
+		</isNotEmpty>
+		<isNotEmpty property="phone">
+			,PHONE = #phone#
+		</isNotEmpty>
+		<isNotEmpty property="status">
+			,STATUS = #status#
+		</isNotEmpty>
+		WHERE CNO=#cno#
+	</update>
+	
+	<select id="getTF" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT TF.TFID TFID
+		FROM AR_TF TF
+		WHERE 1=1
+		AND TF.TFID
+		<iterate prepend="IN" open="(" close=")" property="tfIds"
+			conjunction=",">
+			#tfIds[]#
+		</iterate>
+	</select>
+	
+	<insert id="insTF" parameterClass="java.util.HashMap">
+		INSERT INTO AR_TF(TFID,UID,TFNAME,ADDR,CAP,STATUS,DATA_SRC)
+		VALUES(#tfId#,#uid#,#tfName#,#addr#,#cap#,'0',#dataSrc#)
+	</insert>
+	
+	<update id="updTF" parameterClass="java.util.HashMap">
+		UPDATE AR_TF SET TFID=#tfId#
+		<isNotEmpty property="tfName">
+			,TFNAME = #tfName#
+		</isNotEmpty>
+		<isNotEmpty property="addr">
+			,ADDR = #addr#
+		</isNotEmpty>
+		<isNotEmpty property="cap">
+			,CAP = #cap#
+		</isNotEmpty>
+		WHERE TFID=#tfId#
+	</update>
+	
+	<update id="updCustStatus">
+		UPDATE AR_CUSTOMER SET STATUS=#status#
+		<isEmpty property="uid">
+			,UID=#uid#
+		</isEmpty>
+		WHERE CNO=#cno#
+	</update>
+	
+	<!-- 获取根单位ID -->
+	<select id="getRootUID" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		SELECT DWDM FROM QX_QY WHERE SJDWDM IS NULL
+	</select>
+	
+	<!-- 获取当前变压器信息 -->
+	<select id="getCurrentTF" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT TFID,UID FROM AR_TF WHERE TFID=#tfid#
+	</select>
+	
+	<!-- 获取当前用户信息 -->
+	<select id="getCurrentCust" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT CNO, UID FROM AR_CUSTOMER WHERE CNO=#cno#
+	</select>
+	
+	<!-- 查询当前户号下是否存在其他表计 -->
+	<select id="existOMInCno" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT 1 FROM AR_METER WHERE CNO=#cno# AND MSN !=#msn#
+	</select>
+	
+	<!-- 查询存在多个表号的户号 -->
+	<select id="getComCNO" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT M.CNO 
+		FROM AR_METER M
+		WHERE M.CNO = (SELECT CNO FROM AR_METER WHERE MSN = #msn#)
+	</select>
+</sqlMap>

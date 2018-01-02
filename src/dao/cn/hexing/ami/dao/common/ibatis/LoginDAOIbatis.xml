@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="login">
+ 	<!-- 取登录操作员 -->
+	<select id="getAqCzy"  parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.common.pojo.AqCzy">
+		<isEqual property="czyid" compareValue="admin">
+			SELECT 'admin' AS CZYID,
+				   '' AS BMID,
+			       '' AS BMMC,
+			       DW.DWDM,
+			       DW.DWMC,
+			       DW.JB,
+			       'admin' AS XM,
+			       (select mm from qx_adminmm where czyid='admin' and rownum=1 ) AS MM,
+			       '0' AS ZT,
+			       '' as cjrq,
+			       '' as bdip,
+			       '' as bdmac,
+			       '' as dhhm,
+			       '' as sjhm,
+			       '' as yxdz,
+			       '' as ip,
+			       '' as sysjq,
+			       '' as sysjz,
+			       '' as txfws,
+			       '' as mmcwcs
+			  FROM QX_QY DW
+			 WHERE DW.SJDWDM IS NULL
+		</isEqual>
+		<isNotEqual property="czyid" compareValue="admin">
+			SELECT CZY.CZYID,
+			       CZY.DWDM,
+			       CZY.XM,
+			       CZY.MM,
+			       CZY.ZT,
+			       TO_CHAR(CZY.CJRQ,'yyyy-mm-dd') AS CJRQ,
+			       CZY.BDIP,
+			       CZY.BDMAC,
+			       CZY.DHHM,
+			       CZY.SJHM,
+			       CZY.YXDZ,
+			       BM.BMID,
+			       BM.BMMC,
+			       DW.DWMC,
+			       DW.JB,
+			       CZY.BDIP,
+			       CZY.SYSJQ,
+			       CZY.SYSJZ,
+			       CZY.txfws,
+			       CZY.MMCWCS 
+			  FROM QX_CZY CZY, (select bmid,bmmc from qx_bm union all select posid bmid,posname bmmc from pos_station) BM, QX_QY DW, QX_CZYBM CZYBM
+			 WHERE CZY.DWDM = DW.DWDM
+			   AND CZY.CZYID = CZYBM.CZYID
+			   AND CZYBM.BMID = BM.BMID
+			   AND CZY.CZYID = #czyid#
+		   </isNotEqual>
+	</select>
+	
+	<!-- 取操作员访问角色 -->
+	<select id="getJsByCzy"  parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	select t.jsid from qx_czyjs t where t.czyid=#czyid#
+	</select>
+	
+	<!-- 取操作员菜单访问权限 -->
+	<select id="getCdByCzy"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	 	select count(t.czyid) from qx_czycd t where t.czyid=#czyid#
+	</select>
+	 
+	<!-- 取操作员访问菜单 -->
+	<select id="getJsCdByCzy"  parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.common.pojo.XtCd">
+		select * from (
+		 SELECT DISTINCT CD.CDID AS ID, CD.CDMC AS TEXT, CD.URL, CD.SFYJD AS ISLEAF, CD.PXBM
+		 <isEqual property="czyid" compareValue="admin">
+              FROM QX_CD CD
+              WHERE 1=1
+		 </isEqual>
+		 <isNotEqual property="czyid" compareValue="admin">
+			   FROM QX_JSCD JSCD, QX_CZYJS CZYJS, QX_CD CD
+			 WHERE JSCD.JSID = CZYJS.JSID
+			   AND CD.CDID = JSCD.CDID
+			   AND CZYJS.JSID = JSCD.JSID
+			   AND CZYJS.CZYID = #czyid#
+		  </isNotEqual>
+		   AND CD.SFXS = '1'
+		   AND CD.LANG = #lang#
+		   <isEqual property="sjcdbm" compareValue="root">   
+		    AND CD.SFGJD = '1'
+		   </isEqual>
+		   <isNotEqual property="sjcdbm" compareValue="root">   
+		    AND CD.SJCDID = #sjcdbm#
+		   </isNotEqual>
+		   <!--加入操作员菜单授权模式，预付费pos点授权增加-->
+		   union
+		   select distinct cd.cdid  as id,
+                cd.cdmc  as text,
+                cd.url,
+                cd.sfyjd as isleaf,
+                cd.pxbm
+			from qx_cd cd
+			where cd.cdid in (select t1.cdid from qx_czycd t1 where t1.czyid = '2001')
+			<isEqual property="sjcdbm" compareValue="root">  
+			   and cd.sfgjd = '1'
+			</isEqual>
+			<isNotEqual property="sjcdbm" compareValue="root">   
+				AND CD.SJCDID = #sjcdbm#
+			</isNotEqual>
+			   and cd.sfxs = '1'
+			   and cd.lang = #lang#
+		 )  
+		 ORDER BY PXBM
+	</select>
+	
+	<!--插入登录日志-->
+	<insert id="insRzCzy"  parameterClass="java.util.HashMap">
+		INSERT INTO RZ_DLXX
+		  (CZYID, DWDM, DLSJ, IP, SID,XTID)
+		VALUES
+		  (#czyId#, #dwdm#, SYSDATE, #ip#, #sessionId#,#xtid#)
+	</insert>
+	
+	<!--修改登录日志-->
+	<update id="updateRzCzy" parameterClass="java.lang.String">
+		UPDATE RZ_DLXX SET TCSJ = SYSDATE WHERE SID = #sessionId#
+	</update>
+	
+	<!--修改密码错误次数-->
+	<update id="updateMmcwcs" parameterClass="java.util.HashMap">
+		UPDATE QX_CZY SET MMCWCS = #mmcwcs# 
+		<isNotEmpty property="zt">
+			,zt = #zt#
+		</isNotEmpty>
+		WHERE CZYID = #czyId#
+	</update>
+	
+	<!-- 取得访问标记 -->
+	<select id="getFwbj"  parameterClass="java.util.HashMap"  resultClass="java.util.HashMap" >
+		SELECT *
+		FROM QX_CZYFWQX FWQX
+		WHERE FWQX.CZYID = #czyid# AND FWQX.DWDM = #dwdm#
+	</select>
+	
+ 	<!--获取所有系统菜单-->
+ 	<select id="getAllMenus"  parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.common.pojo.XtCd">
+ 		select distinct cd.cdid  as id,
+	            cd.cdmc  as text,
+	            cd.url,
+	            cd.sfyjd as isleaf,
+	            cd.pxbm,
+	            cd.lang,
+	            cd.sfgjd,
+	            cd.sjcdid pid,
+	            cd.xtids
+	      from qx_cd cd
+	      where cd.sfxs = '1'
+ 	</select>
+ 	
+ 	<!--获取所有系统角色菜单关联-->
+ 	<select id="getAllRoleMenus"  parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 		select jsid, cdid from qx_jscd
+ 	</select>
+ 	
+ 	<!--获取所有系统操作员菜单关联-->
+ 	<select id="getAllOperatorMenus"  parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 		select czyid, cdid, jsid from qx_czycd
+ 	</select>
+ 	
+ 	<!-- 取操作员访问角色对应首页-->
+	<select id="getJsSy" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.common.pojo.Sy">
+	 	select sy.syid, sy.symc, sy.url, sy.xtmr, sy.ms
+		  from qx_sy sy
+		 where sy.lang = #lang# and sy.xtid=#xtid# and sy.syid in
+		       (select j.syid
+		          from qx_jssy j
+		         where j.jsid in
+		               (select t.jsid from qx_czyjs t where t.czyid = #czyid#))
+	</select>
+	<!-- 取默认首页-->
+	<select id="getMrSy"  parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.common.pojo.Sy">
+	 	select sy.syid, sy.symc, sy.url, sy.xtmr, sy.ms from qx_sy sy where sy.xtid=#xtid# and sy.xtmr=#xtmr# and sy.lang=#lang#
+	</select>
+	
+	<!--获取所有系统菜单操作-->
+ 	<select id="getAllMenusOpt"  parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.common.pojo.CdCz">
+ 		select czid, czlbid, czmc, cdid, sfxs, pxbm, lang from qx_cz where sfxs = '1'
+ 	</select>
+ 	
+ 	<!--首页获取告警数量-->
+ 	<select id="zdgjAlertCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		    select count(zb.zdjh)
+			     FROM SB_GJ SB,
+			       SB_SJZB ZB,
+			       DA_ZD ZD,
+			       G_TQ TQ,
+			       G_BYQ BYQ,
+			       DA_YH YH,
+			       QX_QY DW,
+			       P_GJBM GJ,
+			        da_bj bj,
+       		   		da_cld cld
+			 WHERE ZB.SJID = SB.SJID
+			   AND ZB.ZDJH = ZD.ZDJH
+			   AND ZB.HH = YH.HH(+)
+			   AND ZD.DWDM = DW.DWDM
+			   AND ZD.BYQID = BYQ.BYQID(+)
+			   AND BYQ.TQID = TQ.TQID(+)
+			   AND SB.GJBM = GJ.GJBM(+) 
+			    and zd.zdjh = cld.zdjh
+   				and cld.cldjh = bj.bjjh(+)
+   				and zb.cldjh = cld.cldjh
+			   and gj.lang=#appLang# 
+			    <![CDATA[  
+			   AND SB.RQSJ >= TO_DATE(#ksrq#,'YYYY-MM-DD')
+			   AND SB.RQSJ <= TO_DATE(#jsrq#,'YYYY-MM-DD')+1
+			      ]]>
+ 	 	  <include refid='common.nodeFilter'/>
+ 	 </select>
+ 	 
+ 	 <!--根据用户角色获取订阅信息-->
+ 	<select id="getDyxxList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 		select xxbm from qx_jsdy d where d.jsid = #jsid#
+ 	</select>
+ 	
+ 	<!--获取系统配置参数列表-->
+ 	<select id="getSysparaList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 		<![CDATA[ 
+ 		select name pkey,default_value pvalue from p_syspara 
+ 		 ]]>
+ 	</select>
+ 	
+ 	<!--获取快捷菜单列表-->
+ 	<select id="getShortCutsList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 		select cd.cdmc, cd.url,cd.cdid
+		  from qx_kjfs k, qx_cd cd
+		 where k.cdid = cd.cdid
+		   and cd.lang = #appLang#
+		   and k.czyid = #czyId#
+		<isNotEqual property="czyId" compareValue="admin">
+		   and exists
+		 (select 'z'
+		          from qx_jscd jd
+		         where jd.jsid in (select jsid from qx_czyjs where czyid = #czyId#)
+		           and jd.cdid = k.cdid)
+		</isNotEqual>
+ 	</select>
+ 	
+ 	<!-- 新增菜单快捷方式 -->	 
+ 	<insert id="addShortCuts" parameterClass="java.util.HashMap">
+		insert into qx_kjfs (cdid, czyid, xh) values(#menuId#, #czyId#, (select decode(max(xh),null,1,max(xh)) from qx_kjfs))
+ 	 </insert>
+ 	 
+ 	 <!-- 删除菜单快捷方式 -->
+ 	 <delete id="delShortCuts" parameterClass="java.util.HashMap">
+ 	    delete qx_kjfs where cdid=#menuId# and czyid=#czyId#
+ 	 </delete>
+ 	 
+ 	 <!--获取当前单位下第一个变压器ID 用于小型预付费场景-->
+ 	<select id="getFirstTransId" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 		select * from (select byqid from g_byq where dwdm=#dwdm# order by byqid) where rownum=1
+ 	</select>
+ 	
+ 	<!-- 记录pos机登录会话信息 -->	 
+ 	<insert id="savePosLoginLog" parameterClass="java.util.HashMap">
+ 		<selectKey resultClass="java.lang.Integer" keyProperty="sid">
+			 select S_POSSESSION.Nextval from dual
+		</selectKey>
+		INSERT INTO POS_M_SESSION(SESSIONID,czyid,posmid,logindate) VALUES(#sid#,#czyId#,#posmId#,sysdate)
+ 	 </insert>
+</sqlMap>

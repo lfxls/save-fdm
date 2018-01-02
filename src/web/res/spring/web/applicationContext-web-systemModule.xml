@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+>
+
+	<!-- 机构管理 -->
+	<bean id="jgglAction" class="cn.hexing.ami.web.action.system.qyjggl.JgglAction" scope="prototype">
+		<property name="jgglManager" ref="jgglManager"/>
+	</bean>
+	
+	<!-- 安装队管理 -->
+	<bean id="insteamMgtAction" class="cn.hexing.ami.web.action.system.qyjggl.InsteamMgtAction" scope="prototype">
+		<property name="insteamMgtManager" ref="insteamMgtManager"/>
+	</bean>
+	
+	<!-- 角色管理 -->
+	<bean id="jsglAction" class="cn.hexing.ami.web.action.system.qxgl.JsglAction" scope="prototype">
+		<property name="jsglManager" ref="jsglManager"/>
+	</bean>
+	
+	<!-- 操作员管理 -->
+	<bean id="czyglAction" class="cn.hexing.ami.web.action.system.qxgl.CzyglAction" scope="prototype">
+		<property name="czyglManager" ref="czyglManager"/>
+	</bean>
+	
+	<!-- 操作资源管理 -->
+	<bean id="czzyglAction" class="cn.hexing.ami.web.action.system.qxgl.CzzyglAction" scope="prototype">
+		<property name="czzyglManager" ref="czzyglManager"/>
+	</bean>
+
+	<!-- 首页管理 -->
+	<bean id="syglAction" class="cn.hexing.ami.web.action.system.qxgl.SyglAction" scope="prototype">
+		<property name="syglManager" ref="syglManager"/>
+	</bean>
+	
+	<!-- 档案日志 -->
+	<bean id="darzAction" class="cn.hexing.ami.web.action.system.rzgl.DarzAction" scope="prototype">
+		<property name="darzManager" ref="darzManager" />
+	</bean>
+	<!-- 通讯日志 -->
+	<bean id="txrzAction" class="cn.hexing.ami.web.action.system.rzgl.TxrzAction" scope="prototype">
+		<property name="txrzManager" ref="txrzManager" />
+	</bean>
+	<!-- 掌机日志 -->
+	<bean id="hhuLogAction" class="cn.hexing.ami.web.action.system.rzgl.HhuLogAction" scope="prototype">
+		<property name="hhuLogManager" ref="hhuLogManager" />
+	</bean>
+	
+	
+	<!-- 代码管理-->
+	<bean id="dmglAction" class="cn.hexing.ami.web.action.system.ggdmgl.DmglAction" scope="prototype">
+		<property name="dmglManager" ref="dmglManager" />
+	</bean>
+	
+	<!-- 系统配置 -->
+	<bean id="xtcsAction" class="cn.hexing.ami.web.action.system.ggdmgl.XtcsAction" scope="prototype">
+		<property name="xtcsManager" ref="xtcsManager" />
+	</bean>
+	
+	<!-- 登录日志管理 -->
+	<bean id="dlrzAction" class="cn.hexing.ami.web.action.system.rzgl.DlrzAction" scope="prototype">
+		<property name="dlrzManager" ref="dlrzManager" />
+	</bean>
+	<!-- 参数方案 -->
+	<bean id="paramMgtAction" class="cn.hexing.ami.web.action.system.paramData.ParamMgtAction" scope="prototype">
+		<property name="paramMgtManager" ref="paramMgtManager"/>
+	</bean>
+</beans>

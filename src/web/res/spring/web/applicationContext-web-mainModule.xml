@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+>
+	<!-- 用户管理 -->
+	<bean id="custMgtAction" class="cn.hexing.ami.web.action.main.arcMgt.CustMgtAction" scope="prototype">
+		<property name="custMgtManager" ref="custMgtManager"/>
+	</bean>
+	<!-- 表计管理 -->
+	<bean id="meterMgtAction" class="cn.hexing.ami.web.action.main.arcMgt.MeterMgtAction" scope="prototype">
+		<property name="meterMgtManager" ref="meterMgtManager"/>
+	</bean>
+	<bean id="dataImpAction" class="cn.hexing.ami.web.action.main.arcMgt.DataImpAction" scope="prototype">
+		<property name="dataImpManager" ref="dataImpManager"/>
+	</bean>
+	<!-- 表型管理 -->
+	<bean id="modelMgtAction" class="cn.hexing.ami.web.action.main.arcMgt.ModelMgtAction" scope="prototype">
+		<property name="modelMgtManager" ref="modelMgtManager"/>
+	</bean>
+	<!-- 安装计划 -->
+	<bean id="insPlanAction" class="cn.hexing.ami.web.action.main.insMgt.InsPlanAction" scope="prototype">
+		<property name="insPlanManager" ref="insPlanManager"/>
+	</bean>
+	<!-- 无序安装计划 -->
+	<bean id="insUnPlanAction" class="cn.hexing.ami.web.action.main.insMgt.InsUnPlanAction" scope="prototype">
+		<property name="insUnPlanManager" ref="insUnPlanManager"/>
+	</bean>
+	<!-- 安装工单 -->
+	<bean id="insOrderAction" class="cn.hexing.ami.web.action.main.insMgt.InsOrderAction" scope="prototype">
+		<property name="insOrderManager" ref="insOrderManager"/>
+	</bean>
+	<!-- 安装反馈 -->
+	<bean id="insFbAction" class="cn.hexing.ami.web.action.main.insMgt.InsFbAction" scope="prototype">
+		<property name="insFbManager" ref="insFbManager"/>
+	</bean>
+	<!-- SIM卡管理 -->
+	<bean id="simMgtAction" class="cn.hexing.ami.web.action.main.arcMgt.SimMgtAction" scope="prototype">
+		<property name="simMgtManager" ref="simMgtManager"/>
+	</bean>
+	<!-- HHU管理 -->
+	<bean id="hhuMgtAction" class="cn.hexing.ami.web.action.main.arcMgt.HhuMgtAction" scope="prototype">
+		<property name="hhuMgtManager" ref="hhuMgtManager"/>
+	</bean>
+	<!-- 变压器管理 -->
+	<bean id="transfMgtAction" class="cn.hexing.ami.web.action.main.arcMgt.TransfMgtAction" scope="prototype">
+		<property name="transfMgtManager" ref="transfMgtManager"/>
+	</bean>
+	<!-- Token管理 -->
+	<bean id="tokenMgtAction" class="cn.hexing.ami.web.action.main.preMgt.TokenMgtAction" scope="prototype">
+		<property name="tokenMgtManager" ref="tokenMgtManager"/>
+	</bean>
+	<!-- 工单操作日志 -->
+	<bean id="orderLogAction" class="cn.hexing.ami.web.action.main.insMgt.OrderLogAction" scope="prototype">
+		<property name="orderLogManager" ref="orderLogManager"/>
+	</bean>
+	<!-- 安装计划操作日志 -->
+	<bean id="planLogAction" class="cn.hexing.ami.web.action.main.insMgt.PlanLogAction" scope="prototype">
+		<property name="planLogManager" ref="planLogManager"/>
+	</bean>
+	<!-- 工单查询 -->
+	<bean id="orderQueryAction" class="cn.hexing.ami.web.action.main.insMgt.OrderQueryAction" scope="prototype">
+		<property name="orderQueryManager" ref="orderQueryManager"/>
+	</bean>
+	<!-- 安装计划查询 -->
+	<bean id="planQueryAction" class="cn.hexing.ami.web.action.main.insMgt.PlanQueryAction" scope="prototype">
+		<property name="planQueryManager" ref="planQueryManager"/>
+	</bean>
+	<!-- GIS -->
+	<bean id="mapAction" class="cn.hexing.ami.web.action.main.gis.MapAction" scope="prototype">
+		<property name="mapManager" ref="mapManager"/>
+	</bean>
+	<!-- 电量查询 -->
+	<bean id="energyQueryAction" class="cn.hexing.ami.web.action.main.insMgt.EnergyQueryAction" scope="prototype">
+		<property name="energyQueryManager" ref="energyQueryManager"/>
+	</bean>
+	
+	<!-- 勘探计划 -->
+	<bean id="surPlanAction" class="cn.hexing.ami.web.action.main.srvyMgt.SurPlanAction" scope="prototype">
+		<property name="surPlanManager" ref="surPlanManager"/>
+	</bean>
+	
+	<!-- 勘探反馈 -->
+	<bean id="srvyFbAction" class="cn.hexing.ami.web.action.main.srvyMgt.SrvyFbAction" scope="prototype">
+		<property name="srvyFbManager" ref="srvyFbManager"/>
+	</bean>
+</beans>

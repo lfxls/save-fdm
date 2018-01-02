@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+<!-- 安装信息统计 -->
+<package name="insInfoReport" namespace="/report/insInfoReport" extends="struts-base">
+   <!-- 安装进度报表-->
+        <action name="insProRep" class="insProRepAction">
+            <result>/jsp/reportModule/insInfoReport/insProRep/insProRep.jsp</result>
+        </action>
+	<!--安装计划状态-->
+    	<action name="planStsRep" class="planStsRepAction">
+            <result>/jsp/reportModule/insInfoReport/planStsRep/planStsRep.jsp</result>
+        </action>
+	<!--安装数量统计-->
+    	<action name="insNumRep" class="insNumRepAction">
+            <result>/jsp/reportModule/insInfoReport/insNumRep/insNumRep.jsp</result>
+            <result name="detail">/jsp/reportModule/insInfoReport/insNumRep/insNumDetailRep.jsp</result>
+        </action> 
+ 	<!--安装明细报表-->
+    	<action name="insDetailRep" class="insDetailRepAction">
+            <result>/jsp/reportModule/insInfoReport/insDetailRep/insDetailRep.jsp</result>
+        </action>        
+	<!--安装工单状态-->
+    	<action name="woStsRep" class="woStsRepAction">
+            <result>/jsp/reportModule/insInfoReport/woStsRep/woStsRep.jsp</result>
+        </action>       
+</package>
+<package name="insQualReport" namespace="/report/insQualReport" extends="struts-base">
+ 	<!-- 失败分布统计-->
+        <action name="insFailRep" class="insFailRepAction">
+            <result>/jsp/reportModule/insQualReport/insFailRep/insFailRep.jsp</result>
+        </action>
+    <!-- 安装问题数量统计-->
+        <action name="probNumRep" class="probNumRepAction">
+            <result>/jsp/reportModule/insQualReport/probNumRep/probNumRep.jsp</result>
+            <result name="Detail">/jsp/reportModule/insQualReport/probNumRep/probDetailRep.jsp</result>
+         	<result name="testDetail">/jsp/reportModule/insQualReport/probNumRep/testDetailRep.jsp</result>
+        </action>
+</package>
+
+</struts>

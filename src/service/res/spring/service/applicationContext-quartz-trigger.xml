@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd"
+	default-lazy-init="true">
+	<description>Quartz触发器配置</description>
+	<!-- 4、配置调度器 ，容器启动就会执行调度程序 -->
+	<!-- 总管理类，如果lazy-init='false',则容器启动时就会执行调度程序 -->
+	<!-- 如果lazy-init='true',则需要实例化该bean才能执行调度程序 -->
+	<bean id="schdulerFactory" lazy-init="true" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" >
+		<property name="configLocation" value="classpath:res/quartz.properties"/>
+		<property name="triggers">
+			<list>
+			    <!--
+			    	<ref bean="T06-dataExpTrigger" />
+				    <ref bean="T07-softDogTrigger" />
+				  -->
+				  <ref bean="T01-insFbTrigger" />
+				 <!--  <ref bean="T02-srvyFbTrigger" /> -->
+			</list>
+		</property>
+		<!-- Quartz配置 -->
+		<property name="quartzProperties">
+			<props>
+				<prop key="org.quartz.threadPool.threadCount">5</prop>
+			</props>
+		</property>
+		<!-- 启动时延期30秒开始任务 -->
+		<property name="startupDelay" value="30" />
+	</bean>
+</beans>

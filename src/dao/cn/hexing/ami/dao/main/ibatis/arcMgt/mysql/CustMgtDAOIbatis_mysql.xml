@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="custMgt">
+<sql id="CustData">
+FROM ar_customer cust left join qx_qy dw on cust.uid=dw.dwdm
+ WHERE 1=1
+ <isNotEmpty property="cno"> 
+  AND cust.cno LIKE CONCAT('%',#cno#,'%%')
+ </isNotEmpty>
+ <isNotEmpty property="cname">
+  AND cust.cname LIKE CONCAT('%',#cname#,'%%')
+ </isNotEmpty>
+ <isNotEmpty property="nodeIddw">
+  AND cust.uid LIKE CONCAT('%',#nodeIddw#,'%%')
+ </isNotEmpty>
+ <isNotEmpty property="custStatus">
+ AND CUST.STATUS =#custStatus#
+ </isNotEmpty>
+ <isNotEmpty property="dataSrc">
+ AND CUST.DATA_SRC=#dataSrc#
+ </isNotEmpty>
+</sql>
+<select id="CustDataCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+select count(cust.CNO)
+<include refid="custMgt.CustData"/>
+</select>
+<select id="CustDataQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<include refid="common.pagingTop"/>
+	SELECT CUST.CNO ,CUST.CNAME,CUST.UID ,CUST.ADDR ,CUST.BILLING_DATE,CUST.PHONE ,DW.DWMC as UNAME,cust.status,
+	(select name from p_code where code_type='custStatus' and lang=#appLang# and value=cust.status) custStatus,
+	(select name from p_code where code_type='dataSrc' and lang=#appLang# and value=cust.data_src) dataSrc
+	<include refid="custMgt.CustData"/>
+	<include refid="common.nodeFilterN"/>
+ 	<include refid="common.pagingBottom"/>
+</select>
+
+<insert id="insCust" parameterClass="java.util.HashMap">
+  <isNotEmpty property="billing_date">
+ INSERT INTO ar_customer VALUES(#cno#,#cname#,#nodeIddw#,#addr#,#billing_date#,#phone#,#dataSrc#,#custStatus#,'0')
+ </isNotEmpty>
+ <isEmpty property="billing_date">
+  INSERT INTO ar_customer
+  (cno,cname,uid,addr,phone,data_src,status,disp_status)
+  VALUES(#cno#,#cname#,#nodeIddw#,#addr#,#phone#,#dataSrc#,#custStatus#,'0')
+ </isEmpty>
+</insert>
+<update id="updCust" parameterClass="java.util.HashMap">
+ UPDATE ar_customer SET
+  cname=#cname#,
+  uid=#nodeIddw#,
+  addr=#addr#,
+  <isNotEmpty property="billing_date">
+  billing_date=#billing_date#,
+  </isNotEmpty>
+  <isNotEmpty property="custStatus">
+  status=#custStatus#,
+  </isNotEmpty>
+  phone=#phone# 
+  where cno=#cno#
+</update>
+<update id="updMeter" parameterClass="java.util.HashMap">
+    UPDATE ar_meter SET uid=#nodeIddw#  where cno=#cno#
+</update>
+<delete id="delCust" parameterClass="java.util.HashMap">
+ DELETE FROM ar_customer WHERE cno=#cno#
+</delete>
+<select id="getCust" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+SELECT cust.cno ,cust.cname,cust.uid,cust.addr,cust.billing_date,cust.phone,dw.dwmc,cust.status FROM ar_customer cust LEFT JOIN qx_qy dw
+ON cust.uid=dw.dwdm 
+ WHERE cust.cno =#cno#
+</select>
+<select id="getMeterQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+SELECT m.msn,
+(select name from p_code where code_type='mType' and lang=#appLang# and value=m.m_type) m_type,
+(select name from p_code where code_type='mode' and lang=#appLang# and value=m.mode) mode,
+m.ct,m.pt,m.tfid,tf.tfname,DATE_FORMAT(m.ins_date,'%Y-%m-%d') ins_date FROM ar_meter m LEFT JOIN ar_tf tf ON m.tfid=tf.tfid  WHERE m.cno=#cno#
+</select>
+<select id="getMeterCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+select count(1) from ar_meter where cno=#cno# 
+</select>
+<select id="getPlanQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+SELECT * FROM ins_pln_meter WHERE cno=#cno#
+</select>
+<!-- 更新用户是否已派工 -->
+<update id="updCustDispStatus" parameterClass="java.util.HashMap">
+ UPDATE AR_CUSTOMER SET DISP_STATUS=#DSTATUS#
+ WHERE CNO=#CNO#
+</update>
+</sqlMap>

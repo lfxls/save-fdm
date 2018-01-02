@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="insFb">
+   <!--表安装反馈列表  -->
+   <sql id="meterFb">
+     FROM INS_FB_METER FB LEFT JOIN INS_PLN_METER P ON FB.PID = P.PID
+     LEFT JOIN AR_CUSTOMER C ON FB.CNO = C.CNO
+     LEFT JOIN AR_TF T ON FB.TFID = T.TFID
+     LEFT JOIN QX_QY QY ON C.UID = QY.DWDM
+     LEFT JOIN QX_CZY CZY ON FB.OPTID = CZY.CZYID
+     LEFT JOIN INS_TEAM TM ON CZY.TID = TM.TNO
+     WHERE 1 = 1
+     <include refid="common.nodeFilterN"/>
+	  <isNotEmpty property="cno">
+		 	AND FB.CNO LIKE CONCAT('%',#cno#,'%')
+	  </isNotEmpty>
+	  <isNotEmpty property="bussType">
+		 	AND P.BUSS_TYPE = #bussType#
+	  </isNotEmpty>
+	  <isNotEmpty property="status">
+		 	AND FB.STATUS = #status#
+	  </isNotEmpty>
+	  <isNotEmpty property="dataType">
+		 	AND FB.DATA_TYPE = #dataType#
+	  </isNotEmpty>
+	  <isNotEmpty property="plnStatus">
+		 	AND P.STATUS = #plnStatus#
+	  </isNotEmpty>
+	  <isNotEmpty property="pid">
+		 	AND FB.PID LIKE CONCAT('%',#pid#,'%') 
+	  </isNotEmpty>
+	  <isNotEmpty property="msn">
+		 	AND FB.N_MSN LIKE CONCAT('%',#msn#,'%') 
+	  </isNotEmpty>
+	  <isNotEmpty property="omsn">
+		 	AND FB.O_MSN LIKE CONCAT('%',#omsn#,'%') 
+	  </isNotEmpty>
+		ORDER BY FB.FB_DATE DESC
+   </sql>
+   <select id="queryMeterFbCount"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+        SELECT COUNT(FB.PID) 
+        <include refid="insFb.meterFb"/> 
+   </select>
+   <select id="queryMeterFbQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	    <include refid='common.pagingTop'/>
+	    SELECT FB.CNO CNO, FB.TFID TFID, FB.N_MSN NMSN, FB.O_MSN OMSN,
+	    FB.CL_TYPE CLTYPE, FB.CSN CSN, FB.LON LON, FB.LAT LAT, FB.CT CT,
+	    FB.PT PT, FB.SEALID SEALID, FB.SIMMNO SIMNO, FB.MBOXID BOXID,
+	    FB.REMARK REMARK, FB.STATUS STATUS, C.CNAME CNAME, T.TFNAME TFNAME,
+	   	QY.DWMC UNAME, QY.DWDM UID, FB.PID PID, P.STATUS PLNSTATUS,FB.DATA_TYPE DTYPE,
+	   	FB.OPTID OPTID, CZY.XM XM, TM.TNO TNO, TM.TNAME TNAME, P.WOID WOID,
+	   	DATE_FORMAT(FB.OP_DATE,'%Y-%m-%d %H:%i:%s') OPDATE,
+	   	DATE_FORMAT(FB.FB_DATE,'%Y-%m-%d %H:%i:%s') FBDATE,
+	   	(SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'fbStatus' AND T.LANG = #appLang# AND T.VALUE = FB.STATUS) SNAME,
+	   	(SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'bussType' AND T.LANG = #appLang# AND T.VALUE = P.BUSS_TYPE) BTNAME,
+	   	(SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'planStatus' AND T.LANG = #appLang# AND T.VALUE = P.STATUS) PLNSTANAME,
+	   	(SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'fbDataType' AND T.LANG = #appLang# AND T.VALUE = FB.DATA_TYPE) DTNAME
+	      <include refid="insFb.meterFb"/> 
+	      <include refid='common.pagingBottom'/>
+	      <include refid="common.pagingSort"/>
+   </select>
+   
+    <!--集中器安装反馈列表  -->
+   <sql id="dcuFb">
+     FROM INS_FB_DCU FB LEFT JOIN INS_PLN_DCU P ON FB.PID = P.PID
+     LEFT JOIN AR_TF T ON FB.TFID = T.TFID
+     LEFT JOIN QX_QY QY ON T.UID = QY.DWDM
+     WHERE 1 = 1
+     <include refid="common.nodeFilterN"/>
+	  <isNotEmpty property="tfName">
+		 	AND TF.TFNAME LIKE CONCAT('%',#tfName#,'%')
+	  </isNotEmpty>
+	  <isNotEmpty property="bussType">
+		 	AND P.BUSS_TYPE = #bussType#
+	  </isNotEmpty>
+	  <isNotEmpty property="status">
+		 	AND FB.STATUS = #status#
+	  </isNotEmpty>
+		ORDER BY FB.PID DESC
+   </sql>
+   <select id="queryDcuFbCount"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+        SELECT COUNT(FB.PID) 
+        <include refid="insFb.dcuFb"/> 
+   </select>
+   <select id="queryDcuFbQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	    <include refid='common.pagingTop'/>
+	    SELECT FB.TFID TFID, FB.N_DSN NDSN, FB.O_DSN ODSN,
+	    FB.LON LON, FB.LAT LAT, FB.CT CT,
+	    FB.PT PT, FB.SEALID SEALID, FB.SIMMNO SIMNO,
+	    FB.REMARK REMARK, FB.STATUS STATUS, T.TFNAME TFNAME,
+	   	QY.DWMC UNAME, QY.DWDM UID, FB.PID PID,
+	   	(SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'fbStatus' AND T.LANG = #appLang# AND T.VALUE = FB.STATUS) SNAME,
+	   	(SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'bussType' AND T.LANG = #appLang# AND T.VALUE = P.BUSS_TYPE) BTNAME
+	      <include refid="insFb.dcuFb"/> 
+	      <include refid='common.pagingBottom'/>
+	      <include refid="common.pagingSort"/>
+   </select>
+   
+    <!--采集器安装反馈列表  -->
+   <sql id="colFb">
+     FROM INS_FB_COLLECTOR FB LEFT JOIN INS_PLN_COLLECTOR P ON FB.PID = P.PID
+     LEFT JOIN AR_TF T ON FB.TFID = T.TFID
+     LEFT JOIN QX_QY QY ON T.UID = QY.DWDM
+     WHERE 1 = 1
+     <include refid="common.nodeFilterN"/>
+	  <isNotEmpty property="tfName">
+		 	AND FB.TFNAME LIKE CONCAT('%',#tfName#,'%')
+	  </isNotEmpty>
+	  <isNotEmpty property="bussType">
+		 	AND P.BUSS_TYPE = #bussType#
+	  </isNotEmpty>
+	  <isNotEmpty property="status">
+		 	AND FB.STATUS = #status#
+	  </isNotEmpty>
+		ORDER BY FB.PID DESC
+   </sql>
+   <select id="queryColFbCount"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+        SELECT COUNT(FB.PID) 
+        <include refid="insFb.colFb"/> 
+   </select>
+   <select id="queryColFbQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	    <include refid='common.pagingTop'/>
+	    SELECT FB.TFID TFID, FB.N_CSN NCSN, FB.O_CSN OCSN,
+	    FB.LON LON, FB.LAT LAT, FB.SEALID SEALID,
+	    FB.REMARK REMARK, FB.STATUS STATUS, T.TFNAME TFNAME,
+	   	QY.DWMC UNAME, QY.DWDM UID, FB.PID PID,
+	   	(SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'fbStatus' AND T.LANG = #appLang# AND T.VALUE = FB.STATUS) SNAME,
+	    (SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'bussType' AND T.LANG = #appLang# AND T.VALUE = P.BUSS_TYPE) BTNAME
+	      <include refid="insFb.colFb"/> 
+	      <include refid='common.pagingBottom'/>
+	      <include refid="common.pagingSort"/>
+   </select>
+   
+   <sql id="pmObis">
+   		<isEmpty property="verid">
+       		(SELECT C.ITEM_ID, N.ITEM_NAME, C.UNIT, N.LANG
+			FROM DLMS_OBIS_CODE C LEFT JOIN DLMS_OBIS_NAME N ON C.VERID = N.VERID AND C.ITEM_ID = N.ITEM_ID
+			WHERE C.VERID = '0' AND C.ISSHOW = '1') OB ON K.OBIS = OB.ITEM_ID
+       	</isEmpty>
+       	<isNotEmpty property="verid">
+       		(
+       		SELECT C.ITEM_ID, N.ITEM_NAME, C.UNIT, N.LANG
+			FROM DLMS_OBIS_CODE C LEFT JOIN DLMS_OBIS_NAME N ON C.VERID = N.VERID AND C.ITEM_ID = N.ITEM_ID
+			WHERE C.VERID = '0' AND C.ISSHOW = '1' AND C.VERID=#verid#
+			UNION
+			SELECT A.ITEM_ID, A.ITEM_NAME, A.UNIT, A.LANG
+			FROM
+			(SELECT C.ITEM_ID, N.ITEM_NAME, C.UNIT, N.LANG
+			FROM DLMS_OBIS_CODE C LEFT JOIN DLMS_OBIS_NAME N ON C.VERID = N.VERID AND C.ITEM_ID = N.ITEM_ID
+			WHERE C.VERID = '0' AND C.ISSHOW = '1') A, AR_METER_MODEL M
+			WHERE M.VERID=#verid#
+			AND NOT EXISTS 
+			(SELECT 1 FROM DLMS_OBIS_CODE C WHERE  C.VERID=#verid# AND C.ITEM_ID = A.ITEM_ID)
+			) OB ON K.OBIS = OB.ITEM_ID
+       	</isNotEmpty>
+   </sql>
+   
+   <!-- 查询设置参数 -->
+   <select id="querySetPmCount"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+        SELECT COUNT(DISTINCT K.OBIS) 
+        FROM INS_FB_SETPM K LEFT JOIN
+        <include refid="insFb.pmObis"/>
+        WHERE K.PID = #pid#
+        AND K.MSN = #msn# 
+        AND OB.LANG = #lang#
+   </select>
+   <select id="querySetPmQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	    <include refid='common.pagingTop'/>
+	   	SELECT DISTINCT K.OBIS OBIS, OB.ITEM_NAME ITEMNAME, K.RST,
+	   (SELECT NAME FROM P_CODE WHERE CODE_TYPE='result' AND VALUE = K.RST AND LANG=#lang#) RSTN,
+	   	CASE K.VALUE
+		WHEN NULL THEN ''
+		WHEN '' THEN ''
+		ELSE CONCAT(K.VALUE,OB.UNIT)
+		END AS VALUE
+       	 FROM INS_FB_SETPM K LEFT JOIN 
+       	 <include refid="insFb.pmObis"/>
+       	WHERE K.PID = #pid#
+     	AND K.MSN = #msn# 
+     	AND OB.LANG = #lang#
+	      <include refid='common.pagingBottom'/>
+	      <include refid="common.pagingSort"/>
+   </select>
+   
+   <!-- 查询测试参数 -->
+   <select id="queryTestPmCount"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+        SELECT COUNT(TPM.TIID) 
+        FROM INS_FB_TESTPM TPM LEFT JOIN P_PS_TINAME PTN
+        ON TPM.TIID = PTN.TIID
+		WHERE TPM.PID=#pid#
+		AND TPM.MSN=#msn#
+		AND PTN.LANG=#lang#
+   </select>
+   
+   <select id="queryTestPmQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	    <include refid='common.pagingTop'/>
+	   	SELECT TPM.TIID TIID, PTN.TINAME TINAME, 
+	   	TPM.RST TRST,
+	   	(SELECT NAME FROM P_CODE WHERE CODE_TYPE='result' AND VALUE = TPM.RST AND LANG=#lang#) TRSTN
+	    FROM INS_FB_TESTPM TPM LEFT JOIN P_PS_TINAME PTN ON TPM.TIID = PTN.TIID
+		WHERE TPM.PID=#pid#
+		AND TPM.MSN=#msn#
+		AND PTN.LANG=#lang#
+		<include refid='common.pagingBottom'/>
+	    <include refid="common.pagingSort"/>
+   </select>
+   
+   <!-- 查询测试参数 -->
+   <select id="queryTestOBISCount"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+        SELECT COUNT(DISTINCT K.OBIS) 
+        FROM INS_FB_TESTPMCODE K LEFT JOIN 
+        <include refid="insFb.pmObis"/>
+        WHERE K.PID=#pid#
+		AND K.MSN=#msn#
+		AND K.TIID=#tiid#
+		AND OB.LANG=#lang#
+   </select>
+   
+   <select id="queryTestOBISQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	    <include refid='common.pagingTop'/>
+	   	SELECT K.OBIS, OB.ITEM_NAME ITEMNAME, K.RST ORST,
+	   	(SELECT NAME FROM P_CODE WHERE CODE_TYPE='result' AND VALUE = K.RST AND LANG=#lang#) ORSTN,
+		CASE K.VALUE
+		WHEN NULL THEN ''
+		WHEN '' THEN ''
+		ELSE CONCAT(K.VALUE,OB.UNIT)
+		END AS OPVALUE
+		FROM INS_FB_TESTPMCODE K LEFT JOIN
+        <include refid="insFb.pmObis"/>
+        WHERE K.PID=#pid#
+		AND K.MSN=#msn#
+		AND K.TIID=#tiid#
+		AND OB.LANG=#lang#
+	    <include refid='common.pagingBottom'/>
+	    <include refid="common.pagingSort"/>
+   </select>
+   
+   <!-- 查询读取参数 -->
+   <select id="queryReadPmCount"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+        <!-- 新表读参数 -->
+        <isEqual property="flag" compareValue="0">
+        	SELECT COUNT(DISTINCT K.OBIS)
+        	FROM INS_FB_READPM K LEFT JOIN 
+        	<include refid="insFb.pmObis"/>
+        	WHERE K.PID = #pid#
+	 		AND K.MSN = #msn#
+	 		AND OB.LANG = #lang#
+        </isEqual>
+        <!-- 老表读参数 -->
+        <isEqual property="flag" compareValue="1">
+        	SELECT COUNT(DISTINCT K.OBIS) 
+	        FROM INS_FB_READPM K
+			WHERE K.PID = #pid#
+			AND K.MSN = #msn#
+        </isEqual>
+   </select>
+   <select id="queryReadPmQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	    <include refid='common.pagingTop'/>
+	    <!-- 新表读参数 -->
+        <isEqual property="flag" compareValue="0">
+        	SELECT DISTINCT K.OBIS OBIS, OB.ITEM_NAME ITEMNAME, 
+		   	CASE K.VALUE
+			WHEN NULL THEN ''
+			WHEN '' THEN ''
+			ELSE CONCAT(K.VALUE,OB.UNIT)
+			END AS RST	
+        	FROM INS_FB_READPM K LEFT JOIN
+        	<include refid="insFb.pmObis"/>
+        	WHERE K.PID = #pid#
+	 		AND K.MSN = #msn#
+	 		AND OB.LANG = #lang#
+        </isEqual>
+        <!-- 老表读参数 -->
+        <isEqual property="flag" compareValue="1">
+        	SELECT DISTINCT K.OBIS OBIS,
+        	(SELECT P.NAME FROM P_CODE P WHERE P.CODE_TYPE='oev' AND P.LANG=#lang# AND P.VALUE=K.OBIS) ITEMNAME, 
+		   	CASE K.VALUE
+			WHEN NULL THEN ''
+			WHEN '' THEN ''
+			ELSE CONCAT(K.VALUE,'kWh')
+			END AS RST	
+	       	FROM INS_FB_READPM K
+	 		WHERE K.PID = #pid#
+	 		AND K.MSN = #msn#
+        </isEqual>
+	      <include refid='common.pagingBottom'/>
+	      <include refid="common.pagingSort"/>
+   </select>
+   
+   <!-- 获取图片 -->
+    <select id="getPics" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 		SELECT N_PICS NPICS, O_PICS OPICS 
+	 		FROM INS_FB_METER WHERE PID=#pid#
+   </select>
+   
+   <insert id="insMeterFB" parameterClass="java.util.HashMap">
+   		REPLACE INTO INS_FB_METER(PID,DATA_TYPE,TFID,N_MSN,O_MSN,CNO,
+   		CNAME,ADDR,CL_TYPE,CSN,LON,LAT,CT,PT,N_PICS,O_PICS,SEALID,
+   		MSP,SIMMNO,MBOXID,M_TYPE,M_WIRING,M_MODE,OPTID,OP_DATE,OP_STS,
+   		REMARK,STATUS,FB_DATE,VERID,OP_MSN)
+   		VALUES(#S#,#DATA_TYPE#,#TFNO#,#NO#,#ONO#,#CNO#,#CNAME#,#ADDR#,
+   		#CLTYPE#,#CLNO#,#LGT#,#LAT#,#CT#,#PT#,#PICS#,#PICSO#,#QF#,#MC#,
+   		#SIM#,#MB#,#MT#,#CM#,#MM#,#OPT#,#DT#,#STS#,#RM#,'0',now(),#VNO#,#OPMSN#)
+   </insert>
+   
+   <!-- 删除设置反馈数据 -->
+   <delete id="delSetFB" parameterClass="java.util.HashMap">
+   		DELETE FROM INS_FB_SETPM WHERE PID=#PID#
+   </delete>
+   <!-- 插入设置反馈数据 -->
+   <insert id="insSetFB" parameterClass="java.util.HashMap">
+   		INSERT INTO INS_FB_SETPM(PID,MSN,OBIS,RST,VALUE)
+   		VALUES(#PID#,#MSN#,#OBIS#,#RST#,#RSTV#)
+   </insert>
+   
+   <!-- 删除读取反馈数据 -->
+   <delete id="delReadFB" parameterClass="java.util.HashMap">
+   		DELETE FROM INS_FB_READPM WHERE PID=#PID#
+   </delete>
+   
+   <!-- 插入读取反馈数据 -->
+   <insert id="insReadFB" parameterClass="java.util.HashMap">
+   		INSERT INTO INS_FB_READPM(PID,MSN,OBIS,VALUE)
+   		VALUES(#PID#,#MSN#,#OBIS#,#VALUE#)
+   </insert>
+   
+   <!-- 删除测试反馈数据 -->
+   <delete id="delTestFB" parameterClass="java.util.HashMap">
+   		DELETE FROM INS_FB_TESTPM WHERE PID=#PID#
+   </delete>
+   
+   <!-- 插入测试反馈数据 -->
+   <insert id="insTestFB" parameterClass="java.util.HashMap">
+   		INSERT INTO INS_FB_TESTPM(PID,MSN,TIID,RST)
+   		VALUES(#PID#,#MSN#,#TIID#,#RST#)
+   </insert>
+   
+   <!-- 删除反馈测试数据项 -->
+   <delete id="delTestPMCodeFB" parameterClass="java.util.HashMap">
+   		DELETE FROM INS_FB_TESTPMCODE WHERE PID=#PID#
+   </delete>
+   
+   <!-- 插入反馈测试数据项 -->
+   <insert id="insTestPMCodeFB" parameterClass="java.util.HashMap">
+   		INSERT INTO INS_FB_TESTPMCODE(PID,MSN,TIID,OBIS,RST,VALUE)
+   		VALUES(#PID#,#MSN#,#TIID#,#OBIS#,#RST#,#RSTV#)
+   </insert>
+   
+   <select id="queryExistMeters" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+   		SELECT MSN 
+   		FROM AR_METER
+   		WHERE MSN
+   		<iterate prepend="IN" open="(" close=")" property="msns" conjunction=",">
+			#msns[]#
+		</iterate>
+   </select>
+   
+   <select id="queryExistCusts" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+   		SELECT C.CNO CNO, C.CNAME CNAME, C.ADDR ADDR, C.UID UID 
+   		FROM AR_CUSTOMER C
+   		WHERE C.CNO
+   		<iterate prepend="IN" open="(" close=")" property="cnos" conjunction=",">
+			#cnos[]#
+		</iterate>
+   </select>
+   
+   <select id="queryExistSims" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+   		SELECT S.SIMNO SIMNO 
+   		FROM AR_SIM S
+   		WHERE S.SIMNO
+   		<iterate prepend="IN" open="(" close=")" property="simNos" conjunction=",">
+			#simNos[]#
+		</iterate>
+   </select>
+   
+   <insert id="insMeters" parameterClass="java.util.HashMap">
+   		INSERT INTO AR_METER(MSN,CNO,UID,TFID,STATUS,M_TYPE,
+   		WIRING,MODE,CT,PT,LON,LAT,SIMNO,SEALID,MBOXID,
+   		INS_DATE,UNINS_DATE,DATA_SRC)
+   		VALUES(#MSN#,#CNO#,#UID#,#TFNO#,#MSTATUS#,#MT#,#CM#,#MM#,
+   		#CT#,#PT#,#LGT#,#LAT#,#SIM#,#QF#,#MB#,#INSDATE#,#UNINSDATE#,#DATASRC#)
+   </insert>
+   
+   <update id="updMeters" parameterClass="java.util.HashMap">
+   		UPDATE AR_METER SET CNO=#CNO#,TFID=#TFNO#
+   		<isNotEmpty property="UID">
+   			 ,UID=#UID#
+   		</isNotEmpty>
+   		<isNotEmpty property="MSTATUS">
+   			 ,STATUS=#MSTATUS#
+   		</isNotEmpty>
+   		<isNotEmpty property="MT">
+   			 ,M_TYPE=#MT#
+   		</isNotEmpty>
+   		<isNotEmpty property="CM">
+   			 ,WIRING=#CM#
+   		</isNotEmpty>
+   		<isNotEmpty property="MM">
+   			 ,MODE=#MM#
+   		</isNotEmpty>
+   		<isNotEmpty property="CT">
+   			 ,CT=#CT#
+   		</isNotEmpty>
+   		<isNotEmpty property="PT">
+   			 ,PT=#PT#
+   		</isNotEmpty>
+   		<isNotEmpty property="LGT">
+   			 ,LON=#LGT#
+   		</isNotEmpty>
+   		<isNotEmpty property="LAT">
+   			 ,LAT=#LAT#
+   		</isNotEmpty>
+   		<isNotEmpty property="SIM">
+   			 ,SIMNO=#SIM#
+   		</isNotEmpty>
+   		<isNotEmpty property="QF">
+   			 ,SEALID=#QF#
+   		</isNotEmpty>
+   		<isNotEmpty property="MB">
+   			 ,MBOXID=#MB#
+   		</isNotEmpty>
+   		<isNotEmpty property="INSDATE">
+   			 ,INS_DATE=#INSDATE#
+   		</isNotEmpty>
+   		<isNotEmpty property="UNINSDATE">
+   			 ,UNINS_DATE=#UNINSDATE#
+   		</isNotEmpty>
+   		WHERE MSN=#MSN#
+   </update>
+   
+   <insert id="insCusts" parameterClass="java.util.HashMap">
+   		INSERT INTO AR_CUSTOMER(CNO,CNAME,ADDR,UID,DATA_SRC,STATUS,DISP_STATUS)
+   		VALUES(#CNO#,#CNAME#,#ADDR#,#UID#,#DATASRC#,#STATUS#,#DSTATUS#)
+   </insert>
+   
+   <update id="updCusts" parameterClass="java.util.HashMap">
+   		UPDATE AR_CUSTOMER SET CNAME=#CNAME#, ADDR=#ADDR#
+   		<isNotEmpty property="UID">
+   			,UID=#UID#
+   		</isNotEmpty>
+   		<isNotEmpty property="STATUS">
+   			,STATUS=#STATUS#
+   		</isNotEmpty>
+   		<isNotEmpty property="DSTATUS">
+   			,DISP_STATUS=#DSTATUS#
+   		</isNotEmpty>
+   		WHERE CNO=#CNO#
+   </update>
+   
+   <insert id="insSims" parameterClass="java.util.HashMap">
+   		INSERT INTO AR_SIM(SIMNO,SIMSN,MSP)
+   		VALUES(#SIMNO#,NULL,#MSP#)
+   </insert>
+   
+   <!-- 获取变压器单位代码 -->
+	<select id="getTFUID" parameterClass="java.lang.String" resultClass="java.lang.String">
+		SELECT UID FROM AR_TF WHERE TFID=#tfid#
+	</select>
+	
+	<!-- 获取测试反馈信息 -->
+	<select id="getTestFB" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+   		SELECT  T.TIID TIID, T.TINAME TINAME, T.RST RST
+   		FROM INS_FB_TESTPM T,P_PS_TINAME PN
+   		WHERE T.TIID = PN.TIID
+   		<isNotEmpty property="pid">
+   		AND T.PID = #pid#
+   		</isNotEmpty>
+   		<isNotEmpty property="msn">
+   		AND T.MSN = #msn#
+   		</isNotEmpty>
+   </select>
+   
+   <!-- 获取未同步给MDC或同步失败的反馈成功或异常的安装计划反馈数据  -->
+   <select id="getMeterPlnFBData" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+   		SELECT P.PID PID, P.N_MSN NMSN, P.O_MSN OMSN, P.MBOXID MBOXID, P.TFID TFID, TF.TFNAME TFNAME,
+   		TF.ADDR TFADDR, P.CNO CNO, P.CNAME CNAME, P.ADDR CADDR, P.M_TYPE MTYPE, P.M_WIRING MWIRING,
+   		P.M_MODE MMODE, P.MSP MSP, P.SIMMNO SIMNO, SIM.SIMSN SIMSN, P.CT CT, P.PT PT, P.LON LON,
+   		P.LAT LAT, P.SEALID SEALID, P.OP_DATE OPDATE, PM.BUSS_TYPE BUSSTYPE
+   		FROM INS_FB_METER P LEFT JOIN INS_PLN_METER PM ON P.PID = PM.PID
+   		LEFT JOIN AR_TF TF ON P.TFID = TF.TFID
+   		LEFT JOIN AR_SIM SIM ON P.SIMMNO = SIM.SIMNO
+   		WHERE P.STATUS
+   		<iterate prepend="IN" open="(" close=")" property="synSts" conjunction=",">
+			#synSts[]#
+		</iterate>
+   		AND P.OP_STS 
+   		<iterate prepend="IN" open="(" close=")" property="opSts" conjunction=",">
+			#opSts[]#
+		</iterate>
+   </select>
+   
+   <!-- 获取未同步给MDC或同步失败的反馈成功或异常的安装计划中表对应的底度信息  -->
+   <select id="getMeterEVData" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+   		SELECT P.PID PID, RP.MSN MSN, RP.OBIS OBIS, RP.VALUE VALUE
+   		FROM INS_FB_METER P LEFT JOIN INS_FB_READPM RP ON P.PID = RP.PID
+   		WHERE P.STATUS
+   		<iterate prepend="IN" open="(" close=")" property="synSts" conjunction=",">
+			#synSts[]#
+		</iterate>
+   		AND P.OP_STS 
+   		<iterate prepend="IN" open="(" close=")" property="opSts" conjunction=",">
+			#opSts[]#
+		</iterate>
+		AND RP.OBIS 
+   		<iterate prepend="IN" open="(" close=")" property="obiss" conjunction=",">
+			#obiss[]#
+		</iterate>
+   </select>
+   
+   <!-- 更新表安装计划反馈数据同步到MDC状态 -->
+   <update id="updMeterFBSynStatus" parameterClass="java.util.HashMap">
+   		UPDATE INS_FB_METER SET STATUS=#status#
+   		WHERE PID=#pid#
+   </update>
+   
+   <!-- 查询户号下其他表号信息 -->
+   <select id="getMeterByCno" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+   		SELECT M.MSN, M.CNO
+   		FROM AR_METER M
+   		WHERE M.CNO = #CNO#
+   		AND M.MSN != #MSN#
+   		AND M.STATUS = #STATUS#
+   </select>
+   
+   <!-- 获取系统根单位代码 -->
+	<select id="getRootUnit" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		SELECT DWDM 
+		FROM QX_QY
+		WHERE SJDWDM IS NULL
+	</select>
+	
+	<!-- 更新非当前反馈表且与当前反馈表绑定相同sim卡号的表的sim卡为Null -->
+	<update id="updMeterSim" parameterClass="java.util.HashMap">
+		UPDATE AR_METER SET SIMNO = NULL
+		WHERE MSN != #msn#
+		AND STATUS != #status#
+		AND SIMNO = #simNo#
+	</update>
+	
+	<!-- 获取派发下去的安装计划信息 -->
+	<select id="getDispPlan" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT P.O_MSN P_O_MSN, M.MSN M_MSN, M.UID
+		FROM INS_PLN_METER P LEFT JOIN AR_METER M ON P.O_MSN = M.MSN
+		WHERE P.PID = #PID#
+		AND P.BUSS_TYPE = #BUSSTYPE#
+	</select>
+	
+	<!-- 获取反馈老表对应的户号信息 -->
+	<select id="getFbMeterCust" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT M.CNO, C.ADDR, C.CNAME
+		FROM AR_METER M LEFT JOIN AR_CUSTOMER C ON M.CNO = C.CNO
+		WHERE M.MSN = #msn#
+	</select>
+</sqlMap>

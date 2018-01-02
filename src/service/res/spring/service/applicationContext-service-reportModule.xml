@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+>
+	<!-- 安装进度报表-->
+	<bean id="insProRepManager" class="cn.hexing.ami.service.report.insInfoReport.InsProRepManager" scope="prototype">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	<!-- 安装计划报表-->
+	<bean id="planStsRepManager" class="cn.hexing.ami.service.report.insInfoReport.PlanStsRepManager" scope="prototype">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	<bean id="insNumRepManager" class="cn.hexing.ami.service.report.insInfoReport.InsNumRepManager" scope="prototype">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	<bean id="insDetailRepManager" class="cn.hexing.ami.service.report.insInfoReport.InsDetailRepManager" scope="prototype">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	<!-- 安装工单报表-->
+	<bean id="woStsRepManager" class="cn.hexing.ami.service.report.insInfoReport.WoStsRepManager" scope="prototype">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	<!-- 安装失败统计-->
+	<bean id="insFailRepManager" class="cn.hexing.ami.service.report.insQualReport.InsFailRepManager" scope="prototype">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	<!--安装问题数量统计-->
+	<bean id="probNumRepManager" class="cn.hexing.ami.service.report.insQualReport.ProbNumRepManager" scope="prototype">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+</beans>

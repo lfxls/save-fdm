@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="FDMWeb" default="war">
+	<property file="build.properties"/>
+
+	<target name="prepare">
+		<property name="src.dir" value="${basedir}/src" />
+		<property name="src.dao.dir" value="${src.dir}/dao" />
+		<property name="src.service.dir" value="${src.dir}/service" />
+		<property name="src.web.dir" value="${src.dir}/web" />
+		<property name="src.util.dir" value="${src.dir}/util" />
+		<property name="src.test.dir" value="${src.dir}/test" />
+		<property name="src.res.dir" value="${src.dir}/res" />
+		<property name="dist.dir" value="${war.dest}" />
+		<property name="build.dir" value="${basedir}/WebContent/WEB-INF/classes" />
+		<property name="meta-inf.dir" value="${basedir}/META-INF" />
+		<!--   jar包路径 -->
+		<property name="lib.dir" value="${basedir}/WebContent/WEB-INF/lib" />
+		<path id="compile.classpath">
+			<fileset dir="${lib.dir}">
+				<include name="*.jar"/>
+			</fileset>
+		</path>
+
+	</target>
+
+	<!--创建目录-->
+	<target name="init" depends="clean">
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${build.dir}" />
+	</target>
+
+	<!--编译-->
+	<target name="compile" depends="init">
+		<echo message="----------- compile ${web.name} ${version}------------" />
+		<javac destdir="${build.dir}" encoding="UTF-8" nowarn="true" debug="true" deprecation= "false"  optimize= "true" fork= "no" verbose= "no"  failonerror= "on">
+			<src path="${src.dao.dir}"/>
+			<src path="${src.service.dir}"/>
+			<src path="${src.web.dir}"/>
+			<src path="${src.util.dir}"/>
+			<src path="${src.test.dir}"/>
+			<src path="${src.res.dir}"/>
+			<classpath refid="compile.classpath"/>
+		</javac>
+		<copy todir="${build.dir}" >
+			<fileset dir="${src.dao.dir}">
+				<include name="**/*.properties"/>
+				<include name="**/*.xml"/>
+			</fileset>
+			<fileset dir="${src.service.dir}">
+				<include name="**/*.properties"/>
+				<include name="**/*.xml"/>
+			</fileset>
+			<fileset dir="${src.web.dir}">
+				<include name="**/*.properties"/>
+				<include name="**/*.xml"/>
+			</fileset>
+			<fileset dir="${src.util.dir}">
+				<include name="**/*.properties"/>
+				<include name="**/*.xml"/>
+			</fileset>
+			<fileset dir="${src.test.dir}">
+				<include name="**/*.properties"/>
+				<include name="**/*.xml"/>
+			</fileset>
+			<fileset dir="${src.res.dir}">
+				<include name="**/*.properties"/>
+				<include name="**/*.xml"/>
+				<include name="**/*.hx"/>
+				<include name="**/*.ftl"/>
+				<include name="**/*.dll"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<!--war-->
+	<target name="war" depends="compile" >
+		<echo message="----------- war ${web.name} ${version}------------" />
+		<war warfile="${dist.dir}/${web.name}.war" webxml="${basedir}/WebContent/WEB-INF/web.xml">
+			<fileset dir="${basedir}/WebContent" />
+		</war>
+	</target>
+	
+	<!--ear-->
+	<target name="ear" depends="war" >
+		<echo message="----------- ear ${web.name} ${version}------------" />
+		<ear destfile="${dist.dir}/${web.name}.ear" appxml="${basedir}/WebContent/META-INF/application.xml">
+			<fileset dir="${dist.dir}" includes="*.war"/>
+			<metainf dir="WebContent/META-INF">
+				<exclude name="application.xml"/>
+			</metainf>
+		</ear>
+	</target>
+	
+	<!--deploy-->
+	<target name="deploy" depends="ear">
+		<copy todir="${deploy.dir}" file="${dist.dir}/${web.name}.ear"/>
+	</target>
+	
+	<!--clean-->
+	<target name="clean" depends="prepare">
+		<delete dir="${dist.dir}" />
+		<delete dir="${build.dir}" />
+	</target>
+</project>

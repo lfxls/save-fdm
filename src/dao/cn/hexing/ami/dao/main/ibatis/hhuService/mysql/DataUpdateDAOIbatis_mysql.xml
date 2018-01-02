@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="dataUpdate">
+	<!-- 保存变压器更新数据 -->
+	<insert id="insTf" parameterClass="cn.hexing.ami.dao.main.pojo.hhuService.DataRecord">
+		<selectKey resultClass="java.lang.String" keyProperty="opID">
+			SELECT nextval('S_HHU_DU')
+		</selectKey>
+		INSERT INTO hhu_du_tf
+		(OPID,
+		TFID,
+		TFNAME,
+		OPTID,
+		OP_TYPE,
+		OP_DATE,
+		STATUS)
+		VALUES (#opID#,
+		#tfID#,
+		#tfName#,
+		#optID#,
+		#opType#,
+		now(),
+		#status#)
+	</insert>
+
+	<!-- 更新历史的变压器更新数据，相同变压器ID状态都改成已完成 -->
+	<update id="updTf" parameterClass="cn.hexing.ami.dao.main.pojo.hhuService.DataRecord">
+		UPDATE hhu_du_tf SET STATUS = '1' WHERE tfid = #tfID#
+	</update>
+
+	<!-- 保存参数方案更新数据 -->
+	<insert id="insPs" parameterClass="cn.hexing.ami.dao.main.pojo.hhuService.DataRecord">
+		<selectKey resultClass="java.lang.String" keyProperty="opID">
+			SELECT nextval('S_HHU_DU')
+		</selectKey>
+		INSERT INTO hhu_du_ps
+		(OPID,
+		CATE_NO,
+		OBIS,
+		PM_TYPE,
+		OPTID,
+		OP_TYPE,
+		OP_DATE,
+		STATUS,
+		CATE_NAME,
+		VERID)
+		VALUES (#opID#,
+		#cateNo#,
+		#obis#,
+		#pmType#,
+		#optID#,
+		#opType#,
+		now(),
+		#status#,
+		#cate_name#,
+		#verId#)
+	</insert>
+
+	<!-- 更新历史的参数方案更新数据，相同参数方案数据项状态都改成已完成 -->
+	<update id="updPs" parameterClass="cn.hexing.ami.dao.main.pojo.hhuService.DataRecord">
+		UPDATE hhu_du_ps SET STATUS = '1' WHERE verid = #verId# AND cate_no =
+		#cateNo# AND obis = #obis#
+	</update>
+
+	<!-- 保存基础代码更新数据 -->
+	<insert id="insCode" parameterClass="cn.hexing.ami.dao.main.pojo.hhuService.DataRecord">
+		<selectKey resultClass="java.lang.String" keyProperty="opID">
+			SELECT nextval('S_HHU_DU')
+		</selectKey>
+		INSERT INTO hhu_du_code
+		(OPID,
+		CODE_TYPE,
+		CODE_NAME,
+		VALUE,
+		NAME,
+		LANG,
+		OPTID,
+		OP_TYPE,
+		OP_DATE,
+		STATUS)
+		VALUES (#opID#,
+		#codeType#,
+		#cateName#,
+		#value#,
+		#name#,
+		#lang#,
+		#optID#,
+		#opType#,
+		now(),
+		#status#)
+	</insert>
+
+	<!-- 更新历史的基础编码更新数据，相同基础编码状态都改成已完成 -->
+	<update id="updCode" parameterClass="cn.hexing.ami.dao.main.pojo.hhuService.DataRecord">
+		UPDATE hhu_du_code SET STATUS = '1' WHERE CODE_TYPE = #codeTypeO# and VALUE
+		= #valueO# and LANG = #lang#
+	</update>
+
+	<!-- 保存Token更新数据 -->
+	<insert id="insToken" parameterClass="cn.hexing.ami.dao.main.pojo.hhuService.DataRecord">
+		<selectKey resultClass="java.lang.String" keyProperty="opID">
+			SELECT nextval('S_HHU_DU')
+		</selectKey>
+		INSERT INTO hhu_du_token
+		(OPID,
+		TID,
+		TOKEN,
+		MSN,
+		OPTID,
+		OP_TYPE,
+		OP_DATE,
+		STATUS)
+		VALUES (#opID#,
+		#tokenID#,
+		#token#,
+		#msn#,
+		#optID#,
+		#opType#,
+		now(),
+		#status#)
+	</insert>
+
+	<!-- 更新历史的TOKEN更新数据，相同TOKEN状态都改成已完成 -->
+	<update id="updToken" parameterClass="cn.hexing.ami.dao.main.pojo.hhuService.DataRecord">
+		UPDATE hhu_du_token SET STATUS = '1' WHERE TID = #tokenID#
+	</update>
+
+	<!-- 获取变压器更新数据 -->
+	<select id="getTf" parameterClass="java.util.HashMap"
+		resultClass="cn.hexing.ami.dao.common.pojo.arc.Transformer">
+		SELECT
+		ntf.tfid,
+		ntf.OPID opID,
+		ntf.OP_TYPE opType,
+		tf.uid,
+		tf.tfname,
+		tf.addr,
+		tf.cap
+		FROM
+		(SELECT
+		htf.OPID,
+		htf.TFID,
+		htf.OP_TYPE
+		FROM
+		hhu_du_tf htf
+		WHERE htf.STATUS = #dataStat#
+		AND NOT EXISTS
+		(SELECT
+		1
+		FROM
+		hhu_du_hhulog LOG,
+		hhu_du_hhulogop logop
+		WHERE logop.OPID = htf.OPID
+		AND log.LOGID = logop.LOGID
+		AND log.HHUID = #hhuID#
+		AND log.UPT_RST = #logStat#)) ntf
+		left join ar_tf tf on tf.TFID = ntf.tfid
+	</select>
+
+	<!-- 获取读参数方案更新数据 -->
+	<select id="getPsRead" parameterClass="java.util.HashMap"
+		resultClass="cn.hexing.ami.dao.common.pojo.paramData.ParamData">
+		SELECT
+		rd.sort,rd.status,rd.optid,rd.upt_date,
+		ncate.obis,ncate.cate_no,
+		ncate.OPID opID,
+		ncate.OP_TYPE opType,
+		ncate.PM_TYPE,
+		m.verid,
+		m.M_MODEL model,
+		'R' op_type,
+		IF(code.child_data_type IS
+		NULL,code.dlms_data_type,CONCAT(code.dlms_data_type,'_',code.child_data_type))dlms_data_type,
+		code.scale,
+		code.unit,
+		code.xctpt
+		FROM
+		AR_METER_MODEL m,
+		(SELECT
+		doc.item_id,doc.dlms_data_type,doc.child_data_type,doc.op_type,doc.scale,doc.unit,doc.xctpt,m.verid
+		FROM dlms_obis_code doc JOIN ar_meter_model m ON m.verid=doc.verid
+		WHERE doc.isshow='1' AND m.VERID=#VERID#
+		UNION
+		SELECT
+		doc.item_id,doc.dlms_data_type,doc.child_data_type,doc.op_type,doc.scale,doc.unit,doc.xctpt,m.verid
+		FROM dlms_obis_code doc JOIN ar_meter_model m ON doc.verid = '0'
+		WHERE isshow='1' AND m.VERID=#VERID#
+		AND NOT EXISTS
+		(SELECT 1 FROM dlms_obis_code c,ar_meter_model m WHERE c.item_id =doc.item_id
+		AND c.verid=m.verid AND m.verid=#VERID# )) code,
+		(SELECT
+		hcate.OPID,
+		hcate.CATE_NO,
+		hcate.OBIS,
+		hcate.verid,
+		hcate.OP_TYPE,
+		hcate.op_date,
+		hcate.pm_type
+		FROM
+		hhu_du_ps hcate
+		WHERE hcate.STATUS = #dataStat#
+		AND hcate.PM_TYPE = #pmType#
+		AND NOT EXISTS
+		(SELECT 1 FROM ( SELECT logop.opid FROM
+		hhu_du_hhulog LOG, hhu_du_hhulogop logop
+		WHERE log.LOGID = logop.LOGID
+		AND log.HHUID = #hhuID#
+		AND log.UPT_RST = #logStat#
+		)op WHERE op.opid=hcate.opid)) ncate
+		left join P_PS_READ rd on rd.OBIS = ncate.obis AND rd.CATE_NO =
+		ncate.CATE_NO
+		WHERE ncate.VERID = m.VERID
+		AND m.verid = code.verid
+		AND ncate.obis=code.item_id
+		order by ncate.op_date
+	</select>
+
+	<!-- 获取设置参数方案更新数据 -->
+	<select id="getPsSet" parameterClass="java.util.HashMap"
+		resultClass="cn.hexing.ami.dao.common.pojo.paramData.ParamData">
+		SELECT
+		pset.sort,pset.value,pset.status,pset.optid,pset.upt_date,pset.buss_type,
+		ncate.obis,ncate.cate_no,
+		ncate.OPID opID,
+		ncate.op_type as opType,
+		ncate.PM_TYPE,
+		m.verid,
+		m.M_MODEL model,
+		'W' op_type,
+		IF(code.child_data_type IS
+		NULL,code.dlms_data_type,CONCAT(code.dlms_data_type,'_',code.child_data_type))dlms_data_type,
+		code.scale,
+		code.unit,
+		code.xctpt
+		FROM
+
+		AR_METER_MODEL m,
+		(SELECT
+		doc.item_id,doc.dlms_data_type,doc.child_data_type,doc.op_type,doc.scale,doc.unit,doc.xctpt,m.verid
+		FROM dlms_obis_code doc JOIN ar_meter_model m ON m.verid=doc.verid
+		WHERE doc.isshow='1' AND m.VERID=#VERID#
+		UNION
+		SELECT
+		doc.item_id,doc.dlms_data_type,doc.child_data_type,doc.op_type,doc.scale,doc.unit,doc.xctpt,m.verid
+		FROM dlms_obis_code doc JOIN ar_meter_model m ON doc.verid = '0'
+		WHERE isshow='1' AND m.VERID=#VERID#
+		AND NOT EXISTS
+		(SELECT 1 FROM dlms_obis_code c,ar_meter_model m WHERE c.item_id =doc.item_id
+		AND c.verid=m.verid AND m.verid=#VERID# )) code,
+		(SELECT
+		hcate.OPID,
+		hcate.CATE_NO,
+		hcate.verid,
+		hcate.OBIS,
+		hcate.OP_TYPE,
+		hcate.op_date,
+		hcate.pm_type
+		FROM
+		hhu_du_ps hcate
+		WHERE hcate.STATUS = #dataStat#
+		AND hcate.PM_TYPE = #pmType#
+		AND NOT EXISTS
+		(SELECT 1 FROM ( SELECT logop.opid FROM
+		hhu_du_hhulog LOG, hhu_du_hhulogop logop
+		WHERE log.LOGID = logop.LOGID
+		AND log.HHUID = #hhuID#
+		AND log.UPT_RST = #logStat#
+		)op WHERE op.opid=hcate.opid)) ncate
+		LEFT JOIN P_PS_SET pset
+		ON pset.OBIS = ncate.obis AND pset.CATE_NO = ncate.CATE_NO
+		WHERE ncate.VERID = m.VERID
+		AND m.verid = code.verid
+		AND ncate.obis=code.item_id
+		order by ncate.op_date
+	</select>
+
+	<!-- 获取测试参数方案更新数据 -->
+	<select id="getPsTest" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		SELECT
+		ptest.sort,ptest.status,ptest.level,ptest.optid,ptest.upt_date,
+		ncate.cate_no,ncate.obis tiid,
+		ncate.OPID opID,
+		ncate.OP_TYPE opType,
+		ncate.PM_TYPE,
+		m.verid,m.M_VERID,
+		m.M_MODEL model
+		FROM
+		AR_METER_MODEL m,
+		(SELECT
+		hcate.OPID,
+		hcate.CATE_NO,
+		hcate.verid,
+		hcate.OBIS,
+		hcate.OP_TYPE,
+		hcate.op_date,
+		hcate.pm_type
+		FROM
+		hhu_du_ps hcate
+		WHERE hcate.STATUS = #dataStat#
+		AND hcate.PM_TYPE = #pmType#
+		AND NOT EXISTS
+		(SELECT 1 FROM ( SELECT logop.opid FROM
+		hhu_du_hhulog LOG, hhu_du_hhulogop logop
+		WHERE log.LOGID = logop.LOGID
+		AND log.HHUID = #hhuID#
+		AND log.UPT_RST = #logStat#
+		)op WHERE op.opid=hcate.opid)) ncate
+		left join P_PS_TEST ptest
+		on ptest.CATE_NO = ncate.CATE_NO AND ptest.tiid = ncate.obis
+		WHERE
+		ncate.VERID = m.VERID
+		AND m.verid=#VERID#
+		order by ncate.op_date
+	</select>
+
+	<!-- 获取基础代码更新数据 -->
+	<select id="getCode" parameterClass="java.util.HashMap"
+		resultClass="cn.hexing.ami.dao.system.pojo.ggdmgl.Code">
+		SELECT
+		ncode.code_type cateCode,
+		ncode.lang lang,
+		ncode.value codeValue,
+		ncode.OPID opID,
+		ncode.OP_TYPE opType,
+		CODE.name codeName,
+		CODE.isshow isShow,
+		CODE.disp_sn disp_sn
+		FROM
+		(SELECT
+		hcode.OPID,
+		hcode.CODE_TYPE,
+		hcode.NAME,
+		hcode.VALUE,
+		hcode.LANG,
+		hcode.OP_TYPE
+		FROM
+		hhu_du_code hcode
+		WHERE hcode.STATUS = #dataStat#
+		AND NOT EXISTS
+		(SELECT
+		1
+		FROM
+		hhu_du_hhulog LOG,
+		hhu_du_hhulogop logop
+		WHERE logop.OPID = hcode.OPID
+		AND log.LOGID = logop.LOGID
+		AND log.HHUID = #hhuID#
+		AND log.UPT_RST = #logStat#)) ncode
+		LEFT JOIN p_code CODE
+		ON CODE.CODE_TYPE = ncode.code_type
+		AND code.VALUE = ncode.value
+		AND code.LANG = ncode.lang
+	</select>
+
+	<!-- 获取Token更新数据 -->
+	<select id="getToken" parameterClass="java.util.HashMap"
+		resultClass="cn.hexing.ami.dao.common.pojo.pre.Token">
+		<!-- SELECT token.*, ntoken.OPID opID, ntoken.OP_TYPE opType FROM token, 
+			(SELECT htoken.OPID, htoken.tid, htoken.OP_TYPE FROM hhu_du_token htoken 
+			WHERE htoken.STATUS = #dataStat# AND NOT EXISTS (SELECT 1 FROM hhu_du_hhulog 
+			LOG, hhu_du_hhulogop logop WHERE logop.OPID = htoken.OPID AND log.LOGID = 
+			logop.LOGID AND log.HHUID = #hhuID# AND log.UPT_RST = #logStat#)) ntoken 
+			WHERE token.tid = ntoken.tid order by token.sort -->
+		SELECT
+		*
+		FROM
+		(SELECT
+		token.cno,
+		token.orderid,
+		token.sort,
+		token.upt_date,
+		token.status,
+		ntoken.tid tid,
+		ntoken.msn msn,
+		ntoken.token token,
+		ntoken.OPID opID,
+		ntoken.OP_TYPE opType
+		FROM
+		(SELECT
+		htoken.OPID,
+		htoken.tid,
+		htoken.OP_TYPE,
+		htoken.token,
+		htoken.msn
+		FROM
+		hhu_du_token htoken
+		WHERE htoken.STATUS = #dataStat#
+		AND EXISTS (
+		SELECT
+		*
+		FROM
+		ins_pln_meter,ins_wo
+		WHERE ins_pln_meter.N_MSN = htoken.msn AND ins_pln_meter.WOID=ins_wo.WOID
+		AND ins_wo.STATUS !=  '6' AND ins_wo.STATUS != '4'
+		AND ins_wo.P_OPTID = #optID#
+		)
+		AND NOT EXISTS
+		(SELECT
+		1
+		FROM
+		hhu_du_hhulog LOG,
+		hhu_du_hhulogop logop
+		WHERE logop.OPID = htoken.OPID
+		AND log.LOGID = logop.LOGID
+		AND log.HHUID = #hhuID#
+		AND log.UPT_RST = #logStat#)) ntoken
+		LEFT JOIN token
+		ON token.tid = ntoken.tid) tk
+		WHERE (STATUS != '00'
+		AND STATUS != '02' or STATUS is null) AND EXISTS (
+		SELECT
+		*
+		FROM
+		ins_pln_meter,ins_wo
+		WHERE ins_pln_meter.N_MSN = tk.msn AND ins_pln_meter.WOID=ins_wo.WOID AND
+		ins_wo.STATUS != '6' AND ins_wo.STATUS != '4'
+		AND ins_wo.P_OPTID = #optID#
+		)
+	</select>
+
+	<!-- 获取所有基础编码 -->
+	<!-- <select id="getAllCode" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.system.pojo.ggdmgl.Code"> 
+		SELECT code.* code.code_type cateCode, code.lang lang, code.value codeValue, 
+		code.name codeName, code.isshow isShow, code.disp_sn disp_sn FROM p_code 
+		CODE WHERE CODE.isshow = '1' </select> -->
+
+	<!-- 保存操作日志 -->
+	<insert id="insLog"
+		parameterClass="cn.hexing.ami.dao.main.pojo.hhuService.DataUpdateLog">
+		<selectKey resultClass="java.lang.String" keyProperty="logID">
+			SELECT nextval('S_HHU_DU_HHULOG')
+		</selectKey>
+		INSERT INTO hhu_du_hhulog
+		(LOGID,
+		REQID,
+		OPTID,
+		HHUID,
+		UPT_WAY,
+		UPT_RST,
+		ERR_MSG,
+		UPT_DATE)
+		VALUES (#logID#,
+		#reqID#,
+		#optID#,
+		#hhuID#,
+		#uptWay#,
+		#uptRst#,
+		#errMsg#,
+		now())
+	</insert>
+
+	<!-- 保存操作日志 关联 -->
+	<insert id="insLogOp"
+		parameterClass="cn.hexing.ami.dao.main.pojo.hhuService.DataUpdateLog">
+		INSERT INTO hhu_du_hhulogop
+		(LOGID,
+		OPID,
+		DATA_TYPE)
+		VALUES (#logID#,
+		#opID#,
+		#dataType#)
+	</insert>
+
+	<!-- 修改操作日志状态 -->
+	<update id="updLogStat" parameterClass="java.util.HashMap">
+		UPDATE
+		hhu_du_hhulog
+		SET
+		UPT_RST = #uptRst#,
+		ERR_MSG = #errMsg#,
+		UPT_DATE = NOW()
+		WHERE HHUID=#hhuID# and REQID = #reqID#
+	</update>
+	<select id="getVerLs" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		SELECT * FROM ar_meter_model
+	</select>
+
+	<select id="getAllTest" parameterClass="java.util.HashMap"
+		resultClass="cn.hexing.ami.dao.common.pojo.paramData.ParamData">
+		SELECT tc.*, IF(doc.child_data_type IS
+		NULL,doc.dlms_data_type,CONCAT(doc.dlms_data_type,'_',doc.child_data_type))dlms_data_type,
+		doc.scale,doc.unit,doc.xctpt,doc.verid FROM P_PS_TICODE tc
+		JOIN
+		(SELECT
+		doc.item_id,doc.dlms_data_type,doc.child_data_type,doc.op_type,doc.scale,doc.unit,doc.xctpt,m.verid
+		FROM dlms_obis_code doc JOIN ar_meter_model m ON m.verid=doc.verid
+		WHERE doc.isshow='1' AND m.VERID=#VERID#
+		UNION
+		SELECT
+		doc.item_id,doc.dlms_data_type,doc.child_data_type,doc.op_type,doc.scale,doc.unit,doc.xctpt,m.verid
+		FROM dlms_obis_code doc JOIN ar_meter_model m ON doc.verid = '0'
+		WHERE isshow='1' AND m.VERID=#VERID#
+		AND NOT EXISTS
+		(SELECT 1 FROM dlms_obis_code c,ar_meter_model m WHERE c.item_id =doc.item_id
+		AND c.verid=m.verid AND m.verid=#VERID# )) doc ON tc.OBIS=doc.item_id
+		where tc.tiid=#TIID#
+	</select>
+	<select id="getTiName" parameterClass="java.util.HashMap"
+		resultClass="cn.hexing.ami.dao.common.pojo.paramData.TestParamName">
+		SELECT tn.fhint,tn.tiname,tn.lang FROM P_PS_TI ti LEFT JOIN p_ps_tiname tn
+		ON ti.tiid=tn.tiid where ti.tiid=#TIID#
+	</select>
+</sqlMap>

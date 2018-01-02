@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="hhuMgt">
+	<!-- 插入HHU信息 -->
+	<insert id="insertHhu" parameterClass="java.util.HashMap">
+		insert into ar_hhu
+			(hhuid, model, bcap, appvn, wh_date, status, data_init)
+		values
+			(#hhuid#, #model#, #bcap#, #appvn#, Now(), #status#, '1')
+	</insert>
+	
+	<!-- 修改HHU信息 -->
+	<update id="updateHhu" parameterClass="java.util.HashMap">
+		update ar_hhu
+			set model = #model#, bcap = #bcap#, appvn = #appvn#, status = #status#
+				where hhuid = #hhuid#
+	</update>
+	
+	<!-- 删除HHU信息 -->
+	<delete id="deleteHhu" parameterClass="java.util.HashMap">
+		delete from ar_hhu
+			where hhuid = #hhuid#
+	</delete>
+	
+	<!-- 判断HHU是否已经存在 -->
+	<select id="existsHhu" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select 1 from ar_hhu
+			where hhuid = #hhuid#
+	</select>
+	
+	<!-- HHU管理界面，获取HHU列表 -->	
+	<select id="getHhuListQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<include refid='common.pagingTop'/>
+		select hhu.hhuid, hhu.model as hhumodel, 
+			(select c.name 
+					from p_code c 
+				where c.code_type = 'HHUModel' 
+					and c.lang = #appLang# 
+					and c.value = hhu.model) model,
+			hhu.bcap, hhu.appvn, 
+			date_format(hhu.wh_date, '%Y-%m-%d') wh_date,
+			hhu.status as hhustatus,
+			(select c.name 
+					from p_code c 
+				where c.code_type = 'HHUStatus' 
+					and c.lang = #appLang# 
+					and c.value = hhu.status) status,
+			hhu.data_init as dataInitSts,
+			(select c.name 
+					from p_code c 
+				where c.code_type = 'dataInitSts' 
+					and c.lang = #appLang# 
+					and c.value = hhu.data_init) data_init
+		from ar_hhu hhu
+			where hhu.hhuid like concat('%', #hhuid#, '%')
+			<isNotEmpty property="model"> 
+				and hhu.model = #model#
+			</isNotEmpty>
+			<isNotEmpty property="status"> 
+				and hhu.status = #status#
+			</isNotEmpty>
+		<include refid='common.pagingBottom'/>
+	</select>
+	
+	<!-- HHU管理界面，获取HHU总数 -->	
+	<select id="getHhuListCount" resultClass="int">
+		select count(hhu.hhuid)
+			from ar_hhu hhu
+				where hhu.hhuid like concat('%', #hhuid#, '%')
+			<isNotEmpty property="model"> 
+				and hhu.model = #model#
+			</isNotEmpty>
+			<isNotEmpty property="status"> 
+				and hhu.status = #status#
+			</isNotEmpty>
+	</select>
+	 
+	<!-- HHU选择界面，获取HHU列表 -->	
+	<select id="hhuSelQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<include refid='common.pagingTop'/>
+		select hhu.hhuid, hhu.model as hhumodel, 
+			(select c.name 
+					from p_code c 
+				where c.code_type = 'hhumodel' 
+					and c.lang = #appLang# 
+					and c.value = hhu.model) model,
+			hhu.bcap, hhu.appvn, 
+			date_format(hhu.wh_date, '%Y-%m-%d') wh_date,
+			hhu.status as hhustatus,
+			(select c.name 
+					from p_code c 
+				where c.code_type = 'hhustatus' 
+					and c.lang = #appLang# 
+					and c.value = hhu.status) status
+		from ar_hhu hhu
+			where hhu.hhuid like concat('%', #hhuid#, '%')
+			<isNotEmpty property="model"> 
+				and hhu.model = #model#
+			</isNotEmpty>
+			<isNotEmpty property="status"> 
+				and hhu.status = #status#
+			</isNotEmpty>
+		<include refid='common.pagingBottom'/>
+	</select>
+	
+	<!-- HHU选择界面，获取HHU总数 -->	
+	<select id="hhuSelCount" resultClass="int">
+		select count(hhu.hhuid)
+			from ar_hhu hhu
+				where hhu.hhuid like concat('%', #hhuid#, '%')
+			<isNotEmpty property="model"> 
+				and hhu.model = #model#
+			</isNotEmpty>
+			<isNotEmpty property="status"> 
+				and hhu.status = #status#
+			</isNotEmpty>
+	</select>
+	
+	<!-- 查询HHU状态是否是enabled -->
+	<select id="querysts" resultClass="java.util.HashMap">
+		select hhuid from ar_hhu
+			where hhuid = #hhuid# and status = '01'
+	</select>
+	
+	<!-- 根据HHUID查询数据是否初始化 -->
+	<select id="getHhuInit" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		select data_init from ar_hhu
+			where hhuid = #hhuID# AND STATUS=#status#
+	</select>
+	
+	<!-- 复位数据初始化，从Yes状态变成No -->
+	<!-- <update id="resetHhu" parameterClass="java.lang.String">
+		update ar_hhu
+			set data_init = '1'
+		where hhuid = #hhuid#
+	</update> -->
+	<update id="resetHhu" parameterClass="java.util.HashMap">
+		update ar_hhu 
+			set data_init = '1'
+				where hhuid = #hhuid#
+	</update>
+	
+	<!-- 下载完初始数据，No状态变成Yes -->
+	<update id="setHhuInit" parameterClass="java.util.HashMap">
+		update ar_hhu 
+			set data_init = '0'
+				where hhuid = #hhuid#
+	</update>
+	
+	<!-- 编辑掌机获取信息 -->
+	<select id="getHhu" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		select hhuid, model, bcap, appvn, wh_date, status, data_init
+			from ar_hhu
+		where hhuid = #hhuid#
+	</select>
+
+</sqlMap>

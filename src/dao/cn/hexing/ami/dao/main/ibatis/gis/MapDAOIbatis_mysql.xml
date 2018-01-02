@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="map">
+	<select id="getMeters" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.common.pojo.arc.Meter">
+	    <![CDATA[
+	    SELECT 
+		  mi.*,
+		  c.cname,
+		  (select name from p_code pc where pc.code_type = 'mStatus' and pc.value = mi.status and pc.lang = #appLang#) mstsn,
+		  pnm.status psts,
+		  (select name from p_code pc where pc.code_type = 'planStatus' and pc.value = pnm.status and pc.lang = #appLang#) pstsn,
+		  (select name from p_code pc where pc.code_type = 'bussType' and pc.value = pnm.buss_type and pc.lang = #appLang#) busstypen
+		  FROM
+		    (SELECT 
+		      meter.msn,
+		      meter.lon,
+		      meter.lat,
+		      meter.cno,
+		      meter.status,
+		      fbm.fb_date,
+		      fbm.pid,
+		      fbm.op_sts
+		    FROM
+		      (SELECT 
+		        * 
+		      FROM
+		        ar_meter 
+		      WHERE lon > #minLon#
+		      AND lon < #maxLon#
+		      AND lat > #minLat#
+		      AND lat < #maxLat#) meter 
+		        LEFT JOIN (select * from ins_fb_meter order by fb_date desc) fbm 
+		          ON meter.msn = fbm.op_msn 
+		      GROUP BY meter.msn) mi 
+		      LEFT JOIN ar_customer c 
+		        ON mi.cno = c.cno 
+		      LEFT JOIN ins_pln_meter pnm
+		  		ON mi.pid = pnm.pid
+	    ]]>
+ 	</select>
+ 	
+	<select id="getMeter" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.common.pojo.arc.Meter">
+	    <![CDATA[
+	    SELECT 
+		  mi.*,
+		  c.cname,
+		  (select name from p_code pc where pc.code_type = 'mStatus' and pc.value = mi.status and pc.lang = #appLang#) mstsn,
+		  pnm.status psts,
+		  (select name from p_code pc where pc.code_type = 'planStatus' and pc.value = pnm.status and pc.lang = #appLang#) pstsn,
+		  (select name from p_code pc where pc.code_type = 'bussType' and pc.value = pnm.buss_type and pc.lang = #appLang#) busstypen
+		FROM
+		  (SELECT 
+		    meter.msn,
+		    meter.lon,
+		    meter.lat,
+		    meter.cno,
+		    meter.status,
+		    fbm.fb_date,
+		    fbm.pid,
+		    fbm.op_sts 
+		  FROM
+		    ar_meter meter 
+		    LEFT JOIN (select * from ins_fb_meter order by fb_date desc) fbm 
+		      ON meter.msn = fbm.op_msn 
+		  GROUP BY meter.msn) mi 
+		  LEFT JOIN ar_customer c 
+		    ON mi.cno = c.cno 
+		  LEFT JOIN ins_pln_meter pnm
+		  	ON mi.pid = pnm.pid
+		WHERE mi.msn = #meterNo#
+	    ]]>
+ 	</select>
+</sqlMap>

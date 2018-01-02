@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="modelMgt">
+<sql id="getModel">
+ from ar_meter_model m  where 1=1
+ <isNotEmpty property="mfid">
+	and m.mfid=#mfid#
+ </isNotEmpty>
+ <isNotEmpty property="model">
+	and m.m_model=#model#
+ </isNotEmpty>
+ <isNotEmpty property="vername">
+ 	and m.m_vername like  concat('%',#vername#,'%')
+ </isNotEmpty>
+</sql>
+<select id="getModelCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+select count(1) 
+<include refid="modelMgt.getModel"/>  
+</select>
+<select id="getModelQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<include refid="common.pagingTop"/>
+		select m.m_vername,m.m_model,m.verid,m.mfid,m.optid,m.m_verid,
+		(select name from p_code  where code_type='MF'
+		 and  value=m.mfid
+		 and lang=#appLang#)mf,
+		optid,DATE_FORMAT(m.crt_date,'%y-%m-%d %T') crt_date
+	<include refid="modelMgt.getModel"/>
+ 	<include refid="common.pagingBottom"/>
+</select>
+<insert id="insModel" parameterClass="java.util.HashMap">
+insert into ar_meter_model values(nextval('S_M_VERID'),#vername#,#model#,#verid#,#mfid#,#czyid#,NOW())
+</insert>
+<delete id="delModel" parameterClass="java.util.HashMap">
+delete from ar_meter_model where m_vername=#vername# and verid=#verid#
+</delete>
+<update id="updModel" parameterClass="java.util.HashMap">
+update ar_meter_model  set m_vername=#vername#,m_model=#model#,verid=#verid#,mfid=#mfid# where m_verid=#m_verid#
+</update>
+<select id="getModelLs" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+SELECT M_MODEL mc,M_MODEL bm FROM ar_fac_model 
+where mfid=#mfid#
+</select>
+<select id="getVerid" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+select * from ar_meter_model where verid=#verid# and m_model=#model#
+</select>
+<select id="getDlms"  parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+select * from p_ps_category where verid=#verid#
+</select>
+</sqlMap>

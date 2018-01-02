@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+	
+<sqlMap namespace="qz">
+	<select id="getAdvZdjh" remapResults="true" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		<isEqual property="viewType" compareValue="sb">
+			SELECT DISTINCT ZD.ZDJH
+				FROM DA_ZD ZD,DA_YH YH
+				WHERE ZD.HH = YH.HH(+) 
+				AND ZD.DWDM = YH.DWDM(+) 
+			<include refid='common.queryInfo' />
+			union
+			SELECT DISTINCT ZD.ZDJH
+				FROM DA_ZD ZD,DA_YH YH,DA_BJ BJ,DA_CLD CLD
+				WHERE ZD.ZDJH = CLD.ZDJH(+) 
+				AND CLD.CLDJH = BJ.BJJH(+) 
+				AND BJ.HH = YH.HH(+) 
+			<include refid='common.queryInfo' />
+	    </isEqual>
+	    <isEqual property="viewType" compareValue="bj">
+	    	SELECT DISTINCT BJ.BJJH AS ZDJH
+	    	<!--专,公变,低压情况下 -->
+			FROM DA_ZD ZD,DA_YH YH,DA_BJ BJ,DA_CLD CLD
+			WHERE ZD.ZDJH = CLD.ZDJH(+)
+			AND CLD.CLDJH = BJ.BJJH(+)
+			AND BJ.HH = YH.HH(+)
+			<include refid='common.queryInfo' />
+	   </isEqual>
+	</select>
+
+	<!--  根据操作员权限 查询所能访问的所有群组信息   -->
+	<select id = "getGroup" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT G.QZID, G.QZMC, G.SFGX, DECODE(G.SMZQ, NULL, (select name from p_code where code_type='qzzt' and lang=#appLang# and value='0'), G.SMZQ) AS SMZQ FROM QZ_DY G
+		 WHERE G.CZYID = #czyid#  
+    	 ORDER BY G.QZMC
+	</select>
+	
+	<!-- 群组列表   -->
+	<select id="getGroupGrid" remapResults="true" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT M.* FROM (
+		<dynamic>
+			<isEqual property="qzlx" compareValue="bj">
+				SELECT YH.HH,YH.HM,BJ.BJJH,
+				(SELECT name FROM P_CODE WHERE CODE_TYPE = 'dblx' AND LANG = #appLang# and value =bj.bjlx) bjlx FROM
+				DA_YH YH,DA_BJ BJ 
+		        WHERE BJ.HH = YH.HH
+		        )M WHERE 1=1
+				<isNotEmpty prepend="AND" property="zdjh">
+					M.BJJH
+					<iterate prepend="IN" open="(" close=")" property="zdjh" conjunction=",">
+						#zdjh[]#
+					</iterate>
+				</isNotEmpty>  
+			</isEqual>
+			<isEqual property="qzlx" compareValue="sb"> 
+				select zd.zdjh,zd.zdljdz,
+				(select name FROM P_CODE WHERE CODE_TYPE = 'yhlx' AND LANG = #appLang# and value=zd.zdyt ) zdyt,
+				(SELECT name FROM P_CODE WHERE CODE_TYPE = 'zdzt' AND LANG = #appLang# and value=zd.zt) zdzt
+				 from da_zd zd
+				) M WHERE 1 = 1 
+				<isNotEmpty prepend="AND" property="zdjh">
+					M.ZDJH
+					<iterate prepend="IN" open="(" close=")" property="zdjh" conjunction=",">
+						#zdjh[]#
+					</iterate>
+				</isNotEmpty>  
+			</isEqual>
+		</dynamic>
+	</select>
+	<!--  查找群组名是否存在   -->
+	<select id = "qzmExsit" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT * FROM QZ_DY G
+		 WHERE G.QZMC = #qzm#
+	</select>
+	
+	<!-- 新建群组 -->
+	<insert id="insQzdy" parameterClass="java.util.HashMap">
+		<selectKey resultClass="java.lang.String" keyProperty="qzid">
+			SELECT S_QZ_DY.Nextval FROM DUAL
+		</selectKey>
+		INSERT INTO QZ_DY
+		VALUES(#qzid#,#dwdm#,#qzm#,#czyid#,'',sysdate,#smzq#,#qzfl#) 
+	</insert>
+	
+	<!-- 新建群组明细 -->
+	<insert id="insQzmx" parameterClass="java.util.HashMap">
+		INSERT INTO QZ_MX
+		VALUES(#qzid#,#hhIns#,#zdjhIns#,#bjjhIns#) 
+	</insert>
+	
+	<!-- 加入群组 -->
+	<update id="updQzmx" parameterClass="java.util.HashMap">
+		MERGE INTO QZ_MX MX
+		USING (SELECT #qzid# AS QZID, #hhIns# AS HH, #zdjhIns# AS ZDJH, #bjjhIns# AS BJJH FROM DUAL) MX2
+		<isEqual property="qzlx" compareValue="bj">
+			ON (MX.BJJH = MX2.BJJH AND MX.QZID = MX2.QZID)
+		</isEqual>
+		<isNotEqual property="qzlx" compareValue="bj">
+			ON (MX.ZDJH = MX2.ZDJH AND MX.QZID = MX2.QZID)
+		</isNotEqual>
+		WHEN MATCHED THEN
+		UPDATE SET MX.HH = MX2.HH
+		WHEN NOT MATCHED THEN
+		INSERT(MX.QZID,MX.HH,MX.ZDJH,MX.BJJH)
+		VALUES(MX2.QZID,MX2.HH,MX2.ZDJH,MX2.BJJH)
+ 	</update>
+	
+	<!-- 删除群组 -->
+	<delete id = "deleteOneGroup" parameterClass="java.lang.String">
+		delete from QZ_DY where qzid = #value#
+	</delete>
+	
+	<!-- 删除群组明细 -->
+	<delete id = "deleteOneGroupMx" parameterClass="java.lang.String">
+		delete from QZ_MX where qzid = #value#
+	</delete>
+</sqlMap>

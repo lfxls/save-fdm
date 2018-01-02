@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="woQuery">
+   <!-- 工单生成查询 -->
+   <sql id="wo">
+	    FROM INS_WO W LEFT JOIN QX_CZY CZY ON W.P_OPTID = CZY.CZYID
+	    LEFT JOIN INS_TEAM T ON CZY.TID = T.TNO
+	    WHERE 1=1
+		<isNotEmpty property="woid">
+	 		AND W.WOID LIKE CONCAT('%', #woid#, '%')
+	 	</isNotEmpty>
+		<isNotEmpty property="status">
+	 		AND W.STATUS = #status#
+	 	</isNotEmpty>
+		<isNotEmpty property="type">
+	 		AND W.TYPE = #type#
+	 	</isNotEmpty>
+		<isNotEmpty property="popid">
+	 		AND W.P_OPTID = #popid#
+	 	</isNotEmpty>
+		<isNotEmpty property="startDate">
+	 		AND DATE_FORMAT(W.C_DATE,'%Y-%m-%d') <![CDATA[ >= ]]> #startDate#
+	 	</isNotEmpty>
+		<isNotEmpty property="endDate">
+	 		AND DATE_FORMAT(W.C_DATE,'%Y-%m-%d') <![CDATA[ <= ]]> #endDate#
+	 	</isNotEmpty>
+		ORDER BY W.C_DATE DESC
+   </sql>
+   <select id="workOrderCount"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+        SELECT COUNT(W.WOID) 
+        <include refid="woQuery.wo"/> 
+   </select>
+   <select id="workOrderQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+    <include refid='common.pagingTop'/>
+	   SELECT W.WOID WOID, W.STATUS STATUS, W.TYPE TYPE,
+	   W.P_OPTID OPTID, IF(W.P_OPTID = 'admin','admin',CZY.XM) OPTNAME,
+	   W.C_OPTID COPTID, IF(W.C_OPTID = 'admin','admin',(SELECT QC.XM FROM QX_CZY QC WHERE QC.CZYID=W.C_OPTID)) COPTNAME,
+	   DATE_FORMAT(W.C_DATE,'%Y-%m-%d %H:%i:%s') CDATE, T.TNAME TNAME,
+	   DATE_FORMAT(W.PF_DATE,'%Y-%m-%d') FTIME,
+	  (SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'woStatus' AND T.VALUE = W.STATUS AND T.LANG = #appLang#) SNAME,
+	  (SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'fbDataType' AND T.VALUE = W.TYPE AND T.LANG = #appLang#) TYPENM
+      <include refid="woQuery.wo"/> 
+      <include refid='common.pagingBottom'/>
+      <include refid="common.pagingSort"/>
+   </select> 
+</sqlMap>

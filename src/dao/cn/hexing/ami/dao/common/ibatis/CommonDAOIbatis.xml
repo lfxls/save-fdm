@@ -1,0 +1,601 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="common">
+	 <!--主站数据操作日志-->
+ 	 <insert id="insRzFwxx" parameterClass="java.util.HashMap" >
+		 INSERT INTO RZ_FWXX
+	 		 (CZYID, DWDM, CZSJ, CDID, CZID, RZNR,XTID)
+	 	  VALUES
+ 		     (#czyId#, #unitCode#, SYSDATE, #cdid#, #czid#, #cznr#,#xtid#)
+ 	 </insert>
+ 	 
+ 	 <!--主站操作终端日志-->
+ 	 <insert id="insRzCzzd" parameterClass="java.util.HashMap" >
+		 INSERT INTO RZ_CZZD
+		 	(rzid, czyid, dwdm, czsj, czid, zdjh, czsjx, rznrq, rznrh, ip, xtid)
+	 	 VALUES
+ 		     (S_RZ_CZZD.NEXTVAL,#czyId#, #unitCode#, SYSDATE, #czid#, #zdjh#, #czsjx#,'',#rznrh#,#ip#,#xtid#)
+ 	 </insert>
+	
+	 <!-- 取数据字典 -->
+	 <select id="getPCode" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	SELECT VALUE BM, NAME MC FROM P_CODE T WHERE isshow='1' and CODE_TYPE = #code_type#
+	 	<isNotEmpty property="lang">
+	 		AND t.LANG = #lang#
+	 	</isNotEmpty>
+	 	order by t.value
+	 	<isEqual property="orderType" compareValue="DESC">
+	 		desc
+	 	</isEqual>
+	 </select>
+	 	 <!-- 任务属性-->
+	 <select id="getRwsx" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	SELECT RWSX BM, RWSXMC MC FROM P_RWSX T WHERE GYLX=#gylx#
+	 	<isNotEmpty property="lang">
+	 		AND t.LANG = #lang#
+	 	</isNotEmpty>
+	 </select>
+	 <!-- 取数据字典 数值型 -->
+	 <select id="getPCodeNumber" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	SELECT VALUE BM, NAME MC FROM P_CODE T WHERE isshow='1' and CODE_TYPE = #code_type#
+	 	<isNotEmpty property="lang">
+	 		AND t.LANG = #lang#
+	 	</isNotEmpty>
+	 	order by to_number(t.value)
+	 	<isEqual property="orderType" compareValue="DESC">
+	 		desc
+	 	</isEqual>
+	 </select>
+	 
+	  <!-- 取数据字典根据disp_sn进行排序 -->
+	 <select id="getPCodeOrderBySN" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	SELECT VALUE BM, NAME MC FROM P_CODE T WHERE isshow='1' and CODE_TYPE = #code_type#
+	 	<isNotEmpty property="lang">
+	 		AND t.LANG = #lang#
+	 	</isNotEmpty>
+	 	order by to_number(t.disp_sn)
+	 	<isEqual property="orderType" compareValue="DESC">
+	 		desc
+	 	</isEqual>
+	 </select>
+	 
+	 <!-- 获取系统配置 -->
+	 <select id="getPSys" parameterClass="java.util.HashMap" resultClass="String">
+		 SELECT DEFAULT_VALUE BM FROM P_SYSPARA WHERE PARA_ID = #id# order by PARA_ID
+	 </select>
+	 
+	 <!-- 操作员操作权限过滤 -->
+	 <select id="getCzyCzqx" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 SELECT CZYID FROM QX_CZYJS CZY,QX_JSCZ JS, QX_CZ CZ
+		WHERE CZY.JSID = JS.JSID
+		AND JS.CZLBID = CZ.CZLBID
+		AND CZ.CZID =#czid#
+		AND CZY.CZYID = #czyid#
+	 </select>
+	 
+	<!-- 操作员访问权限或部门访问权限 控制权限生成 -->
+	<sql id="fwdwFilter">
+		<dynamic>
+			<isEqual property="fwbj" compareValue="0">
+				 AND EXISTS (SELECT 1 FROM QX_BMFWQX QX WHERE QX.BMID = #bmid# AND $main$.DWDM = QX.DWDM)
+	 		</isEqual>
+	 		<isEqual property="fwbj" compareValue="1">
+	 		 	 AND EXISTS (SELECT 1 FROM QX_CZYFWQX QX WHERE QX.CZYID = #czyid# AND $main$.DWDM = QX.DWDM)
+	 		</isEqual>
+		</dynamic>
+	</sql>
+	
+	<!--查询与高级查询-->
+	<sql id="queryInfo">
+		<dynamic>
+			<include refid='common.fwdwFilter'/>
+			<isNotEmpty property="yhlx">
+				AND ZD.ZDYT = #yhlx# 
+			</isNotEmpty>
+			<!--区域-->
+			<isNotNull property="dwdm">  
+				AND ZD.DWDM LIKE #dwdm# || '%'
+			</isNotNull>
+			 <!--线路--> 
+			<isNotNull property="xlmc">
+			   AND EXISTS (SELECT 1
+				 FROM G_XL XL,G_TQ TQ,G_BYQ BYQ,G_XLTQGX RA
+				 WHERE XL.XLID = RA.XLID AND RA.TQID = TQ.TQID AND TQ.TQID = BYQ.TQID
+				 AND XL.XLMC LIKE '%' || #xlmc# || '%' AND BYQ.BYQID = $main$.BYQID)
+			</isNotNull> 
+			<!--台区--> 
+			<isNotNull property="tqmc">  
+			  AND EXISTS (SELECT 1
+				 FROM G_TQ TQ,G_BYQ BYQ
+				 WHERE TQ.TQID = BYQ.TQID
+				 AND TQ.TQMC  LIKE '%' || #tqmc# || '%' AND BYQ.BYQID = $main$.BYQID)
+			</isNotNull>
+			<!--变压器-->
+			<isNotNull property="byqmc">  
+			  AND EXISTS (SELECT 1
+			  FROM G_BYQ BYQ 
+			  WHERE BYQ.BYQID = $main$.BYQID 
+			  AND BYQ.MC LIKE '%' || #byqmc# || '%')
+			</isNotNull>
+			<!--用户-->
+			<isNotNull prepend="AND" property="hm">  
+				YH.HM LIKE '%' || #hm# || '%'
+			</isNotNull>
+			<isNotNull prepend="AND" property="hh">  
+				YH.HH LIKE '%' || #hh# || '%'
+			</isNotNull>
+			<isNotNull prepend="AND" property="zdjh">  
+				ZD.ZDJH LIKE '%' || #zdjh# || '%'
+			</isNotNull>
+			<isNotNull prepend="AND" property="zdljdz">  
+				ZD.ZDLJDZ LIKE '%' || #zdljdz# || '%'
+			</isNotNull>
+			<isNotNull prepend="AND" property="bjjh">  
+				BJ.BJJH LIKE '%' || #bjjh# || '%'
+			</isNotNull>
+			<isNotNull prepend="AND" property="bjtxdz">  
+				BJ.TXDZ LIKE '%' || #bjtxdz# || '%'
+			</isNotNull>
+			<isNotNull prepend="AND" property="advhh">  
+				YH.HH
+				<iterate prepend="IN" open="(" close=")" property="advhh" conjunction=",">
+					#advhh[]#
+				</iterate>
+			</isNotNull>
+			<isNotNull property="zdysdrl">  
+				AND YH.SDRL &gt;= #minrl#
+   				AND YH.SDRL &lt; #maxrl#
+			</isNotNull>
+			<isNotNull prepend="AND" property="dydj">  
+				YH.GDDY
+				<iterate prepend="IN" open="(" close=")" property="dydj" conjunction=",">
+					#dydj[]#
+				</iterate>
+			</isNotNull>
+			<!--终端-->
+			<isNotNull prepend="AND" property="advzdjh">  
+				ZD.ZDJH 
+				<iterate prepend="IN" open="(" close=")" property="advzdjh" conjunction=",">
+					#advzdjh[]#
+				</iterate>
+			</isNotNull>
+			<isNotNull prepend="AND" property="advzdljdz">  
+				ZD.ZDLJDZ
+				<iterate prepend="IN" open="(" close=")" property="advzdljdz" conjunction=",">
+					#advzdljdz[]#
+				</iterate>
+			</isNotNull>
+			
+			<!--高级查询用表计局号查找的时候 -->
+			<isEqual property="viewType" compareValue="sb">
+				<isNotEqual property="yhlx" compareValue="03">
+					<isNotNull prepend="AND" property="advbjjh">  
+					BJ.BJJH
+					<iterate prepend="IN" open="(" close=")" property="advbjjh" conjunction=",">
+						#advbjjh[]#
+					</iterate>
+					</isNotNull>
+				</isNotEqual>
+			</isEqual>
+			
+			<isEqual property="viewType" compareValue="bj">
+				<isNotNull prepend="AND" property="advbjjh">  
+				BJ.BJJH
+				<iterate prepend="IN" open="(" close=")" property="advbjjh" conjunction=",">
+					#advbjjh[]#
+				</iterate>
+				</isNotNull>
+			</isEqual>
+			
+			<isNotNull prepend="AND" property="simkh">  
+					ZD.SIMKH
+				<iterate prepend="IN" open="(" close=")" property="simkh" conjunction=",">
+					#simkh[]#
+				</iterate>
+			</isNotNull>
+			<isNotNull prepend="AND" property="zdgylx">  
+				ZD.ZDGYLX =#zdgylx#
+			</isNotNull>
+			<isNotNull prepend="AND" property="zdzt">  
+				ZD.ZT 
+				<iterate prepend="IN" open="(" close=")" property="zdzt" conjunction=",">
+					#zdzt[]#
+				</iterate>
+			</isNotNull>
+			<isNotNull prepend="AND" property="zdjhFrom">  
+				<![CDATA[
+				to_number(Zd.zdjh)>=#zdjhFrom#
+				]]>
+			</isNotNull>
+			<isNotNull prepend="AND" property="zdjhTo">
+				<![CDATA[
+				to_number(Zd.zdjh)<=#zdjhTo#
+				]]>
+			</isNotNull>
+		</dynamic>
+	</sql>
+	
+	<!-- 用户列表权限控制 -->
+	<sql id="nodeFilter">
+		<dynamic>
+			 <!-- 单位-->
+			 <isEqual property="nodeType" compareValue="dw">
+			 	 AND $main$.DWDM LIKE #nodeId# || '%'
+			 	 <include refid='common.fwdwFilter'/>
+			 </isEqual>
+			 <!-- 线路--> 
+			 <isEqual property="nodeType" compareValue="xl">
+			 	 AND EXISTS (SELECT 1
+				 FROM G_XL XL,G_TQ TQ,G_BYQ BYQ,G_XLTQGX RA
+				 WHERE XL.XLID = RA.XLID AND RA.TQID = TQ.TQID AND TQ.TQID = BYQ.TQID
+				 AND XL.XLID = #nodeId# AND BYQ.BYQID = $main$.BYQID)
+			 </isEqual> 
+			 <!-- 台区--> 
+			 <isEqual property="nodeType" compareValue="tq">
+			 	 AND EXISTS (SELECT 1
+				 FROM G_TQ TQ,G_BYQ BYQ
+				 WHERE TQ.TQID = BYQ.TQID
+				 AND TQ.TQID = #nodeId# AND BYQ.BYQID = $main$.BYQID)
+			 </isEqual> 
+			  <!-- 变压器--> 
+			 <isEqual property="nodeType" compareValue="byq">
+			 	 AND $main$.BYQID = #nodeId#
+			 </isEqual> 
+			 <!-- 设备群组--> 
+			 <isEqual property="nodeType" compareValue="sbqz">
+			 	 AND EXISTS (SELECT 1 FROM QZ_MX QZ WHERE $main$.ZDJH = QZ.ZDJH AND QZID = #nodeId#)
+			 </isEqual>
+			 <!-- 表计群组--> 
+			 <isEqual property="nodeType" compareValue="bjqz">
+			 	 AND EXISTS (SELECT 1 FROM QZ_MX QZ WHERE $main$.BJJH = QZ.BJJH AND QZID = #nodeId#)
+			 </isEqual> 
+			 <!-- 设备--> 
+			 <isEqual property="nodeType" compareValue="sb">
+			     AND $main$.ZDJH = #nodeId#
+			 </isEqual> 
+			 <!-- 表计--> 
+			 <isEqual property="nodeType" compareValue="bj">
+			     AND $main$.BJJH = #nodeId#
+			 </isEqual> 
+			 <!-- 查询--> 
+			 <isEqual property="nodeType" compareValue="cx">
+				<include refid='common.queryInfo'/>
+			 </isEqual> 
+			 <!-- 非单位--> 
+			 <isNotEqual property="nodeType" compareValue="dw">
+				 <isNotEmpty prepend="AND" property="nodeDwdm">
+				 	$main$.DWDM LIKE #nodeDwdm# || '%'
+				 </isNotEmpty>
+			 </isNotEqual>
+		</dynamic>
+	</sql>
+
+	 <!-- 分页用 前面sel -->
+	<sql id="pagingTop">
+		<dynamic>
+			<isEmpty property="isExcel">
+				select * from (select * from (select b.*, row_number() OVER(ORDER BY null) AS row_number
+                  from (
+			</isEmpty>
+		</dynamic>
+	</sql>
+	<!--
+	<sql id="pagingTop">
+		<dynamic>
+			<isEmpty property="isExcel">
+				SELECT A.* FROM ( SELECT B.*, ROWNUM AS ST FROM (
+			</isEmpty>
+		</dynamic>
+	</sql>
+	-->
+	
+	<!-- 分页用 后面sel -->
+	<sql id="pagingBottom">
+		<dynamic>
+			<isEmpty property="isExcel"> 
+			<![CDATA[
+			) b ) a where a. row_number > #start#) where rownum <= #end#-#start#
+			]]>
+			</isEmpty>
+		</dynamic>
+	</sql>
+	<!--
+	<sql id="pagingBottom">
+		<dynamic>
+			<isEmpty property="isExcel"> 
+				 )B ) A WHERE A.ST &gt; #start# and A.ST &lt;= #end#
+			</isEmpty>
+		</dynamic>
+	</sql>
+	-->
+	<!-- 分页用 排序sel -->
+	<sql id="pagingSort">
+		<dynamic>
+			<isNotEmpty property="sort">
+				ORDER BY $sort$
+			</isNotEmpty>
+			<isNotEmpty property="dir">
+				$dir$
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+	
+	<!-- 统计公共过滤 -->
+	<sql id="tj_qxkz">
+		<dynamic>
+			<isNotEmpty prepend="AND" property="dwdm">
+				$main$.DWDM LIKE #dwdm# || '%' AND $main$.JB = #dwjb#
+			</isNotEmpty>
+			<!-- 下转不过滤数据权限 -->
+			<isEmpty property="sfxz">
+				<include refid="common.fwdwFilter"/>
+			</isEmpty>	
+		</dynamic>
+	</sql>
+	
+	<!-- 查询当前单位代码的全路径 -->
+	<select id="getDwPath" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select qy.dwdm,qy.dwmc from qx_qy qy start with qy.dwdm=#dwdm# CONNECT BY prior qy.sjdwdm=qy.dwdm 
+	</select>
+	
+	<!-- 页面上有受电容量时需要关联表 -->
+	<sql id="fromSdrl">
+		<isNotEmpty property = "sdrl">
+	  		,Vw_Sdrldj rl
+	  	</isNotEmpty>
+	</sql>
+	<sql id="whereSdrl">
+		<isNotEmpty property = "sdrl">
+	   		AND rl.dm = #sdrl#
+	   		AND yh.sdrl &gt;= rl.qsz AND yh.sdrl &lt; rl.jzz
+	   </isNotEmpty>
+	</sql>
+	
+	<!-- 导航条-->
+ 	<select id="navibar" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select qy.dwdm, qy.dwmc, qy.jb
+		  from qx_qy qy
+		 start with qy.dwdm = #dwdm#
+		        and qy.jb != '06'
+		connect by prior qy.sjdwdm = qy.dwdm
+		and qy.dwdm like #UNIT_CODE# ||'%'
+ 		 order by qy.dwdm
+ 	</select>
+ 	
+ 	<!--License超期控制-->
+ 	<select id="getDayLimitLicense" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+ 		select count(days) from p_daylimit
+ 	</select>
+ 		
+ 	<insert id="initDayLimitLicense" parameterClass="java.util.HashMap">
+	 	insert into p_daylimit
+	      (days, upddate,expdate)
+	    values
+	      (#days#,sysdate,to_date(#expDate#,'yyyy-mm-dd'))
+ 	</insert>
+ 	
+ 	<!--定期更新使用天数-->
+ 	<update id="updateDayLimitLicense" parameterClass="java.util.HashMap">
+ 		update p_daylimit set days = #days#,upddate=sysdate
+ 	</update>
+ 	<!--获取已使用天数-->
+ 	<select id="getUsedDaysLicense" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 		select days,to_char(upddate,'yyyy-mm-dd') upddate,to_char(expdate,'yyyy-mm-dd') expdate from p_daylimit where rownum=1
+ 	</select>
+ 	<!--重置使用天数-->
+ 	<update id="resetDayLimitLicense" parameterClass="java.util.HashMap">
+ 		update p_daylimit set days = 0,upddate=sysdate,expdate=to_date(#expDate#,'yyyy-mm-dd')
+ 	</update>
+ 	<!--  获取终端唤醒持续了多少秒 (查询非心跳报文)，kzm:02-国网心跳、DD-DLMS心跳、24-浙规心跳-->
+ 	<select id="getWakingSecond" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+ 		SELECT (sysdate-TXSJ)*86400 wakingsecond
+ 		from (select TXSJ from bw_sx bw,da_zd zd where bw.zdljdz=zd.zdljdz 
+ 				and bw.zdljdz=#zdjh# 
+ 				and ((zd.zdgylx='02' and kzm!='02') or (zd.zdgylx='03' and kzm!='DD') or 
+ 					(zd.zdgylx='01' and kzm!='24'))
+ 				order by TXSJ desc)
+		where rownum=1
+ 	</select>
+ 	<select id="getSimkh" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 		SELECT zd.simkh,(select txfws from da_sim where simkh=zd.simkh ) txfws, to_char(sysdate,'yyyy-mm-dd hh24:mi:ss') xtsj from da_zd zd where zd.zdjh=#zdjh#
+ 	</select>
+ 	<select id="getZdjh" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+ 		select zdjh from da_cld where 
+		<isNotEmpty property="bjjh">  cldjh=#bjjh# </isNotEmpty>
+		<isEmpty property="bjjh">
+			<isNotEmpty property="cldjh"> cldjh=#cldjh# </isNotEmpty>
+			<isEmpty property="cldjh"> 1=2 </isEmpty>
+		</isEmpty>
+ 	</select>
+ 	<select id="getZdgylx" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		select zdgylx from da_zd where zdjh=#zdjh#
+ 	</select>
+ 	<select id="getWakingUpBwCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+ 		SELECT count(*) from bw_sx where zdljdz=#zdjh# and txsj &gt; to_date(#time#,'yyyy-mm-dd hh24:mi:ss')
+ 	</select>
+ 	
+ 	<!--终端和任务同步-->
+ 	<insert id="insertZdcstb" parameterClass="java.util.HashMap">
+ 		merge into zd_cstb a
+		using (select #zdjh# as zdjh, #tblb# tblb from dual) b
+		on (a.zdjh = b.zdjh and a.tblb = b.tblb)
+		when matched then
+		   update set a.tbsj = sysdate
+		when not matched then
+		   insert (zdjh, tblb, tbsj) values (b.zdjh, #tblb#, sysdate)
+ 	</insert>
+ 	
+ 	<select id="getUserListCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+ 		SELECT count(ZD.ZDJH) 
+		<isNotEqual property="yhlx" compareValue="03">
+			FROM DA_ZD ZD, QX_QY DW,
+			DA_YH YH
+			WHERE ZD.DWDM = DW.DWDM AND YH.DWDM = ZD.DWDM
+			AND YH.HH = ZD.HH 
+	    </isNotEqual>
+	    <!--低压情况下不显示用户信息,显示台区编码，台区名称，安装地址 -->
+		<isEqual property="yhlx" compareValue="03">
+			FROM DA_ZD ZD, QX_QY DW,G_BYQ BYQ,G_TQ TQ
+			WHERE ZD.DWDM = DW.DWDM
+			AND BYQ.BYQID = ZD.BYQID
+			AND TQ.TQID = BYQ.TQID
+	    </isEqual>
+	    <!-- 投运，待投 -->
+	    AND ZD.ZT IN ('02','03')
+		<include refid='common.nodeFilter' />
+ 	</select>
+ 	
+	<!--获取终端列表（公用） -->
+	<select id="getUserListQuery" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap" remapResults="true">
+		<include refid='common.pagingTop'/>
+		SELECT ZD.ZDJH || ':' || ZD.DWDM || ':' || ZD.ZDGYLX AS ZH
+		<isNotEqual property="yhlx" compareValue="03">
+			,YH.HH,YH.HM,YH.YHLX,ZD.DWDM,DW.DWMC,ZD.ZDJH,ZD.ZDLJDZ,ZD.ZDLX,ZDLX.MC
+			AS ZDLXMC,ZD.ZDGYLX, GYLX.MC AS GYMC
+			FROM DA_ZD ZD, QX_QY DW,
+			DA_YH YH,
+			(SELECT VALUE BM, NAME MC FROM P_CODE WHERE CODE_TYPE = 'zdgylx' AND LANG = #appLang#) GYLX,
+			(SELECT VALUE BM, NAME MC FROM P_CODE WHERE CODE_TYPE = 'zdlx' AND LANG = #appLang#) ZDLX
+			WHERE ZD.ZDGYLX = GYLX.BM
+			AND ZD.ZDLX = ZDLX.BM
+			AND ZD.DWDM = DW.DWDM AND YH.DWDM = ZD.DWDM
+			AND YH.HH = ZD.HH 
+	    </isNotEqual>
+	    <!--低压情况下不显示用户信息,显示台区编码，台区名称，安装地址 -->
+		<isEqual property="yhlx" compareValue="03">
+			,ZD.DWDM,DW.DWMC,ZD.ZDJH,ZD.ZDLJDZ,ZD.ZDLX,ZDLX.MC AS
+			ZDLXMC,ZD.ZDGYLX, GYLX.MC AS GYMC,TQ.TQBM,TQ.TQMC,ZD.AZDZ
+			FROM DA_ZD ZD, QX_QY DW,G_BYQ BYQ,G_TQ TQ,
+			(SELECT VALUE BM, NAME MC FROM P_CODE WHERE CODE_TYPE = 'zdgylx' AND LANG = #appLang#) GYLX,
+			(SELECT VALUE BM, NAME MC FROM P_CODE WHERE CODE_TYPE = 'zdlx' AND LANG = #appLang#) ZDLX
+			WHERE ZD.ZDGYLX = GYLX.BM
+			AND ZD.ZDLX = ZDLX.BM
+			AND ZD.DWDM = DW.DWDM
+			AND BYQ.BYQID = ZD.BYQID
+			AND TQ.TQID = BYQ.TQID
+	    </isEqual>
+	    <!-- 投运，待投 -->
+	    AND ZD.ZT IN ('02','03')
+		<include refid='common.nodeFilter' />
+		<include refid='common.pagingBottom'/>
+		<include refid="common.pagingSort"/>
+	</select>
+	
+	<select id="getVeeSjzd" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select distinct content1 zd, disp_sn from P_CODE t where t.code_type = 'veesjzd' and isshow='1' order by disp_sn
+	</select>
+	<select id="getLoadTableColumn" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT COLUMN_NAME FROM USER_TAB_COLUMNS WHERE TABLE_NAME = 'SB_FHSJ'
+	</select>
+	
+	<!--取得字段数据项 -->
+	<select id="cbsjx" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select pz.sjx,
+		       sjx.sjxmc sjxmc,
+		       pz.dw,
+		       pz.width,
+		       pz.xctpt,
+		       pz.format,
+		       pz.txid
+		  from p_cbsj_pz pz, P_CBSJ_SJX sjx
+		 where pz.sjx = sjx.sjx
+		   and pz.dlx = sjx.dlx
+		   and sjx.lang = #lang#
+		   and pz.dlx = #dlx#
+		 <isNotEmpty property="xlx">
+		 	and pz.xlx = #xlx#
+		 </isNotEmpty>
+		 <isNotEmpty property="txid">
+		 	and pz.txid = #txid#
+		 </isNotEmpty>		 
+		   and pz.sfxs = '01'
+		 order by pz.pxbm
+	</select>
+	
+	<!--取得抄表项标题 -->
+	<select id="xlx" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select xl.xlid BM, xl.xlmc MC
+		  from p_cbsj_xl xl
+		 where dlx = #dlx#
+		   and lang = #lang#
+		 order by pxbm
+	</select>
+	
+	<!--取得图表TAB标题 -->
+	<select id="tx" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select distinct t.txid BM, t.txmc MC
+		  from p_cbsj_pz pz, p_cbsj_tx t
+		 where pz.txid = t.txid
+		   and pz.dlx = #dlx#
+		   and pz.xlx = #xlx#
+		   and t.lang = #lang#
+		 order by t.txid
+	</select>
+	
+	<!--取得VEE数据项 -->
+	<select id="veesjx" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select content1 BM, name MC
+		  from P_CODE t
+		 where t.code_type='veesjzd'
+		   and lang = #lang#
+		   and t.isshow = '1'
+	</select>
+	
+	<!--取得节点名称 -->
+	<select id="nodeName" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<isEqual property="nodeType" compareValue="dw">
+			select dwmc mc from qx_qy t where t.dwdm = #nodeId#
+		</isEqual>
+		<isEqual property="nodeType" compareValue="xl">
+			select xlmc mc from g_xl t where t.xlid = #nodeId#
+		</isEqual>
+		<isEqual property="nodeType" compareValue="tq">
+			select tqmc mc from g_tq t where t.tqid = #nodeId#
+		</isEqual>
+		<isEqual property="nodeType" compareValue="byq">
+			select mc from g_byq t where t.byqid = #nodeId#
+		</isEqual>	
+	</select>
+	<!--更新vee_log wcsj字段为空的值 -->
+	<update id="veeLogWcsjUpd" parameterClass="java.util.HashMap">
+		UPDATE vee_log 
+		SET wcsj= SYSDATE, Running_State=#runState#
+		WHERE wcsj IS NULL
+		AND  EXISTS(
+			SELECT 1 FROM job_control jc
+			WHERE jc.job_name =#moduleName#
+			AND jc.physical_machine_ip
+		<iterate prepend="in" open="(" close=")" property="localIP" conjunction=",">
+			#localIP[]#
+		</iterate> 
+		)
+	</update>
+	
+	<!--删除数据表job_control中的数据  -->
+	<delete id="jobControlClear" parameterClass="java.util.HashMap">
+		DELETE FROM job_control 
+		WHERE job_name = #moduleName#
+		AND  physical_machine_ip
+	  <iterate prepend="in" open="(" close=")" property="localIP" conjunction=",">
+			#localIP[]#
+	  </iterate> 
+	</delete>
+	
+	<!--更新aggregation_log wcsj字段为空的值 -->
+	<update id="aggLogWcsjUpd" parameterClass="java.util.HashMap">
+		update aggregation_log set finishtime = SYSDATE, running_state=#runState# where finishtime is null 
+		AND  EXISTS(
+			SELECT 1 FROM job_control jc
+			WHERE jc.job_name =#moduleName#
+			AND jc.physical_machine_ip
+		<iterate prepend="in" open="(" close=")" property="localIP" conjunction=",">
+			#localIP[]#
+		</iterate> 
+		)
+	</update>
+	
+</sqlMap>

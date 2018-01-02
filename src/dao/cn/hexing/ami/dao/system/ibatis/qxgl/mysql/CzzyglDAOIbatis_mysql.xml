@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="czzygl">
+ 	 <sql id="czlb">
+ 	     FROM QX_CZLB WHERE LANG = #appLang#
+ 	 </sql>
+ 	 
+ 	 <select id="czlbCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+ 	 	SELECT COUNT(CZLBID) 
+ 	 	 <include refid='czzygl.czlb'/>
+ 	 </select>
+ 	 
+ 	 <select id="czlbQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	 	SELECT CZLBID, CZLBMC
+			 <include refid='czzygl.czlb'/>
+		 <include refid='common.pagingBottom'/>
+ 	 </select>
+
+	
+	 <select id="getCd" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	SELECT CD.CDID,
+		       CD.CDMC,
+		       CD.SFYJD, PXBM
+		  FROM QX_CD CD
+		  WHERE SFXS = '1'
+		  	 AND CD.LANG = #lang#
+		   <isEqual property="sjcdbm" compareValue="root">
+		   	 AND CD.SFGJD = '1'
+		   </isEqual>
+		   <isNotEqual property="sjcdbm" compareValue="root">
+		   	 AND CD.SJCDID = #sjcdbm#
+		   </isNotEqual>
+		   ORDER BY PXBM
+	 </select>
+
+ 	<select id="getCz" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	SELECT CZ.CZID,
+		       CZ.CZMC, 
+		       CZ.PXBM
+		  FROM QX_CZ CZ
+		  WHERE SFXS = '1'
+		   	AND CZ.CDID = #sjcdbm#
+		    AND CZ.LANG = #lang#
+		    AND CZ.CZLBID = #czlbid#
+		  ORDER BY PXBM
+	 </select>
+
+	
+</sqlMap>
+
+	
+

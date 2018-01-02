@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="jsgl">
+ 	 <sql id="js">
+ 	     FROM QX_JS 
+ 	     <!-- where xtid = #xtid# -->
+ 	     order by jsmc
+ 	     <!-- order by jsmc,cdubz -->
+ 	 </sql>
+ 	 
+ 	 <select id="jsCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+ 	 	SELECT COUNT(JSID) 
+ 	 	 <include refid='jsgl.js'/>
+ 	 </select>
+ 	 
+ 	 <select id="jsQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 	 	<include refid='common.pagingTop'/>
+	 	 	SELECT JSID, JSMC
+	 	 	<!-- (select name from p_code where code_type ='sfxm' and lang=#appLang# and value=cdubz) cdubzmc,cdubz,res_type -->
+	 	 	<!-- (select name from p_code where code_type ='sfxm' and lang=#appLang#) cdubzmc,cdubz,res_type -->
+			 <include refid='jsgl.js'/>
+		 <include refid='common.pagingBottom'/>
+ 	 </select>
+
+	<!-- 角色菜单 -->
+	 <select id="getJsCd" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	SELECT CD.CDID,
+		       CD.CDMC,
+		       CD.SFYJD,
+		       IF(JS.CDID IS NULL, '0', '1') AS CHECKED
+		  FROM QX_CD CD LEFT JOIN  QX_JSCD JS  ON  CD.CDID = JS.CDID  AND JS.JSID = #jsid#
+		   WHERE CD.SFXS = 1
+		   <isEqual property="sjcdbm" compareValue="root">
+		   	 AND CD.SFGJD = '1'
+		   </isEqual>
+		   <isNotEqual property="sjcdbm" compareValue="root">
+		   	 AND CD.SJCDID = #sjcdbm#
+		   </isNotEqual>
+	 </select>
+	 
+	<!-- 角色操作权限 -->
+	 <select id="getJsCz" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		 SELECT CZLB.CZLBID,
+	       CZLB.CZLBMC,
+	       CZLB.PXBM,
+	       if(JS.CZLBID is NULL, '0', '1') AS CHECKED
+		  FROM QX_CZLB CZLB left join QX_JSCZ JS
+		 on CZLB.CZLBID = JS.CZLBID
+		   AND JS.JSID = #jsid#
+		   where CZLB.LANG = #lang#
+		   AND CZLB.CZLBID IN ('1', '2', '3')
+		 ORDER BY PXBM
+	</select>
+	
+	<!-- 角色首页 -->
+	 <select id="getJsSy" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select y.syid, y.symc, if(js.syid is null, '0', '1') as checked
+		  from qx_sy y left join  qx_jssy js
+		  on js.syid = y.syid
+		   and js.jsid = #jsid#
+		   where y.xtmr != #xtmr#
+		   and y.lang = #lang#
+	</select>
+	
+	<!-- 角色订阅信息-->
+<!-- 	 <select id="getJsDy" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select d.xxbm,d.xxmc,if(js.xxbm is null, '0', '1') as checked
+	      from qx_dy d left join qx_jsdy js
+	      on  js.xxbm = d.xxbm
+	      and js.jsid = #jsid#
+	      where d.lang = #appLang#
+	</select> -->
+
+	<!-- 角色是否存在 -->
+	<select id="existsJsmc" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		SELECT JSID FROM QX_JS WHERE JSMC = #jsmc#
+	</select>
+	
+	<!-- 插入角色 -->
+	<insert id="insJs"  parameterClass="java.util.HashMap" >
+		<selectKey resultClass="java.lang.String" keyProperty="jsid">
+			SELECT nextval('S_QX_JS')
+		</selectKey>
+		<!-- INSERT INTO QX_JS
+		  (JSID, JSMC, JSSM, JSSX, JSJB, XTID, CDUBZ,res_type)
+		VALUES
+		  (#jsid#, #jsmc#, #jsmc#, '01', '01', #xtid#, #cdubz#,#resType#) -->
+		  
+		  INSERT INTO QX_JS
+		  (JSID, JSMC, JSSM, JSSX, JSJB)
+		VALUES
+		  (#jsid#, #jsmc#, #jsmc#, '01', '01')
+	</insert>	
+	
+	<!-- 更新角色 -->
+	<update id="updJs"  parameterClass="java.util.HashMap" >
+		<!-- update QX_JS set jsmc=#jsmc#,cdubz=#cdubz#,res_type = #resType# WHERE JSID = #jsid# -->
+		update QX_JS set jsmc=#jsmc# WHERE JSID = #jsid#
+	</update>
+	
+	<!-- 删除角色 -->
+	<delete id="delJs"  parameterClass="java.util.HashMap" >
+		DELETE from QX_JS WHERE JSID = #jsid#
+	</delete>
+	
+	<!-- 删除角色操作 -->
+	<delete id="delJscz"  parameterClass="java.util.HashMap" >
+		DELETE from QX_JSCZ WHERE JSID = #jsid#
+	</delete>
+	
+	<!-- 删除角色菜单 -->
+	<delete id="delJscd"  parameterClass="java.util.HashMap" >
+		DELETE from QX_JSCD WHERE JSID = #jsid#
+	</delete>
+	
+	<!-- 删除操作菜单授权的脏数据 -->
+	<delete id="delCzycd"  parameterClass="java.util.HashMap" >
+		DELETE FROM  qx_czycd 
+        WHERE jsid = #jsid#
+        AND cdid NOT IN
+       (SELECT t.cdid FROM qx_jscd t WHERE t.jsid = #jsid#)
+	</delete>
+	
+	<!-- 删除角色首页 -->
+	<delete id="delJssy"  parameterClass="java.util.HashMap" >
+		DELETE from qx_jssy WHERE JSID = #jsid#
+	</delete>
+	
+	<!-- 删除角色订阅信息 -->
+<!-- 	<delete id="delJsdy"  parameterClass="java.util.HashMap" >
+		DELETE from qx_jsdy WHERE JSID = #jsid#
+	</delete> -->
+	
+	<!-- 删除角色操作员 -->
+	<delete id="delJsczy"  parameterClass="java.util.HashMap" >
+		DELETE from QX_CZYJS WHERE JSID = #jsid#
+	</delete>
+	
+	<!-- 删除某一角色对应操作员的所有授权菜单-->
+	<delete id="delCzycdByJs"  parameterClass="java.util.HashMap" >
+		delete from qx_czycd  where JSID= #jsid#
+	</delete>
+	
+	<!-- 插入角色菜单 -->
+	<insert id="insJscd"  parameterClass="java.util.HashMap" >
+		INSERT INTO QX_JSCD (JSID, CDID) 
+		SELECT #jsid# AS JSID, CDID FROM QX_CD CD 
+		 WHERE CD.CDID 
+		<iterate prepend="IN" open="(" close=")" property="cdid" conjunction=",">
+			#cdid[]#
+		</iterate> 
+	</insert>	
+	
+	<!-- 插入角色操作-->
+	<insert id="insJscz"  parameterClass="java.util.HashMap" >
+		 INSERT INTO QX_JSCZ (JSID, CZLBID)
+		SELECT #jsid# AS JSID, CZLBID FROM QX_CZLB CD 
+		 WHERE lang=#appLang#  and CZLBID 
+		<iterate prepend="IN" open="(" close=")" property="czlbid" conjunction=",">
+			#czlbid[]#
+		</iterate> 
+	</insert>	
+	
+	<!-- 插入角色首页-->
+	<insert id="insJssy"  parameterClass="java.util.HashMap" >
+		insert into qx_jssy (jsid, syid) 
+		select #jsid# as jsid,syid from qx_sy
+		where syid
+		<iterate prepend="IN" open="(" close=")" property="syid" conjunction=",">
+			#syid[]#
+		</iterate> 
+	</insert>
+	
+	<!-- 插入角色订阅-->
+	<!-- <insert id="insJsdy"  parameterClass="java.util.HashMap" >
+		insert into qx_jsdy (jsid, xxbm) 
+		select #jsid# as jsid,xxbm from qx_dy
+		where lang = #appLang# and xxbm
+		<iterate prepend="IN" open="(" close=")" property="xxbm" conjunction=",">
+			#xxbm[]#
+		</iterate> 
+	</insert> -->
+	
+	<!-- 角色是否使用中-->
+	<select id="jsIsUse" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select jsid from QX_CZYJS where jsid = #jsid#
+	</select>
+</sqlMap>

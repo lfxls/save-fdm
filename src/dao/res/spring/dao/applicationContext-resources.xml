@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:res/database.properties</value>
+			</list>
+		</property>
+	</bean>
+	<!-- 生产环境部署用jndi -->
+	<!--
+		<bean id="dataSource"
+		class="org.springframework.jndi.JndiObjectFactoryBean"> <property
+		name="jndiName" value="OracleDataSource"/> </bean>
+	-->
+
+	<!-- begin jdbc config -->
+	<!-- c3p0 config-->
+	
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${database.connection.driver_class}" />
+		<property name="jdbcUrl" value="${database.connection.url}" />
+		<property name="user" value="${database.connection.username}" />
+		<property name="password" value="${database.connection.password}" />
+		<property name="minPoolSize" value="${database.connection.minPoolSize}" />
+		<property name="maxPoolSize" value="${database.connection.maxPoolSize}" />
+		<property name="maxIdleTime" value="1800" />
+		<property name="acquireIncrement" value="2" />
+		<property name="maxStatements" value="0" />
+		<property name="initialPoolSize" value="${database.connection.initialPoolSize}" />
+		<property name="idleConnectionTestPeriod" value="1800" />
+		<property name="acquireRetryAttempts" value="30" />
+		<property name="breakAfterAcquireFailure" value="false" />
+		<property name="testConnectionOnCheckout" value="true" />
+		<property name="acquireRetryDelay" value="500" />
+	</bean>
+	<!-- end jdbc config -->
+</beans>

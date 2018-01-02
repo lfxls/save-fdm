@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="rwmbpz">
+	<sql id="rwmbWhere">
+		from p_rwsx t
+		 where t.lang = #appLang#
+		   and t.sfxs = '1'
+		<isNotEmpty property="zdgylx">
+		   and t.gylx = #zdgylx#
+		</isNotEmpty>
+		order by t.gylx,rwsx
+	</sql>
+	
+	<select id="rwmbCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(t.rwsx) 
+		<include refid='rwmbpz.rwmbWhere'/>
+	</select>
+	
+	<select id="rwmbQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true" >
+	    <include refid='common.pagingTop'/>
+	    select t.rwsx,
+	       t.rwsxmc,
+	       t.gylx zdgylx,
+	       (select name
+	          from p_code
+	         where lang = #appLang#
+	           and code_type = 'rwlx'
+	           and value = t.rwlx) rwlxmc,
+	       (select name
+	          from p_code
+	         where lang = #appLang#
+	           and code_type = 'zdgylx'
+	           and value = t.gylx) zdgymc,
+	       sjjg
+		<include refid='rwmbpz.rwmbWhere'/>
+ 		<include refid='common.pagingBottom'/>
+	</select>
+	
+	<sql id="dxsjxWhere">
+		from dlms_params_name n,dlms_params p
+		where p.item_id  = n.item_id
+  		and n.lang = #appLang#
+		<isNotEmpty property="sjxmc">
+			and n.item_name like '%' || #sjxmc# ||'%'
+		</isNotEmpty>
+		<isNotEmpty property="sjxbm">
+			and n.item_id like '%' || #sjxbm# ||'%'
+		</isNotEmpty>
+	</sql>
+	<!--查询待选数据项-->
+	<select id="dxsjxCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(p.item_id) 
+		<include refid='rwmbpz.dxsjxWhere'/>
+	</select>
+	
+	<select id="dxsjxQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true" >
+	    <include refid='common.pagingTop'/>
+	    select n.item_id sjxbm,
+      		 n.item_name sjxmc,
+	       (select dlms_sub_name
+	          from dlms_sub
+	         where dlms_sub_protocol = p.dlms_sub_protocol
+	           and lang =  #appLang#) dlms_sub_name,
+	       p.item_sort,
+	       p.array_struct_item
+	    <include refid='rwmbpz.dxsjxWhere'/>
+ 		<include refid='common.pagingBottom'/>
+	</select>
+	
+	<sql id="rwsjxWhere">
+		 from p_rwsjx sjx,
+	         dlms_params_name n,
+	         dlms_params p,
+	         p_sjxdy sjxdy
+	   where sjx.rwsx = #rwsx#
+	     and sjx.gylx = #zdgylx#
+	      and sjx.sjxbm = n.item_id(+) 
+	     and p.item_id  = n.item_id
+	     and n.lang =  #appLang#
+	     and sjx.rwsx = sjxdy.rwsx(+)
+	     and sjx.sjxbm = sjxdy.sjxbm(+)
+	   order by sjxdy.xh
+	</sql>
+	<!--查询待选数据项-->
+	<select id="rwsjxCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(sjx.sjxbm) 
+		<include refid='rwmbpz.rwsjxWhere'/>
+	</select>
+	
+	<select id="rwsjxQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true" >
+	    <include refid='common.pagingTop'/>
+	    select sjx.sjxbm,
+         n.item_name sjxmc,
+         sjx.sjxsx,
+         sjxdy.xh,
+         sjxdy.dysjb,
+         sjxdy.dyzd,
+          (select dlms_sub_name
+          from dlms_sub
+         where dlms_sub_protocol = p.dlms_sub_protocol
+           and lang = #appLang#) dlms_sub_name,
+          p.array_struct_item
+	    <include refid='rwmbpz.rwsjxWhere'/>
+ 		<include refid='common.pagingBottom'/>
+	</select>
+	
+	<!--结构体内数据项查询-->
+	<select id="structSjxQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true" >
+		 select p.item_id sjxbm,
+		        n.item_name sjxmc,
+		        '02' sjxsx,
+		        '' xh,
+		        sjxdy.dysjb,
+		        sjxdy.dyzd,
+		        (select dlms_sub_name
+		           from dlms_sub
+		          where dlms_sub_protocol = p.dlms_sub_protocol
+		            and lang = #appLang#) dlms_sub_name,
+		            '' array_struct_item
+		   from dlms_params_name n, dlms_params p, p_dbsjxmx sjxdy
+		  where p.item_id = n.item_id
+		    and p.item_id = sjxdy.xxsjxbm(+)
+		    and n.lang = #appLang#
+		    and p.item_id 
+		<iterate prepend="in" open="(" close=")" property="sjxbms" conjunction=",">
+           #sjxbms[]#
+       	</iterate>
+	</select>
+	
+	<!--结构体内数据项查询-->
+	<select id="structSjxRwsxQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true" >
+		 select p.item_id sjxbm,
+		        n.item_name sjxmc,
+		        '02' sjxsx,
+		        '' xh,
+		        sjxdy.dysjb,
+		        sjxdy.dyzd,
+		        (select dlms_sub_name
+		           from dlms_sub
+		          where dlms_sub_protocol = p.dlms_sub_protocol
+		            and lang = #appLang#) dlms_sub_name,
+		            '' array_struct_item
+		   from dlms_params_name n, dlms_params p, p_dbsjxmx sjxdy,p_sjxdy dy
+		  where p.item_id = n.item_id
+		    and p.item_id = sjxdy.xxsjxbm(+)
+		    and n.lang = #appLang#
+		    and dy.sjxbm = sjxdy.dxsjxbm
+        	and dy.rwsx=#rwsx#
+		    and p.item_id 
+		<iterate prepend="in" open="(" close=")" property="sjxbms" conjunction=",">
+           #sjxbms[]#
+       	</iterate>
+	</select>
+	
+	<!--判断任务数据项是否已经添加-->
+	<select id="rwsjxExist" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		select count(sjxbm) from p_rwsjx where gylx=#zdgylx# and rwsx=#rwsx# and sjxbm=#sjxbm# 
+	</select>
+	
+	<!--新增任务数据项-->
+	<insert id="insRwsjx" parameterClass="java.util.HashMap">
+	insert into p_rwsjx
+	  (gylx, sjxbm, rwsx, sjxsx,xh)
+	values
+	  (#zdgylx#, #sjxbm#, #rwsx#, #sjxsx#,#xh#)
+	</insert>
+	
+	<!--删除任务数据项-->
+	<delete id="delRwsjx" parameterClass="java.util.HashMap">
+		delete p_rwsjx where gylx=#zdgylx# and rwsx=#rwsx# and sjxbm=#sjxbm#
+	</delete>
+	
+	<!--删除dlms关系表数据-->
+	<delete id="delDlmsSjxgx" parameterClass="java.util.HashMap">
+		delete p_dlmssjxgx where item_id
+		<iterate prepend="in" open="(" close=")" property="sjxbmArr" conjunction=",">
+           #sjxbmArr[]#
+       	</iterate>
+	</delete>
+	
+	<!--新增dlms关系表数据-->
+	<insert id="insDlmsSjxgx" parameterClass="java.util.HashMap">
+		insert into p_dlmssjxgx (sjxbm, item_id) values (#sjxbm#, #sjxbm#)
+	</insert>
+	
+	<!--删除dlms打包数据项和数据字段的映射关系-->
+	<delete id="delDlmsDbSjxdy" parameterClass="java.util.HashMap">
+		delete p_dbsjxmx where dxsjxbm = #dxsjxbm# and xxsjxbm = #xxsjxbm#
+	</delete>
+	
+	<!--删除dlms小项数据项和数据字段的映射关系-->
+	<delete id="delDlmsXxSjxdy" parameterClass="java.util.HashMap">
+		delete p_sjxdy where sjxbm = #sjxbm# and dysjb=#dysjb# and dyzd=#dyzd# and rwsx=#rwsx#
+	</delete>
+	
+	<!--删除dlms小项数据项和数据字段的映射关系-->
+	<delete id="delDlmsXxSjxdy2" parameterClass="java.util.HashMap">
+		delete p_sjxdy where sjxbm = #sjxbm# and rwsx=#rwsx# and dysjb is null and dyzd is null
+	</delete>
+	
+	<!--新增dlms打包数据项和数据字段的映射关系-->
+	<insert id="insDlmsDbSjxdy" parameterClass="java.util.HashMap">
+		insert into p_dbsjxmx
+		  (dxsjxbm, xxsjxbm, dysjb, dyzd, xh, rwsx)
+		values
+		  (#dxsjxbm#, #xxsjxbm#, #dysjb#, #dyzd#, #xh#, #rwsx#)
+	</insert>
+	
+	<!--新增dlms小项数据项和数据字段的映射关系-->
+	<insert id="insDlmsXxSjxdy" parameterClass="java.util.HashMap">
+		insert into p_sjxdy
+		  (sjxbm, dysjb, dyzd, xh, ctpt, sjd, rwsx, sjxsx)
+		values
+		  (#sjxbm#, #dysjb#, #dyzd#, #xh#, 1, 10, #rwsx#, #sjxsx#)
+	</insert>
+	
+	<!--修改p_rwsjx排序-->
+	<update id="updRwsjxXh" parameterClass="java.util.HashMap">
+		update p_rwsjx
+		   set xh = #xh#
+		 where gylx = #zdgylx#
+		   and rwsx = #rwsx#
+		   and sjxbm = #sjxbm#
+	</update>
+</sqlMap>

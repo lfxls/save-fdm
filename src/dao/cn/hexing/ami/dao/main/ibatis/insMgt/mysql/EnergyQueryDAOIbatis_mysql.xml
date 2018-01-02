@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="energyQuery">
+   <!-- 电量查询  -->
+	<sql id="energy">
+	   FROM INS_FB_METER FB 
+	   		LEFT JOIN AR_CUSTOMER C ON FB.CNO = C.CNO
+     		LEFT JOIN AR_TF T ON FB.TFID = T.TFID
+     		LEFT JOIN QX_QY QY ON C.UID = QY.DWDM
+     		WHERE FB.O_MSN IS NOT NULL
+     		AND FB.O_MSN != ''
+          <include refid="common.nodeFilterN"/>
+		  <isNotEmpty property="cno">
+		     AND FB.CNO LIKE CONCAT('%',#cno#,'%')
+		  </isNotEmpty>
+		  <isNotEmpty property="tfName">
+		  	 AND T.TFNAME LIKE CONCAT('%',#tfName#,'%')
+		  </isNotEmpty>
+		  <isNotEmpty property="omsn">
+		  	 AND FB.O_MSN LIKE CONCAT('%',#omsn#,'%')
+		  </isNotEmpty>
+		  <isNotEmpty property="startDate">
+		  	 AND FB.FB_DATE &gt;= STR_TO_DATE(#startDate#,'%Y-%m-%d')
+		  </isNotEmpty>
+		  <isNotEmpty property="endDate">
+		  	 AND FB.FB_DATE &lt; DATE_ADD(STR_TO_DATE(#endDate#,'%Y-%m-%d'), INTERVAL 1 DAY)
+		  </isNotEmpty>
+		  ORDER BY FB.FB_DATE DESC
+    </sql>
+  
+  	<select id="energyCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(FB.O_MSN) 
+		<include refid='energyQuery.energy'/>
+	</select>
+	
+	<select id="energyQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true" >
+	    <include refid='common.pagingTop'/>
+	      SELECT FB.CNO CNO, FB.TFID TFID, FB.O_MSN OMSN, C.CNAME CNAME, 
+       			 QY.DWMC UNAME, QY.DWDM UID, T.TFNAME,
+       			 DATE_FORMAT(FB.FB_DATE,'%Y-%m-%d %H:%i:%s') FBDATE,
+       			 FB.PID
+ 		<include refid='energyQuery.energy'/>
+		<include refid='common.pagingBottom'/>
+		<include refid="common.pagingSort"/>
+	</select>
+	
+	<!--变压器LIst	-->
+	<sql id="tf">
+		FROM AR_TF TF LEFT JOIN QX_QY QY ON TF.UID = QY.DWDM
+		WHERE TF.STATUS = '0'
+		AND 1=1
+		<isNotEmpty property="tfName">
+			AND TF.TFNAME LIKE CONCAT('%', #tfName#, '%')
+		</isNotEmpty> 	
+		<isNotEmpty property="uid">
+			AND TF.UID LIKE CONCAT (#uid#, '%')
+		</isNotEmpty> 	
+	</sql>
+	<select id="getTfListQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 	   <include refid='common.pagingTop'/>
+ 	 	  SELECT TF.TFID TFID, TF.TFNAME,TFNAME, TF.ADDR ADDR,
+ 	 	  QY.DWMC UNAME, TF.UID UID
+ 	   <include refid='energyQuery.tf'/>
+	   <include refid='common.pagingBottom'/>
+	   <include refid="common.pagingSort"/>
+    </select>
+	<select id="getTfListCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">  
+	 	 SELECT COUNT(*)
+	    <include refid='energyQuery.tf'/>
+	</select>
+	
+	<select id="getReadPM" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT CONCAT(FB.PID,FB.O_MSN,FBR.OBIS) BM, FBR.VALUE MC
+		FROM INS_FB_METER FB LEFT JOIN INS_FB_READPM FBR ON (FB.PID = FBR.PID
+     	AND FB.O_MSN = FBR.MSN
+     	AND FBR.OBIS
+     	<iterate prepend="IN" open="(" close=")" property="sjxs"
+				conjunction=",">
+			#sjxs[]#
+		</iterate>)
+		WHERE 1 = 1
+		<isNotEmpty property="startDate">
+	  	AND FB.FB_DATE &gt;= STR_TO_DATE(#startDate#,'%Y-%m-%d')
+	  	</isNotEmpty>
+	 	<isNotEmpty property="endDate">
+	  	AND FB.FB_DATE &lt; DATE_ADD(STR_TO_DATE(#endDate#,'%Y-%m-%d'), INTERVAL 1 DAY)
+	  	</isNotEmpty>
+	</select>
+</sqlMap>

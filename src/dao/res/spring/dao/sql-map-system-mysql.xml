@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+    
+<!--系统管理-->
+<sqlMapConfig>
+    <settings useStatementNamespaces="true" />
+	
+	<!--机构管理-->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/qyjggl/mysql/JgglDAOIbatis_mysql.xml" />
+    
+    <!--安装队管理-->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/qyjggl/mysql/InsteamMgtDAOIbatis_mysql.xml" />
+    
+    <!--操作员管理-->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/qxgl/mysql/CzyglDAOIbatis_mysql.xml" />
+    <!--角色管理-->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/qxgl/mysql/JsglDAOIbatis_mysql.xml" />
+    <!--操作资源管理 -->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/qxgl/mysql/CzzyglDAOIbatis_mysql.xml" />
+    <!--首页管理-->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/qxgl/mysql/SyglDAOIbatis_mysql.xml" />
+	
+	<!--档案日志 -->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/rzgl/mysql/DarzDAOIbatis_mysql.xml" />
+	<!--通讯日志 -->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/rzgl/mysql/TxrzDAOIbatis_mysql.xml" />    
+    <!--掌机日志 -->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/rzgl/mysql/HhuLogDAOIbatis_mysql.xml" />
+    
+    <!--代码管理-->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/ggdmgl/mysql/DmglDAOIbatis_mysql.xml" />
+  
+    <!--系统配置 -->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/ggdmgl/mysql/XtcsDAOIbatis_mysql.xml" />
+    
+    <!--登录日志管理 -->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/rzgl/mysql/DlrzDAOIbatis_mysql.xml" />
+    <!--参数方案--> 
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/paramData/mysql/ParamMgtDAOIbatis_mysql.xml"/>
+</sqlMapConfig>

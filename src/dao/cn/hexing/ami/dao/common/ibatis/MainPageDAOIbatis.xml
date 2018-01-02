@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="mainPage">
+	<select id="getSyzb" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		SELECT ZB.BM, ZB.MC, SY.ZBZ
+		FROM (SELECT ZBZ, ZBDM
+		FROM TJ_SYTX
+		WHERE DWDM = #dwdm#
+		AND RQ = TRUNC(SYSDATE)) SY,
+		(SELECT VALUE AS BM, NAME AS MC FROM P_CODE WHERE CODE_TYPE = 'syzb' AND LANG
+		= #appLang#) ZB
+		WHERE SY.ZBDM(+) = ZB.BM AND ZB.BM
+		<iterate prepend="IN" open="(" close=")" property="zbbms"
+			conjunction=",">
+			#zbbms[]#
+		</iterate>
+	</select>
+	<select id="getMdmSyzb" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		SELECT ZBDM,sc.mc as csmc, ZBZ,dw.dwmc
+		FROM TJ_SYTX sy,qx_qy dw,(select
+		value as bm,name as mc from p_code where code_type='syzb' and
+		lang=#lang# and isshow='1')sc
+		WHERE sy.dwdm=dw.dwdm
+		AND RQ =
+		TRUNC(SYSDATE)
+		and sc.bm=sy.zbdm
+		<isNotEmpty property="dwdm">
+			and sy.DWDM = #dwdm#
+		</isNotEmpty>
+		and sy.ZBDM LIKE #zbbms# || '%'
+	</select>
+
+	<select id="getXlxs" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		select *
+		from (SELECT tj.dwdm,
+		tj.xlid,
+		xl.xlmc,
+		tj.xlxsl,
+		tj.rq,
+		dense_rank() over(ORDER BY tj.xlxsl desc) rn
+		FROM tj_xlxs_r tj, G_XL xl
+		WHERE rq = to_date(#rq#, 'yyyy-MM-dd') - 1
+		AND xlxsl IS NOT NULL
+		and
+		tj.xlid = xl.xlid
+		<include refid='common.nodeFilter' />
+		)
+		where rn <![CDATA[ <  ]]>=
+		10
+
+	</select>
+
+
+	<select id="getDA" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		SELECT sc.mc as csmc,
+		max(case when sy.ZBDM LIKE 'tyzds'||
+		'%' then zbz end) as tyzds,
+		max(case when sy.ZBDM LIKE 'tyyhs'|| '%'
+		then zbz end) as tyyhs
+		FROM TJ_SYTX sy,
+		qx_qy dw,
+		(select value as bm,
+		name as mc
+		from p_code
+		where code_type = 'syzb'
+		and lang = #lang# and
+		isshow='1') sc
+		WHERE sy.dwdm = dw.dwdm
+		AND RQ = TRUNC(SYSDATE)
+		and sc.bm
+		= sy.zbdm
+		and sy.DWDM = #dwdm#
+		and sy.ZBDM LIKE 'ty__s'|| '%'
+		group by
+		sc.mc
+		order by  csmc 
+	</select>
+
+	<select id="getGprs" parameterClass="java.util.HashMap"
+		resultClass="java.lang.Integer">
+		select count(*) from VW_DA_ZD t where t.zdlx='05' and t.dwdm=#dwdm#
+	</select>
+	<select id="getJzq" parameterClass="java.util.HashMap"
+		resultClass="java.lang.Integer">
+		select count(*) from VW_DA_ZD t where t.zdlx='03' and t.dwdm=#dwdm#
+	</select>
+	<select id="getPlc" parameterClass="java.util.HashMap"
+		resultClass="java.lang.Integer">
+		select count(*) from vw_da_bj t where t.bjlx='04' and t.dwdm=#dwdm#
+	</select>
+	<select id="getGjtj" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		select c.rn, d.name from (
+		select count(gjlb) rn,b.gjlb from sb_gj a , p_gjbm b 
+		where a.gjbm = b.gjbm and b.lang=#appLang# group by b.gjlb) c, p_code d 
+		where c.gjlb=d.value and d.code_type='gjlb' and d.lang=#appLang#
+	</select>
+	
+	<select id="getSyCbcgl" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		SELECT SY.RQ, ZB.BM, ZB.MC, SY.ZBZ
+		FROM (SELECT RQ, ZBZ, ZBDM
+		FROM TJ_SYTX
+		WHERE DWDM = #dwdm#
+		AND RQ BETWEEN TRUNC(SYSDATE- #days# +1) AND TRUNC(SYSDATE)) SY,
+		(SELECT VALUE AS BM, NAME AS MC FROM P_CODE WHERE CODE_TYPE = 'syzb' AND LANG
+		= #appLang#) ZB
+		WHERE SY.ZBDM(+) = ZB.BM AND ZB.BM
+		<iterate prepend="IN" open="(" close=")" property="zbbms"
+			conjunction=",">
+			#zbbms[]#
+		</iterate>
+	</select>
+	  <!--CAI 监控系统增加 -->
+	  <select id="getBjNumTotal" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+   SELECT db.DWDM, xy.DWMC, COUNT(db.bjjh) AS TOTAL
+    FROM da_bj db, da_zd dz, qx_qy xy
+   WHERE db.BJJH = dz.ZDJH
+     AND db.DWDM = xy.DWDM
+     AND db.HH IS NOT NULL
+     AND db.BYQID IS NOT NULL
+     AND db.DWDM IN
+         (SELECT q.DWDM
+            FROM qx_qy q
+           WHERE q.SJDWDM IS NOT NULL
+             AND q.SJDWDM IN (SELECT DWDM FROM qx_qy WHERE SJDWDM IS NULL))
+   GROUP BY db.DWDM, xy.DWMC
+   ORDER BY db.DWDM ASC
+	  </select>
+	  <!--CAI 监控系统增加 -->
+	  <select id="getBjNumAlert" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	SELECT BJ.DWDM, xy.DWMC, COUNT(DISTINCT BJ.BJJH) AS ALERT
+      FROM SB_SJZB ZB
+     INNER JOIN SB_GJ GJ
+        ON ZB.SJID = GJ.SJID
+     INNER JOIN DA_BJ BJ
+        ON ZB.CLDJH = BJ.BJJH
+     INNER JOIN qx_qy xy
+        ON BJ.DWDM = xy.DWDM
+     WHERE BJ.DWDM IN
+           (SELECT q.DWDM
+              FROM qx_qy q
+             WHERE q.SJDWDM IS NOT NULL
+               AND q.SJDWDM IN (SELECT DWDM FROM qx_qy WHERE SJDWDM IS NULL))
+       AND BJ.HH IS NOT NULL
+       AND BJ.BYQID IS NOT NULL
+     GROUP BY BJ.DWDM, xy.DWMC
+     ORDER BY DWDM ASC
+	 </select>	
+</sqlMap>

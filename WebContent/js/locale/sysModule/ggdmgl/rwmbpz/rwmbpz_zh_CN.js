@@ -1,0 +1,9 @@
+var cm_op='操作';
+var cm_edit_title='配置';
+var cm_rwsx='任务模板编号';
+var cm_rwsxmc='任务模板名称';
+var cm_rwlxmc='任务类型';
+var cm_zdgylx='终端规约';
+var cm_sjjg='时间间隔（分）';
+var cm_title='任务模板列表';
+var configWin_title='任务数据项配置';

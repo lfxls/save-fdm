@@ -1,0 +1,132 @@
+html, body{
+  height: 100%;
+}
+.no-top-border{
+  border-top: 0;
+}
+.relative{
+  position: relative;
+}
+
+.site-body{
+  padding:12px 15px;
+}
+.fluid-grid{
+  font-size: 12px;
+  vertical-align: middle;
+}
+.fluid-grid label, .fluid-grid input{
+  vertical-align: middle;
+}
+.divider-span{
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+/*aggregation setting*/
+.aggregation-setting{
+  margin-bottom: 25px;
+}
+.aggregation-setting .ui-label{
+  margin-right: 12px;
+}
+.aggregation-setting .fluid-grid td{
+  padding-right: 30px;
+}
+
+.aggregation-area .ui-panel-item{
+  vertical-align: middle;
+}
+.aggregation-area .ui-form-item{
+  padding:0 0 0 210px;
+}
+.aggregation-area .time-span-action{
+  display: inline-block;
+  *display: inline;
+  *zoom:1;
+}
+.aggregation-area .time-span-action label{
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.aggregation-area .radio-grid{
+  margin-top: 9px;
+  margin-bottom: 9px;
+}
+.aggregation-area .radio-grid td{
+  padding:6px 0 6px 15px;
+  width: 160px;
+}
+.aggregation-area .radio-container{
+  padding: 6px 0;
+}
+.aggregation-area .radio-container label{
+  margin-right: 20px;
+  margin-left: 3px;
+}
+
+.set-icon{
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-image: url(../img/set_icons.png);
+  background-repeat: no-repeat; 
+  top:-3px;
+}
+.icon-date{
+  background-position: 0 0;
+}
+.icon-config{
+  background-position: 0 -20px;
+}
+
+/*aggregation start*/
+.aggregation-start .ui-label{
+  display: inline-block;
+  *display: inline;
+  *zoom:1;
+  float: left;
+  font-weight: bold;
+  font-size: 13px;
+  color: #666;
+  padding-top: 6px;
+  text-align: right;
+  width: 140px;
+}
+.aggregation-start .ui-form-item{
+  padding: 0 0 0 160px;
+}
+
+.aggregation-start .adjacent-bottom{
+  padding-top: 15px;
+}
+.aggregation-start .inline-label{
+  font-weight: bold;
+  color: #555;
+  margin-right: 20px;
+}
+.aggregation-start .form-action{
+  padding:6px 0;
+  text-align: center;
+}
+
+/*aggregation-status*/
+.aggregation-status .form-action .ui-button{
+  margin-top: -2px;
+  margin-left: 20px;
+}
+.aggregation-status .form-action .label-inline{
+  font-weight: bold;
+  margin-right: 20px;
+  font-size: 14px;
+}
+.aggregation-status .form-action{
+  margin-bottom: 25px;
+}
+.aggregation-status .ui-table i{
+  top:-10px;
+}
+.aggregation-status .ui-table th{
+  border-left: 1px solid #cecece;
+}

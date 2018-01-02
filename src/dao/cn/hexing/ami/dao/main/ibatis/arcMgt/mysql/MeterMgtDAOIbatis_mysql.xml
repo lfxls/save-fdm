@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="meterMgt">
+	<sql id="meterData">
+		FROM ar_meter bj LEFT JOIN ar_customer  cust ON bj.cno=cust.cno
+		LEFT JOIN  qx_qy dw ON bj.uid=dw.dwdm
+		LEFT JOIN  ar_tf tf ON bj.tfid=tf.tfid
+		where 1=1 
+		<isNotEmpty property="msn">
+		AND bj.msn like concat('%',#msn#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="mtype">
+		AND bj.m_type=#mtype#
+		</isNotEmpty>
+		<isNotEmpty property="mode">
+		AND bj.mode=#mode#
+		</isNotEmpty>
+		<isNotEmpty property="mfid">
+		AND bj.mfid=#mfid#
+		</isNotEmpty>
+		<isNotEmpty property="status">
+		AND bj.status=#status#
+		</isNotEmpty>
+		<isNotEmpty property="dataSrc">
+		AND bj.data_src=#dataSrc#
+		</isNotEmpty>
+		<include refid="common.nodeFilterN"/>
+	</sql>
+	
+	<select id="meterDataCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		select count(1) 
+		<include refid="meterMgt.meterData"/>  
+	</select>
+	<select id="meterDataQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<include refid="common.pagingTop"/>
+			SELECT bj.msn,cust.cname,cust.cno,cust.addr,bj.uid,dw.dwmc as uname,bj.ct,bj.pt,bj.sealid,bj.mboxid,bj.lon,bj.lat,tf.tfname,bj.simno,
+			DATE_FORMAT(bj.ins_date,'%Y-%m-%d') ins_date,DATE_FORMAT(bj.unins_date,'%Y-%m-%d') unins_date,bj.status,
+			(SELECT name FROM p_code WHERE code_type='wiring' AND lang=#appLang# and value=bj.WIRING)wiring,
+			(SELECT name FROM p_code WHERE code_type='mType' AND lang=#appLang# and value=bj.m_type) mtype,
+			(SELECT name FROM p_code WHERE code_type='mode' AND lang=#appLang# and value=bj.mode) mode,
+			(SELECT name FROM p_code WHERE code_type='MF' AND lang=#appLang# and value=bj.mfid) mf,
+			(SELECT name FROM p_code WHERE code_type='mStatus' AND lang=#appLang# and value=bj.status) statusname,
+			(SELECT name FROM p_code WHERE code_type='dataSrc' AND lang=#appLang# and value=bj.data_src) dataSrc,
+			bj.matCode
+		<include refid="meterMgt.meterData"/>
+	
+	 	<include refid="common.pagingBottom"/>
+	</select>
+	
+	<select id="getMeter" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		    SELECT msn,tf.tfname, meter.uid,meter.tfid,meter.STATUS,
+		    m_type,wiring,MODE,mfid,ct,pt,CAST(lon AS CHAR) as lon,CAST(lat AS CHAR) as lat,
+		    simno,sealid,mboxid,dw.dwmc nodeTextdw,meter.status,meter.matCode
+		    FROM ar_meter meter  
+		    LEFT JOIN qx_qy dw  ON meter.uid = dw.dwdm 
+		    LEFT JOIN ar_tf tf ON tf.tfid=meter.tfid 
+		    where msn=#msn# 
+	</select>
+	
+	<update id="updMeter" parameterClass="java.util.HashMap">
+	   UPDATE ar_meter SET
+	    uid=#nodeIddw#,
+	    mode=#mode#,
+	    m_type=#mtype#,
+	    wiring=#wiring#,
+	    mfid=#mfid#,
+	    ct=#ct#,
+	    pt=#pt#,
+	    <isNotEmpty property="lon">
+	    lon=#lon#,
+	    </isNotEmpty>
+	    <isNotEmpty property="lat">
+	    lat=#lat#,
+	    </isNotEmpty>
+	    simno=#simno#,
+	    sealid=#sealid#,
+	    mboxid=#mboxid#
+	    <isNotEmpty property="matCode">
+	    ,matCode=#matCode#
+	    </isNotEmpty>
+	    where msn=#msn#
+	</update>
+	
+	<delete id="delMeter" parameterClass="java.util.HashMap">
+		delete from ar_meter where msn=#msn#
+	</delete>
+	
+	<insert id="insMeter" parameterClass="java.util.HashMap">
+	   INSERT INTO ar_meter (msn,cno,uid,STATUS,m_type,wiring,MODE,mfid,ct,pt,
+	   <isNotEmpty property="lon">
+	   lon,
+	   </isNotEmpty>
+	   <isNotEmpty property="lat">
+	   lat,
+	   </isNotEmpty>
+	   <isNotEmpty property="tfid">
+	   tfid,
+	   </isNotEmpty>
+	   <isEqual property="status" compareValue="1">
+	   ins_date,
+	   </isEqual>
+	   simno,sealid,mboxid,data_src
+	   <isNotEmpty property="matCode">
+	   ,matCode
+	   </isNotEmpty>
+	   )
+	   VALUES (#msn#,#cno#,#nodeIddw#,#status#,#mtype#,#wiring#,#mode#,#mfid#,#ct#,#pt#,
+	    <isNotEmpty property="lon">
+	    #lon#,
+	    </isNotEmpty>
+	    <isNotEmpty property="lat">
+	    #lat#,
+	    </isNotEmpty>
+	     <isNotEmpty property="tfid">
+	    #tfid#,
+	    </isNotEmpty>
+	   	<isEqual property="status" compareValue="1">
+	    now(),
+	    </isEqual>
+	    #simno#,#sealid#,#mboxid#,#dataSrc#
+	    <isNotEmpty property="matCode">
+	    ,#matCode#
+	    </isNotEmpty>
+	    )
+	</insert>
+	
+	<select id="queryTFById" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT uid,tfid FROM ar_tf WHERE tfid=#tfid#
+	</select>
+	
+	<select id="getSim" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select simno from ar_meter where simno=#simno# and simno is not null and msn &lt;&gt; #msn#
+	</select>
+	
+	<update id="updCust" parameterClass="java.util.HashMap" >
+		update ar_customer set status='1' where cno=#cno#
+	</update>
+</sqlMap>

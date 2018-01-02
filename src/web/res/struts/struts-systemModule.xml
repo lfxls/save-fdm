@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<!-- 区域机构管理 -->
+    <package name="qyjggl" namespace="/system/qyjggl" extends="struts-base">
+        <!-- 机构管理-->
+        <action name="jggl" class="jgglAction">
+            <result>/jsp/sysModule/qyjggl/jggl/jggl.jsp</result>
+            <result name="fwqx">/jsp/sysModule/qyjggl/jggl/jgfwqx.jsp</result>
+            <result name="addJg">/jsp/sysModule/qyjggl/jggl/addJg.jsp</result>
+           	<result name="updateJg">/jsp/sysModule/qyjggl/jggl/updateJg.jsp</result>
+            <result name="addDw">/jsp/sysModule/qyjggl/jggl/addDw.jsp</result>
+           	<result name="updateDw">/jsp/sysModule/qyjggl/jggl/updateDw.jsp</result>
+            <result name="dw">/jsp/sysModule/qyjggl/jggl/jgbm.jsp</result>
+        </action>
+        <!-- 安装队管理 -->
+        <action name="insteamMgt" class="insteamMgtAction">
+            <result>/jsp/sysModule/qyjggl/insteamMgt/insteamMgt.jsp</result>
+            <result name="insteamMgt_edit">/jsp/sysModule/qyjggl/insteamMgt/insteamMgt_edit.jsp</result>
+            <result name="initInsteamSel">/jsp/sysModule/qyjggl/insteamMgt/insteamSel.jsp</result>
+        </action>
+    </package>
+    
+    <!-- 权限管理 -->
+    <package name="qxgl" namespace="/system/qxgl" extends="struts-base">
+        <!-- 操作员管理 -->
+        <action name="czygl" class="czyglAction">
+            <result>/jsp/sysModule/qxgl/czygl/czygl.jsp</result>
+            <result name="editCzy">/jsp/sysModule/qxgl/czygl/czygl_edit.jsp</result>
+            <result name="posAuthorize">/jsp/sysModule/qxgl/czygl/posAuthorize.jsp</result>
+            <result name="bmTree">/jsp/sysModule/qxgl/czygl/bmTree.jsp</result>
+            <result name="dwTree">/jsp/sysModule/qxgl/czygl/dwTree.jsp</result>
+            <result name="pwd">/jsp/sysModule/qxgl/czygl/pwd.jsp</result>
+            <result name="posMachineAuthorize">/jsp/sysModule/qxgl/czygl/posMachineAuthorize.jsp</result>
+        </action>
+        
+        <!-- 角色管理-->
+        <action name="jsgl" class="jsglAction">
+            <result>/jsp/sysModule/qxgl/jsgl/jsgl.jsp</result>
+        </action>
+        
+        <!-- 操作资源管理-->
+        <action name="czzygl" class="czzyglAction">
+            <result>/jsp/sysModule/qxgl/czzygl/czzygl.jsp</result>
+        </action>
+
+        <!-- 首页管理-->
+        <action name="sygl" class="syglAction">
+            <result>/jsp/sysModule/qxgl/sygl/sygl.jsp</result>
+            <result name="editSy">/jsp/sysModule/qxgl/sygl/sygl_edit.jsp</result>
+        </action>        
+    </package>
+    
+    <!-- 日志管理-->
+    <package name="rzgl" namespace="/system/rzgl" extends="struts-base">
+     	<!-- 档案日志-->
+    	<action name="darz" class="darzAction">
+       		 <result>/jsp/sysModule/rzgl/darz/darz.jsp</result>
+       		 <result name="cdTree">/jsp/sysModule/rzgl/darz/cdTree.jsp</result>
+    	</action>
+     	<!-- 通讯日志-->
+    	<action name="txrz" class="txrzAction">
+       		 <result>/jsp/sysModule/rzgl/txrz/txrz.jsp</result>
+       		 <result name="cdTree">/jsp/sysModule/rzgl/txrz/cdTree.jsp</result>
+    	</action>      
+    	<!-- 登陆日志-->
+    	<action name="dlrz" class="dlrzAction">
+       		 <result>/jsp/sysModule/rzgl/dlrz/dlrz.jsp</result>
+    	</action>
+    	<!-- 掌机日志 -->
+    	<action name="hhuLog" class="hhuLogAction">
+    		<result>/jsp/sysModule/rzgl/hhuLog/hhuWoLog.jsp</result>
+    		<result name="hhuDuLog">/jsp/sysModule/rzgl/hhuLog/hhuDuLog.jsp</result>
+    		<result name="hhuWo">/jsp/sysModule/rzgl/hhuLog/hhuWo.jsp</result> 
+    		<result name="hhuTf">/jsp/sysModule/rzgl/hhuLog/hhuTf.jsp</result>
+    		<result name="hhuPs">/jsp/sysModule/rzgl/hhuLog/hhuPs.jsp</result>
+    		<result name="hhuCode">/jsp/sysModule/rzgl/hhuLog/hhuCode.jsp</result>
+    		<result name="hhuToken">/jsp/sysModule/rzgl/hhuLog/hhuToken.jsp</result>
+    		
+    		 		
+    	</action>  	
+    </package>
+    
+    
+    <!-- 代码管理-->
+    <package name="ggdmgl" namespace="/system/ggdmgl" extends="struts-base">
+    	<!--代码管理-->
+        <action name="dmgl" class="dmglAction">
+            <result>/jsp/sysModule/ggdmgl/dmgl.jsp</result>
+            <result name="editDmFl">/jsp/sysModule/ggdmgl/dmgl_sort_edit.jsp</result>
+            <result name="editDmXx">/jsp/sysModule/ggdmgl/dmgl_value_edit.jsp</result>
+        </action>
+        
+        <!--系统参数管理-->
+        <action name="xtcs" class="xtcsAction">
+            <result>/jsp/sysModule/ggdmgl/xtcs/xtcs.jsp</result>
+            <result name="editXtcsFl">/jsp/sysModule/ggdmgl/xtcs/xtcs_sort_edit.jsp</result>
+            <result name="editXtcsXx">/jsp/sysModule/ggdmgl/xtcs/xtcs_edit.jsp</result>
+        </action>
+        
+        <!--系统参数管理-->
+        <action name="dlmszd" class="dlmszdAction">
+            <result>/jsp/sysModule/ggdmgl/dlmszd/dlmszd.jsp</result>
+            <result name="queryItem">/jsp/sysModule/ggdmgl/dlmszd/queryItem.jsp</result>
+            <result name="initDlmsSub">/jsp/sysModule/ggdmgl/dlmszd/dlmsSub.jsp</result>
+            <result name="initDataSort">/jsp/sysModule/ggdmgl/dlmszd/dataSort.jsp</result>
+            <result name="initDlmsParamsNormal">/jsp/sysModule/ggdmgl/dlmszd/dlmsParamsNormal.jsp</result>
+            <result name="initDlmsParamsStruct">/jsp/sysModule/ggdmgl/dlmszd/dlmsParamsStruct.jsp</result>
+        </action>
+        
+         <!--任务模板配置-->
+        <action name="rwmbpz" class="rwmbpzAction">
+            <result>/jsp/sysModule/ggdmgl/rwmbpz/rwmbpz.jsp</result>
+            <result name="showConfigWin">/jsp/sysModule/ggdmgl/rwmbpz/rwmbsjx.jsp</result>
+            <result name="showSjxzdWin">/jsp/sysModule/ggdmgl/rwmbpz/rwsjxzd.jsp</result>
+        </action>
+        
+        <!--常用数据项配置-->
+        <action name="cysjxpz" class="cysjxpzAction">
+            <result>/jsp/sysModule/ggdmgl/cysjxpz/cysjxpz.jsp</result>
+            <result name="cysjxadd">/jsp/sysModule/ggdmgl/cysjxpz/cysjxadd.jsp</result>
+        </action>
+        
+         <!--告警编码管理-->
+        <action name="gjbmgl" class="gjbmglAction">
+            <result>/jsp/sysModule/ggdmgl/gjbmgl/gjbm.jsp</result>
+             <result name="gjbmgl">/jsp/sysModule/ggdmgl/gjbmgl/gjbmgl.jsp</result>
+            
+        </action>
+    </package>
+    <package name="paramData"  namespace="/system/paramData" extends="struts-base">
+    	<action name="paramMgt" class="paramMgtAction">
+    	<result>/jsp/sysModule/paramData/paramMgt/paramMgt.jsp</result>
+    	<result name="param_edit">/jsp/sysModule/paramData/paramMgt/param_edit.jsp</result>
+    	<result name="cate">/jsp/sysModule/paramData/paramMgt/paramCate.jsp</result>
+    	<result name="cate_edit">/jsp/sysModule/paramData/paramMgt/paramCate_edit.jsp</result>
+    	<result name="paramList">/jsp/sysModule/paramData/paramMgt/paramList.jsp</result>
+    	<result name="testDetail">/jsp/sysModule/paramData/paramMgt/testDetail.jsp</result>
+    	
+    	</action>
+    </package> 
+</struts>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+    
+<!--系统管理-->
+<sqlMapConfig>
+    <settings useStatementNamespaces="true" />
+	
+	<!--机构管理-->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/qyjggl/JgglDAOIbatis.xml" />
+    
+    <!--操作员管理-->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/qxgl/CzyglDAOIbatis.xml" />
+    <!--角色管理-->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/qxgl/JsglDAOIbatis.xml" />
+    <!--操作资源管理 -->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/qxgl/CzzyglDAOIbatis.xml" />
+    <!--首页管理-->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/qxgl/SyglDAOIbatis.xml" />
+	
+	<!--档案日志 -->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/rzgl/DarzDAOIbatis.xml" />
+	<!--通讯日志 -->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/rzgl/TxrzDAOIbatis.xml" />    
+    
+    <!--代码管理-->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/ggdmgl/DmglDAOIbatis.xml" />
+  
+    <!--系统配置 -->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/ggdmgl/XtcsDAOIbatis.xml" />
+    
+    <!--登陆日志管理 -->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/rzgl/DlrzDAOIbatis.xml" />
+    
+    <!--DLMS字典 -->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/ggdmgl/DlmszdDAOIbatis.xml" />
+    
+    <!--密钥管理-->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/aqgl/mygl/MyglDAOIbatis.xml" />
+    
+    <!--采集器密钥管理-->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/aqgl/cjqmysj/CjqmysjDAOIbatis.xml" />
+    <!--任务模板配置-->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/ggdmgl/RwmbpzDAOIbatis.xml" />
+	<!--常用数据项配置-->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/ggdmgl/CysjxpzDAOIbatis.xml" />
+    
+    <!--告警编码管理-->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/ggdmgl/GjbmglDAOIbatis.xml" />
+    
+    <!--抄表数据配置-->
+    <sqlMap resource="cn/hexing/ami/dao/system/ibatis/ggdmgl/CbsjpzDAOIbatis.xml" />
+</sqlMapConfig>

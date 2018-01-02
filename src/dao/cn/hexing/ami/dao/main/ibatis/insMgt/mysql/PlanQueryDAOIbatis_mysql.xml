@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="planQuery">
+   <!-- 表安装计划查询  -->
+	<sql id="mPlan">
+	   FROM INS_PLN_METER P  
+              LEFT JOIN AR_CUSTOMER C ON P.CNO = C.CNO
+              LEFT JOIN AR_TF TF ON P.TFID = TF.TFID
+              LEFT JOIN QX_QY QY ON C.UID = QY.DWDM
+              LEFT JOIN QX_CZY CZY ON P.OPTID = CZY.CZYID
+              WHERE 1 = 1 
+          <include refid="common.nodeFilterN"/>
+		  <isNotEmpty property="pid">
+		     AND P.PID LIKE CONCAT('%', #pid#, '%')
+		  </isNotEmpty>
+		  <isNotEmpty property="cno">
+		     AND P.CNO LIKE CONCAT('%',#cno#,'%')
+		  </isNotEmpty>
+		  <isNotEmpty property="bussType">
+		  	 AND P.BUSS_TYPE = #bussType#
+		  </isNotEmpty>
+		  <isNotEmpty property="pType">
+		  	 AND P.P_TYPE = #pType#
+		  </isNotEmpty>
+		  <isNotEmpty property="status">
+		  	 AND P.STATUS = #status#
+		  </isNotEmpty>
+		  <isNotEmpty property="woid">
+		  	 AND P.WOID LIKE CONCAT('%',#woid#,'%')
+		  </isNotEmpty>
+		  <isNotEmpty property="nmsn">
+		  	 AND P.N_MSN LIKE CONCAT('%',#nmsn#,'%')
+		  </isNotEmpty>
+		  ORDER BY P.UPT_DATE DESC
+    </sql>
+  
+  	<select id="meterPlanCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(P.PID) 
+		<include refid='planQuery.mPlan'/>
+	</select>
+	
+	<select id="meterPlanQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true" >
+	    <include refid='common.pagingTop'/>
+	      SELECT
+	        (SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'bussType' AND T.LANG = #appLang# AND T.VALUE = P.BUSS_TYPE) BTNAME, P.BUSS_TYPE BTYPE,
+	        (SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'planStatus' AND T.LANG = #appLang# AND T.VALUE = P.STATUS) SNAME, P.STATUS STATUS,
+	        (SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'mType' AND T.LANG = #appLang# AND T.VALUE = P.M_TYPE) MTNAME, P.M_TYPE MTYPE,
+	        (SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'wiring' AND T.LANG = #appLang# AND T.VALUE = P.M_WIRING) WNAME, P.M_WIRING WIR,
+	        (SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'mode' AND T.LANG = #appLang# AND T.VALUE = P.M_MODE) MMNAME, P.M_MODE MMODE,
+	        (SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'fbDataType' AND T.LANG = #appLang# AND T.VALUE = P.P_TYPE) PTNAME, P.P_TYPE PTYEP,
+	         P.CNO CNO, C.CNAME CNAME, C.ADDR ADDR, TF.TFNAME TFNAME, P.TFID TFID, QY.DWMC UNAME, C.UID UID, P.N_MSN NMSN, P.O_MSN OMSN,
+	         DATE_FORMAT(P.UPT_DATE, '%Y-%m-%d %H:%i:%s') UTIME, P.PID PID, 
+	         IF(P.OPTID = 'admin','admin',CZY.XM) OPR,
+	         P.WOID WOID
+ 		<include refid='planQuery.mPlan'/>
+		<include refid='common.pagingBottom'/>
+		<include refid="common.pagingSort"/>
+	</select>
+</sqlMap>

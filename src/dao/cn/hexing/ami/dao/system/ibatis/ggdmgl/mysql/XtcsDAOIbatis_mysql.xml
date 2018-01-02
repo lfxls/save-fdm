@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="xtcs">
+	<sql id="csfl">
+		from p_syspara_sort
+	 	   where lang = #lang#
+		   <isNotEqual prepend="and" property="name" compareValue="">
+	 		name like concat('%' , #name# , '%')
+	 	   </isNotEqual>
+		   order by para_sort_id
+ 	</sql>
+ 	
+ 	<!--根据条件查询系统参数分类-->
+ 	<select id="csflQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		  select para_sort_id, name, p_sort_code, sort_desc,
+		  (select p.name as mc
+		          from p_code p
+		         where p.code_type = 'syzt' and p.lang=#lang#
+		           and p.value = effective_flag) as syzt
+		  <include refid='csfl'/>
+	    <include refid='common.pagingBottom'/>
+ 	</select>
+ 	
+ 	<!--根据条件查询系统参数分类的数量-->
+ 	<select id="csflCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		 select count(para_sort_id)
+	      <include refid="csfl"/>
+ 	</select>
+	
+	<sql id="csxx">
+		 from p_syspara
+		 where lang = #lang#
+		 <isNotEqual prepend="and" property="para_sort_id" compareValue="-1">
+	 		 para_sort_id = #para_sort_id#
+	 	 </isNotEqual>
+	 	 <isEqual prepend="and" property="para_sort_id" compareValue="-1">
+             para_sort_id = (select para_sort_id
+                     from (select para_sort_id
+                                    from p_syspara_sort
+                                    where lang = #lang#
+                                      and name like concat('%' , #name# , '%')
+                                    order by para_sort_id limit 0,1) c)
+	 	 </isEqual>
+	</sql>
+	
+	<!--根据条件查询系统参数信息-->
+	<select id="csxxQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 		select para_id,
+	       para_sort_id,
+	       name,
+	       (select p.name as mc
+		          from p_code p
+		         where p.code_type = 'xtcszlx' and p.lang=#lang#
+		           and p.value = type_code) as type_code,
+	       default_value,
+	       max_limit,
+	       min_limit,
+	       (select p.name as mc
+		          from p_code p
+		         where p.code_type = 'syzt' and p.lang=#lang#
+		           and p.value = effective_flag) as syzt
+		 <include refid='csxx'/>
+		 <include refid='common.pagingBottom'/>
+ 	</select>
+ 	
+ 	
+ 	<!--根据条件查询系统参数信息的数量-->
+ 	<select id="csxxCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+ 		select count(para_id) 
+ 		  <include refid='csxx'/>
+ 	</select>
+ 	
+ 	<!--根据id查询系统参数分类-->
+ 	<select id="QueryCsflByID" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.system.pojo.ggdmgl.xtcs.CsFl">
+		select para_sort_id, p_sort_code, name,effective_flag as syzt, sort_desc 
+		  from p_syspara_sort
+		 where para_sort_id = #para_sort_id#
+ 	</select>
+ 	
+ 	<!--根据id查询系统参数信息-->
+ 	<select id="QueryCsxxByID" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.system.pojo.ggdmgl.xtcs.CsXx">
+		 select para_id,
+		        para_sort_id,
+		        name,
+		        type_code,
+		        default_value,
+		        max_limit,
+		        min_limit,
+		        effective_flag as syzt
+		   from p_syspara
+		  where para_id = #para_id#
+ 	</select>
+ 	
+ 	<!--修改系统参数分类-->
+ 	<update id="updCsfl"  parameterClass="java.util.HashMap">
+	   update p_syspara_sort
+		   set name           = #csflmc#,
+		       p_sort_code    = #csflbm#,
+		       sort_desc      = #csflms#,
+		       effective_flag = #syzt#,
+		       lang           = #lang#
+		 where para_sort_id = #paraSortId#
+ 	</update>
+ 	
+ 	 <!--修改系统参数值-->
+ 	<update id="updCsxx"  parameterClass="java.util.HashMap">
+		update p_syspara
+		   set name           = #csmc#,
+		   	   para_sort_id   = #paraSortId#,
+		       type_code      = #xtcszlx#,
+		       default_value  = #csz#,
+		       max_limit      = #cszsx#,
+		       min_limit      = #cszxx#,
+		       effective_flag = #syzt#,
+		       lang           = #lang#
+		 where para_id = #paraId#
+ 	</update>
+ 	
+ 	<!--新增系统参数分类-->
+ 	<insert id="inCsfl" parameterClass="java.util.HashMap">
+ 		<selectKey resultClass="java.lang.Integer" keyProperty="para_sort_id">
+			 select nextval('s_p_syspara_sort') from dual
+		</selectKey>
+		insert into p_syspara_sort
+		  (para_sort_id, name, p_sort_code, sort_desc, effective_flag, lang)
+		values
+		  (#para_sort_id#, #csflmc#, #csflbm#, #csflms#, #syzt#, #lang#)
+ 	</insert>
+ 	
+ 	 <!--新增系统参数值-->
+ 	<insert id="inCsxx" parameterClass="java.util.HashMap">
+ 		<selectKey resultClass="java.lang.Integer" keyProperty="para_id">
+			 select nextval('s_p_syspara') from dual
+		</selectKey>
+		insert into p_syspara
+		  (para_id, para_sort_id, name,type_code,default_value,max_limit,min_limit,effective_flag,lang)
+		values
+		  (#para_id#, #paraSortId#, #csmc#, #xtcszlx#, #csz#, #cszsx#, #cszxx#, #syzt#, #lang#)
+ 	</insert>
+ 	
+ 	<!--根据id删除系统参数分类-->
+ 	<delete id="delCsfl" parameterClass="java.util.HashMap">
+	 	 delete p_syspara_sort
+	      where para_sort_id = #paraSortId#
+ 	</delete>
+ 	
+ 	<!--根据系统参数分类id删除系统参数值-->
+ 	<delete id="delCsxxByFl" parameterClass="java.util.HashMap">
+	 	 delete p_syspara
+	      where para_sort_id = #paraSortId#
+ 	</delete>
+ 	
+ 	<!--根据id删除系统参数值-->
+ 	<delete id="delCsxx" parameterClass="java.util.HashMap">
+	 	 delete p_syspara
+	      where para_id = #paraId#
+ 	</delete>
+</sqlMap>
+
+	
+

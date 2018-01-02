@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:jaxws="http://cxf.apache.org/jaxws"
+    xsi:schemaLocation="
+http://www.springframework.org/schema/beans 
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+
+    <import resource="classpath:META-INF/cxf/cxf.xml" />
+    
+    <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+	
+	<!--调用时需要发送基于SOAPHeaderElement的验证：username/password-->
+    <bean id="authIntercetpors" class="cn.hexing.ami.service.ifs.AuthInterceptor">
+    </bean>
+	
+	<!--FDM系统提供给HHU的服务-->
+	<jaxws:endpoint id="installationService"
+		implementor="cn.hexing.ami.service.ifs.InstallationService" address="/InstallationService">
+		<jaxws:inInterceptors>
+			<ref bean="authIntercetpors"/>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+	
+	<!--FDM系统提供给MDC的服务-->
+	<jaxws:endpoint id="archSynService"
+		implementor="cn.hexing.ami.service.ifs.ArchSynService" address="/ArchSynService">
+		<jaxws:inInterceptors>
+			<ref bean="authIntercetpors"/>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+	
+	<!--FDM系统提供给VENDING的服务-->
+	<jaxws:endpoint id="stVendingService"
+		implementor="cn.hexing.ami.service.ifs.STVendingService" address="/STVendingService">
+		<!-- <jaxws:inInterceptors>
+			<ref bean="authIntercetpors"/>
+		</jaxws:inInterceptors> -->
+	</jaxws:endpoint>
+    
+</beans>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="darz">
+
+	 
+ 	 <!-- 取根菜单 -->
+ 	 <select id="getRootMenu" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 	 	SELECT CDID BM, CDMC MC FROM QX_CD CD WHERE CD.SFGJD = '1' AND LANG = #lang# AND SFXS = '1'
+ 	 </select>
+ 	 
+ 	 <!-- 取二级菜单 -->
+ 	 <select id="getMenu" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 	 	SELECT CDID BM, CDMC MC FROM QX_CD CD WHERE CD.SJCDID = #root# AND LANG = #lang#  AND SFXS = '1'
+ 	 </select>
+ 	 
+ 	  <sql id="darz">
+		  FROM RZ_FWXX RZ 
+		  LEFT JOIN QX_CZ CZ 
+		    ON RZ.CZID = CZ.CZID AND CZ.LANG=#lang#
+		  LEFT JOIN QX_CZY CZY 
+		    ON RZ.CZYID = CZY.CZYID 
+		  LEFT JOIN QX_CZLB LB 
+		    ON CZ.CZLBID = LB.CZLBID  AND LB.LANG =#lang#
+		  INNER JOIN QX_CD CD 
+		    ON RZ.CDID = CD.CDID AND CD.LANG=#lang#
+		  INNER JOIN QX_QY DW 
+		    ON RZ.DWDM = DW.DWDM 
+		  <isNotEmpty property="menuId">  
+		  INNER JOIN (SELECT cdid FROM (SELECT cdid FROM qx_cd WHERE lang=#lang# and cdid LIKE CONCAT(SUBSTRING(#menuId#,1,1),'%')) a WHERE FIND_IN_SET(a.cdid, getMenuChildLst(#menuId#,#lang#))) t
+            ON RZ.CDID = t.cdid
+           </isNotEmpty> 
+		 WHERE 1=1
+		   <isNotEmpty property="czyId">
+		   	    AND (RZ.CZYID like concat('%',#czyId#,'%') or CZY.XM like concat('%',#czyId#,'%'))
+		   </isNotEmpty>
+		   <isNotEmpty property="rznr">
+		   	    AND RZ.RZNR like concat('%' , #rznr# , '%')
+		   </isNotEmpty >
+		   <isNotEmpty property="kssj">
+		     <![CDATA[
+		   AND RZ.CZSJ > date_format(#kssj#,'%y-%m-%d')
+		    ]]>
+		   </isNotEmpty>
+		    <isNotEmpty property="jssj">
+		   <![CDATA[
+		   AND RZ.CZSJ < date_add(#jssj#,interval 1 day) 
+		   ]]>
+		   </isNotEmpty>
+ 	 </sql>
+ 	 
+ 	 <!-- 日志查询 -->
+ 	 <select id="darzCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+ 	 	SELECT COUNT(RZ.CZID) 
+ 	 	 <include refid='darz.darz'/>
+ 	 </select>
+ 	 
+ 	 <select id="darzQuery" remapResults="true" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 	 	<include refid='common.pagingTop'/>
+	 	   SELECT DISTINCT DW.DWMC, DW.DWDM,
+	 	       CD.CDID,
+		       ifnull(concat(CZY.XM , '(' , RZ.CZYID , ')'),'admin') AS CZY,
+		       CD.CDMC,
+		       LB.CZLBMC CZLB,
+		       CZ.CZMC,
+		       date_format(RZ.CZSJ, '%Y-%m-%d %H:%i:%s') AS CZSJ,
+		       RZ.RZNR
+			<include refid='darz.darz'/>
+			order by rz.czsj desc
+		 <include refid='common.pagingBottom'/>
+		 <include refid="common.pagingSort"/>
+ 	 </select>
+ 	 
+</sqlMap>
+
+	
+

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+    <settings useStatementNamespaces="true" />
+	<!--common-->
+    <sqlMap resource="cn/hexing/ami/dao/common/ibatis/mysql/CommonDAOIbatis_mysql.xml" />
+    <!--登录-->
+    <sqlMap resource="cn/hexing/ami/dao/common/ibatis/mysql/LoginDAOIbatis_mysql.xml" />
+    <!--左边树-->
+    <sqlMap resource="cn/hexing/ami/dao/common/ibatis/mysql/LeftTreeDAOIbatis_mysql.xml"/>
+	<!--群组-->
+    <sqlMap resource="cn/hexing/ami/dao/common/ibatis/mysql/QzDAOIbatis_mysql.xml"/>
+    <!--群组设置-->
+    <sqlMap resource="cn/hexing/ami/dao/common/ibatis/mysql/QzszDAOIbatis_mysql.xml"/>
+     <!--首 页-->
+    <sqlMap resource="cn/hexing/ami/dao/common/ibatis/mysql/MainPageDAOIbatis_mysql.xml"/>
+    <sqlMap resource="cn/hexing/ami/dao/common/ibatis/mysql/InsProcessDAOIbatis_mysql.xml"/>
+    <sqlMap resource="cn/hexing/ami/dao/common/ibatis/mysql/ArchSynProcessDAOIbatis_mysql.xml"/>
+</sqlMapConfig>

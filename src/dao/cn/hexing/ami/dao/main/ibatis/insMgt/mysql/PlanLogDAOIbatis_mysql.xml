@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="planLog">
+   <!-- 工单生成查询 -->
+   <sql id="log">
+	    FROM INS_PLN_OPLOG L LEFT JOIN QX_CZY CZY ON L.OPTID = CZY.CZYID
+	    WHERE 1=1
+		<isNotEmpty property="pid">
+	 		AND L.PID = #pid#
+	 	</isNotEmpty>
+		<isNotEmpty property="status">
+	 		AND L.STATUS = #status#
+	 	</isNotEmpty>
+		<isNotEmpty property="popid">
+	 		AND L.OPTID = #popid#
+	 	</isNotEmpty>
+		<isNotEmpty property="devType">
+	 		AND L.DEV_TYPE = #devType#
+	 	</isNotEmpty>
+		<isNotEmpty property="startDate">
+	 		AND DATE_FORMAT(L.OP_DATE,'%Y-%m-%d') <![CDATA[ >= ]]> #startDate#
+	 	</isNotEmpty>
+		<isNotEmpty property="endDate">
+	 		AND DATE_FORMAT(L.OP_DATE,'%Y-%m-%d') <![CDATA[ <= ]]> #endDate#
+	 	</isNotEmpty>
+		ORDER BY L.OP_DATE DESC
+   </sql>
+   <select id="queryPlanLogCount"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+        SELECT COUNT(L.LOGID) 
+        <include refid="planLog.log"/> 
+   </select>
+   <select id="queryPlanLogQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+    <include refid='common.pagingTop'/>
+	   SELECT L.LOGID LOGID, L.PID PID, L.STATUS STATUS, L.OPTID OPTID, 
+	   IF(L.OPTID = 'admin','admin',CZY.XM) OPTNAME,
+	   DATE_FORMAT(L.OP_DATE,'%Y-%m-%d %H:%i:%s') OPDATE, 
+	  (SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'planStatus'AND T.VALUE = L.STATUS AND T.LANG = #appLang#) SNAME,
+	  (SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'devType'AND T.VALUE = L.DEV_TYPE AND T.LANG = #appLang#) DEVTYPE
+      <include refid="planLog.log"/> 
+      <include refid='common.pagingBottom'/>
+      <include refid="common.pagingSort"/>
+   </select> 
+</sqlMap>

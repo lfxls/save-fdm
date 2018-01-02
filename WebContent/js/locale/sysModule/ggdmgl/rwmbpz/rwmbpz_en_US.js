@@ -1,0 +1,9 @@
+var cm_op='Operate';
+var cm_edit_title='Config';
+var cm_rwsx='Task Template No.';
+var cm_rwsxmc='Task Template Name';
+var cm_rwlxmc='Task Type';
+var cm_zdgylx='Terminal Protocol';
+var cm_sjjg='Time Interval(Minute)';
+var cm_title='Task Template List';
+var configWin_title='Task Data Items Configuration';

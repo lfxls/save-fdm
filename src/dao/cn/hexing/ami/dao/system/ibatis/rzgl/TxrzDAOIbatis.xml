@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="txrz">
+
+	 <sql id="txrz">
+		  from qx_qy qy, rz_czzd zd, qx_cz cz, vw_sjx bm
+		 where qy.dwdm = zd.dwdm
+		   and zd.czid = cz.czid(+)
+		   and cz.lang(+) = #appLang#
+		   and zd.czsjx = bm.sjxbm(+)
+		   and bm.lang(+) = #appLang#
+		   and zd.xtid = #xtid#
+		   <isNotEmpty property="csxmc">
+		   		and bm.sjxmc like '%'|| #csxmc# ||'%'
+		   </isNotEmpty>
+		   <isNotEmpty property="czybm">
+				and zd.czyid like '%'|| #czybm# ||'%'
+		   </isNotEmpty>
+		   <isNotEmpty property="zdjh">
+				and zd.zdjh like '%'|| #zdjh# ||'%'
+		   </isNotEmpty>
+		   <isNotEmpty property="czlx">and cz.czid=#czlx#</isNotEmpty>
+		   and qy.dwdm like #nodeId# || '%'
+		   and zd.czsj >= to_date(#kssj#, 'yyyy-mm-dd')
+		   and zd.czsj &lt; to_date(#jssj#, 'yyyy-mm-dd') + 1
+	 </sql>
+	 
+ 	 <!-- 日志总数 -->
+ 	 <select id="txrzCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+ 	 	SELECT COUNT(zd.zdjh) 
+ 	 	 <include refid='txrz.txrz'/>
+ 	 </select>
+ 	 <!-- 日志查询 -->
+ 	 <select id="txrzQuery" remapResults="true" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 	 	<include refid='common.pagingTop'/>
+		select qy.dwdm,
+		   qy.dwmc,
+	       cz.czmc,
+	       zd.zdjh,
+	       bm.sjxmc,
+	       zd.rznrh,
+	       zd.czyid,
+	       zd.ip,
+	       to_char(zd.czsj, 'yyyy-mm-dd hh24:mi:ss') as czsj
+		<include refid='txrz.txrz'/>
+		order by zd.czsj desc, qy.dwdm
+		<include refid='common.pagingBottom'/>
+		<include refid="common.pagingSort"/>
+ 	 </select>
+ 	 
+ 	  <select id="czlxList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select cz.czid, cz.czmc ||'-'||cd.cdmc czmc from qx_cz cz,qx_cd cd 
+		where cz.cdid=cd.cdid and cz.lang=cd.lang and cz.lang = #appLang# and cz.czlbid in (3,4,5) order by cd.cdmc
+ 	  </select>
+</sqlMap>
+
+	
+

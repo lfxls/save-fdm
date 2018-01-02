@@ -1,0 +1,152 @@
+.table_accinfo {
+	border: 1px solid #BBBBBB;
+	border-collapse: collapse;
+}
+
+.table_accinfo td {
+	border: 1px solid #BBBBBB;
+	border-collapse: collapse;
+	padding: 5px;
+}
+
+.table_balance {
+	border: 0px;
+	padding: 0px;
+}
+
+.table_balance td {
+	border: 0px;
+	padding: 00px;
+}
+
+.font_query_imp {
+	font-weight: bold;
+}
+
+.input_acc {
+	height: 25px;
+	width: 70%;
+	font-size: 15px;
+}
+
+.input_meter {
+	height: 25px;
+	width: 70%;
+	font-size: 15px;
+}
+
+.font_vend_imp {
+	font-weight: bold;
+	font-size: 14px;
+}
+
+.input_amt {
+	height: 30px;
+	line-height: 30px;
+	width: 230px;
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.table_vendinginfo {
+	border-width: 1px;
+	border-style: solid;
+	border-color: #BBBBBB;
+}
+
+.div_vend {
+	border-width: 1px;
+	border-style: solid;
+	border-color: #BBBBBB;
+	height: 100%;
+}
+
+.quickVendNumber
+{
+	width: 130px;
+	height: 70px;
+	background: url(..//extjs/resources/icons/quickVendNumber.png) no-repeat left top;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.table_charge {
+	border: 1px solid #bbb;
+	border-collapse: collapse;
+}
+
+.table_charge td {
+	border: 1px solid #ccc;
+	border-collapse: collapse;
+	padding: 5px;
+}
+
+.font_chg_imp {
+	font-weight: bold;
+	font-size: 15px;
+}
+
+.funcDiv{
+	float:right;
+	position:absolute;
+	right:0px;
+	top:150px;
+}
+
+.funcMenuFold{
+	background: url(..//extjs/resources/icons/funcMenuFold.png) no-repeat left top;
+	width:30px;
+	height: 150px;
+}
+
+.funcMenuOpen{
+	background: url(..//extjs/resources/icons/funcMenuOpen.png) no-repeat left top;
+	width:30px;
+	height: 150px;
+}
+
+.funcMenuFont{
+	writing-mode:tb-rl;
+	font-weight: bold;
+	font-size: 12px;
+	letter-spacing: 2px;
+}
+
+.container{
+	height:178px;
+	border: 2px solid #3A78B1;
+	background: #fff;
+}
+
+.slide{
+	float:left;
+	margin-right:1px;
+	width:30px;
+	height:178px;
+	cursor:pointer;
+	background:#81BF2C;
+	font:bold 24px Arial, Helvetica, sans-serif;
+	text-align:center;
+	color:#FFF;
+}
+
+.slideFont{
+	writing-mode:tb-rl;
+	font-weight: bold;
+	font-size: 12px;
+	letter-spacing: 2px;
+}
+
+.slide:hover{
+	background:#FC3;
+}
+
+.select{
+	background:#FC3;
+}
+
+.content{
+	float:left;
+	height:178px;
+	display:none;
+}

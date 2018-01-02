@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	 <!--
+    <constant name="struts.custom.i18n.resources" value="messageResource"/>
+    -->
+    <constant name="struts.ui.theme" value="simple" />
+    <constant name="struts.action.extension" value="do" />
+    <!--upload file temp save path-->
+    <constant name="struts.multipart.saveDir" value="/tmp"/>
+    <!--upload file maxSize=10M-->
+    <constant name="struts.multipart.maxSize" value="10240000"/>
+    <!--  
+    <constant name="struts.enable.DynamicMethodInvocation" value="false" />
+    -->
+    <constant name="struts.devMode" value="false" />
+    
+    <!-- Add i18n here -->
+    <constant name="struts.custom.i18n.resources" 
+   		  value="res.i18n.commonModule.common,
+				 res.i18n.sysModule.sysModule_qyjggl,
+				 res.i18n.sysModule.sysModule_qxgl,
+				 res.i18n.sysModule.sysModule_ggdmgl,
+				 res.i18n.sysModule.sysModule_rzgl,
+				 res.i18n.sysModule.sysModule_aqgl,
+				 res.i18n.sysModule.sysModule_paramData,
+				 res.i18n.mainModule.mainModule_arcMgt,
+				 res.i18n.mainModule.mainModule_insMgt,
+				 res.i18n.reportModule.reportModule_insInfoReport,
+				  res.i18n.reportModule.reportModule_insQualReport,
+				 res.i18n.mainModule.mainModule_hhuService,
+				 res.i18n.mainModule.mainModule_preMgt,
+				 res.i18n.mainModule.mainModule_gis,
+				 res.i18n.mainModule.mainModule_srvyMgt
+				 ">
+   	</constant>
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+	<constant name="struts.multipart.maxSize" value="10485760" />
+    <!-- Add packages here -->
+    <include file="res/struts/struts-commonModule.xml"/>
+    <include file="res/struts/struts-systemModule.xml"/>
+    <include file="res/struts/struts-mainModule.xml"/>
+    <include file="res/struts/struts-reportModule.xml"/>
+    <include file="res/struts/struts-gis.xml"/>
+    
+</struts>

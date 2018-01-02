@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+>
+	<bean id="commonManager" class="cn.hexing.ami.service.CommonManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<bean id="loginManager" class="cn.hexing.ami.service.LoginManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<bean id="mainPageManager" class="cn.hexing.ami.service.MainPageManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<bean id="leftTreeManager" class="cn.hexing.ami.service.LeftTreeManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<bean id="roleMenusManager" class="cn.hexing.ami.service.RoleMenusManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+		<property name="roleMenusCache" ref="roleMenusCache" />
+	</bean>
+	
+	<!-- 群组 -->
+	<bean id="qzManager" class="cn.hexing.ami.service.QzManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 群组设置 -->
+	<bean id="qzszManager" class="cn.hexing.ami.service.QzszManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- license管理-->
+	<bean id="licMgtManager" class="cn.hexing.ami.service.license.LicMgtManager">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<!-- 短信服务 -->
+	<bean id="smsServerService" class="cn.hexing.ami.service.sms.SmsServerService">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+
+	<!-- 待办事项服务 -->
+	<bean id="toDoInf" class="cn.hexing.ami.inf.ToDoService">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+		
+	<bean id="installationProcess" class="cn.hexing.ami.service.ifs.InstallationProcess">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<bean id="archSynProcess" class="cn.hexing.ami.service.ifs.ArchSynProcess">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+	
+	<bean id="stVendingProcess" class="cn.hexing.ami.service.ifs.STVendingProcess">
+		<property name="baseDAOIbatis" ref="baseDAOIbatis"/>
+	</bean>
+</beans>

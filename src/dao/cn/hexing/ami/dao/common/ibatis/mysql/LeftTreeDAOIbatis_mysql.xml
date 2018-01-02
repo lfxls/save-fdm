@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="lefttree">
+	<!-- 查询过滤（专变或者低压）-->
+	<sql id="SbCxFilter">
+		<dynamic>
+			<isEqual property="viewType" compareValue="sb">
+				<![CDATA[ 
+				SELECT distinct ZD.ZDJH,ZD.DWDM,ZD.ZDYT,ZD.ZDLJDZ,ZD.ZDLX,ZD.ZT,ZD.ZDGYLX,ZD.AZDZ,ZD.BYQID,ZD.HH,
+				'sb' AS TYPE,ZDZT.MC AS ZDZT,ZDLX.MC AS ZDLXMC,
+				(CASE
+				      WHEN 
+				      (SELECT 
+				         TIMESTAMPDIFF(minute,MAX(t.zjxtsj),NOW())
+				      FROM
+				        tx_zxqk t 
+				      WHERE t.zdljdz = zd.zdljdz) < 24 *60
+				      THEN 1 
+				      ELSE 0 
+				      END
+				  ) bzt 
+                ]]>
+			</isEqual>
+			<isEqual property="viewType" compareValue="bj">
+				SELECT distinct BJ.BJJH,YH.HH,YH.HM,YH.DWDM,YH.YHLX,BJ.BJLX,BJ.ZT,BJ.TXDZ,BJ.BYQID,
+				'bj' AS TYPE, BJZT.MC AS BJZT,BJLX.MC AS BJLXMC
+				,'' AS ZDJH, '' AS ZDLJDZ, '' AS ZDGYLX 
+			</isEqual>
+			<isEqual property="viewType" compareValue="plcBj">
+				SELECT distinct BJ.BJJH,YH.HH,YH.HM,YH.DWDM,YH.YHLX,BJ.BJLX,BJ.ZT,BJ.TXDZ,BJ.BYQID,
+				'bj' AS TYPE, BJZT.MC AS BJZT,BJLX.MC AS BJLXMC
+				,ZD.ZDJH,ZD.ZDLJDZ,ZD.ZDGYLX
+			</isEqual>
+			<isEqual property="viewType" compareValue="allBj">
+				<![CDATA[ 
+				SELECT distinct BJ.BJJH,YH.HH,YH.HM,YH.DWDM,YH.YHLX,BJ.BJLX,BJ.ZT,BJ.TXDZ,BJ.BYQID,
+				'bj' AS TYPE, BJZT.MC AS BJZT,BJLX.MC AS BJLXMC,
+				(CASE
+				      WHEN 
+				      (SELECT 
+				        TIMESTAMPDIFF(minute,MAX(t.zjxtsj),NOW())
+				      FROM
+				        tx_zxqk t 
+				      WHERE t.zdljdz = zd.zdljdz) < 24 *60
+				      THEN 1 
+				      ELSE 0 
+				      END
+				  ) bzt 
+				,ZD.ZDJH,ZD.ZDLJDZ,ZD.ZDGYLX
+			   ]]>
+			</isEqual>
+		</dynamic>
+	</sql>
+	<!-- 电网树单位 -->
+	<select id="getDwDw" parameterClass="java.util.HashMap"	resultClass="java.util.HashMap">
+		SELECT DWDM AS DWBM, DWMC AS DWMC, DWDM, 'dw' AS TYPE, JB AS DWLX
+		FROM QX_QY DW
+		WHERE DW.SJDWDM = #nodeId#
+		<include refid='common.fwdwFilter' />
+		ORDER BY DWDM
+	</select>
+
+	<!-- 电网树直属线路 字段标识一致，使程序公用性提高 -->
+	<select id="getDwZsxl" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		SELECT T.XLID AS DWBM,
+		T.XLMC AS DWMC,
+		T.DWDM,
+		'xl' AS TYPE
+		FROM G_XL T
+		WHERE T.DWDM = #nodeId#
+		ORDER BY T.XLMC
+    </select>
+
+	<!--电网树台区 -->
+	<select id="getDwTq" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		SELECT TQ.TQID AS DWBM, TQ.TQMC AS DWMC, TQ.DWDM, TQ.RL RL, 'tq' AS TYPE
+		FROM G_XLTQGX RA, G_TQ TQ
+		WHERE TQ.TQID = RA.TQID
+		AND RA.XLID = #nodeId#
+		<isNotEmpty property="bz">
+			AND TQ.BZ = #bz#
+		</isNotEmpty>
+		ORDER BY TQ.TQMC
+    </select>
+
+	<!-- 电网树子线路 挂在线路下的这类线路 -->
+	<select id="getDwZxl" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		SELECT XL.XLID AS DWBM,
+		XL.XLMC AS DWMC,
+		XL.DWDM AS DWDM,
+		'xl' AS TYPE
+		FROM G_XL XL,
+		G_XLGX RA,
+		WHERE RA.XLID = XL.XLID
+		AND RA.SJXLID = #nodeId#
+    </select>
+
+	<!-- 变压器 -->
+	<select id="getByq" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT BYQ.BYQID AS DWBM, BYQ.MC AS DWMC, BYQ.DWDM AS DWDM, byq.RL, 'byq' AS TYPE
+		FROM G_BYQ BYQ , g_xltqgx xltqgx
+		WHERE byq.tqid=xltqgx.tqid  and xltqgx.xlID = #nodeId#
+		<isNotEmpty property="bz">
+			AND BYQ.BZ = #bz#
+		</isNotEmpty>
+		ORDER BY BYQ.MC
+    </select>
+    
+ 	<select id="countSb" parameterClass="java.util.HashMap"
+		resultClass="java.lang.Long" remapResults="true">
+    	SELECT 
+		  count(1)
+		FROM
+		  ar_meter m 
+		  LEFT JOIN ar_customer c 
+		    ON m.CNO = c.CNO 
+		WHERE m.uid = #nodeId#
+		<include refid='common.fwdwFilterN'/>
+    </select>
+    
+	<!-- 专变，公变，低压用户 -->
+	<select id="getSb" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults = "true">
+	   SELECT 
+		  m.msn,
+		  m.STATUS msts,
+		  (SELECT 
+		    NAME 
+		  FROM
+		    p_code pc 
+		  WHERE pc.CODE_TYPE = 'mStatus' 
+		    AND pc.lang = #appLang#
+		    AND pc.value = m.STATUS) mstsn,
+		  m.CNO,
+		  c.CNAME 
+		FROM
+		  ar_meter m 
+		  LEFT JOIN ar_customer c 
+		    ON m.CNO = c.CNO 
+		WHERE m.uid = #nodeId#
+		<include refid='common.fwdwFilterN'/>
+	   <isNotEmpty property="pages">
+	   	 	limit #start#,#limit#
+	   </isNotEmpty>
+	   
+	</select>
+	
+	<!-- 小型预付费 集中器,离线表 ,GPRS表-->
+	<select id="countSbS" parameterClass="java.util.HashMap"
+		resultClass="java.lang.Long" remapResults="true">
+		<isEqual property="viewType" compareValue="sb">
+			select count(*)
+			FROM DA_ZD ZD
+			WHERE 1=1
+			<isNotEmpty property="yhlx">
+				AND ZD.ZDYT = #yhlx#
+			</isNotEmpty>
+			<isNotEmpty property="sblx" >
+				AND ZD.ZDLX = #sblx#
+			</isNotEmpty>
+			AND ZD.ZDGYLX='02'
+	   </isEqual>
+	   <isEqual property="viewType" compareValue="bj">
+	   		select count(*)
+			FROM DA_YH YH,DA_BJ BJ, 
+			DA_ZD ZD,DA_CLD CLD
+			WHERE YH.HH = BJ.HH
+			AND YH.DWDM = BJ.DWDM
+			AND ZD.ZDJH = CLD.ZDJH
+			AND CLD.CLDJH = BJ.BJJH
+			AND YH.YHLX = #yhlx#
+			AND bj.bjlx='04'
+			and cld.zdjh=#nodeId#
+	   </isEqual>
+	  <isEqual property="viewType" compareValue="allBj">
+	  	select count(*) from (
+	  	   select bj.bjjh
+		   FROM  DA_BJ BJ LEFT JOIN DA_YH YH ON bj.HH = yh.HH AND bj.DWDM = yh.DWDM AND yh.YHLX=#yhlx#,
+			DA_ZD ZD,DA_CLD CLD
+			WHERE ZD.ZDJH = CLD.ZDJH
+			AND CLD.CLDJH = BJ.BJJH
+			AND bj.bjlx='02'
+			union
+			select bj.bjjh
+			FROM da_bj bj LEFT JOIN DA_YH YH 
+			    ON bj.HH = yh.HH 
+			    AND bj.DWDM = yh.DWDM 
+			    AND yh.YHLX = #yhlx#
+		    where bj.bjlx='20' 
+		) allbj
+	   </isEqual>	
+	</select>
+	
+	<select id="getSbS" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap" remapResults = "true">
+		
+		<isEqual property="viewType" compareValue="sb">
+			<include refid='lefttree.SbCxFilter' />
+			FROM DA_ZD ZD, 
+			(SELECT VALUE BM, NAME MC FROM P_CODE WHERE CODE_TYPE = 'zdzt' AND LANG = #appLang#) ZDZT,
+			(SELECT VALUE BM, NAME MC FROM P_CODE WHERE CODE_TYPE = 'zdlx' AND LANG = #appLang#) ZDLX
+			WHERE ZD.ZT = ZDZT.BM
+			AND ZD.ZDLX = ZDLX.BM
+			<isNotEmpty property="yhlx">
+				AND ZD.ZDYT = #yhlx#
+			</isNotEmpty>
+			<isNotEmpty property="sblx" >
+				AND ZD.ZDLX = #sblx#
+			</isNotEmpty>
+			AND ZD.ZDGYLX='02'
+			ORDER BY ZD.ZDLX
+	   </isEqual>
+	   <isEqual property="viewType" compareValue="plcBj">
+	   		<include refid='lefttree.SbCxFilter' />
+			FROM DA_YH YH,DA_BJ BJ, 
+			(SELECT VALUE BM, NAME MC FROM P_CODE WHERE CODE_TYPE = 'dbzt' AND LANG = #appLang#) BJZT,
+			(SELECT VALUE BM, NAME MC FROM P_CODE WHERE CODE_TYPE = 'dblx' AND LANG = #appLang#) BJLX
+			,DA_ZD ZD,DA_CLD CLD
+			WHERE YH.HH = BJ.HH
+			AND YH.DWDM = BJ.DWDM
+			AND BJ.ZT = BJZT.BM
+			AND BJ.BJLX = BJLX.BM
+			AND ZD.ZDJH = CLD.ZDJH
+			AND CLD.CLDJH = BJ.BJJH
+			AND YH.YHLX = #yhlx#
+			AND bj.bjlx='04'
+			and cld.zdjh=#nodeId#
+			ORDER BY YH.HH	
+	   </isEqual>
+	   <!--除PLC表以为的表计 GPRS+offline-->
+	  <isEqual property="viewType" compareValue="allBj">
+	  		select * from (
+	  		<include refid='lefttree.SbCxFilter' />
+		   FROM  DA_BJ BJ LEFT JOIN DA_YH YH ON bj.HH = yh.HH AND bj.DWDM = yh.DWDM AND yh.YHLX=#yhlx#,
+			(SELECT VALUE BM, NAME MC FROM P_CODE WHERE CODE_TYPE = 'dbzt' AND LANG = #appLang#) BJZT,
+			(SELECT VALUE BM, NAME MC FROM P_CODE WHERE CODE_TYPE = 'dblx' AND LANG = #appLang#) BJLX,
+			DA_ZD ZD,DA_CLD CLD
+			WHERE BJ.ZT = BJZT.BM
+			AND BJ.BJLX = BJLX.BM
+			AND ZD.ZDJH = CLD.ZDJH
+			AND CLD.CLDJH = BJ.BJJH
+			AND bj.bjlx='02'
+			union all
+			SELECT distinct BJ.BJJH,YH.HH,YH.HM,YH.DWDM,YH.YHLX,BJ.BJLX,BJ.ZT,BJ.TXDZ,BJ.BYQID,
+				'bj' AS TYPE, BJZT.MC AS BJZT,BJLX.MC AS BJLXMC,'0' bzt,
+				null ZDJH,null ZDLJDZ,null ZDGYLX
+			FROM da_bj bj LEFT JOIN DA_YH YH 
+			    ON bj.HH = yh.HH 
+			    AND bj.DWDM = yh.DWDM 
+			    AND yh.YHLX = #yhlx#,
+				(SELECT VALUE BM, NAME MC FROM P_CODE WHERE CODE_TYPE = 'dbzt' AND LANG = #appLang#) BJZT,
+				(SELECT VALUE BM, NAME MC FROM P_CODE WHERE CODE_TYPE = 'dblx' AND LANG = #appLang#) BJLX
+		  WHERE bj.bjlx='20' AND 
+			BJ.ZT = BJZT.BM AND BJ.BJLX = BJLX.BM
+		  ) allbj 
+			ORDER BY HH	
+	   </isEqual>
+	   <isNotEmpty property="pages">
+	   	 	limit #start#,#limit#
+	   </isNotEmpty>
+	</select>
+
+	<!-- 群组树 -->
+	<!-- <select id="getQzQz" resultClass="java.util.HashMap">
+		SELECT DISTINCT QZ.QZID AS DWBM,QZ.QZMC AS
+		DWMC,QZ.DWDM,QZ.QZFL,DECODE(SMZQ,NULL,'',0,'',SMZQ -
+		(TRUNC(TO_NUMBER(SYSDATE-CJRQ)) + 1)) AS YXTS,#viewType# as TYPE
+		FROM QZ_DY QZ
+		WHERE QZ.CZYID = #nodeId#
+		<isEqual property="viewType" compareValue="bjqz">
+			AND QZ.QZFL = '04' 
+		</isEqual>
+		<isNotEqual property="viewType" compareValue="bjqz">
+			<isNotEmpty property="yhlx">
+				AND QZ.QZFL = #yhlx# 
+			</isNotEmpty>
+		</isNotEqual>
+		ORDER BY QZ.QZMC
+	</select> -->
+	
+	<!-- 群组树 查询所有群组明细 -->
+	<!-- <select id="getQzMx" resultClass="java.util.HashMap">
+		select distinct qzid from qz_mx where qzid in (select qzid from qz_dy where czyid=#nodeId#)
+		<isEqual property="viewType" compareValue="bjqz">
+			and bjjh is not null
+		</isEqual>
+		<isNotEqual property="viewType" compareValue="bjqz">
+			and zdjh is not null
+		</isNotEqual>
+	</select> -->
+	
+	<!-- 群组树 -->
+	<select id="getQzQz" resultClass="java.util.HashMap">
+		SELECT DISTINCT QZ.QZID AS DWBM, QZ.QZMC AS DWMC, QZ.DWDM, QZ.QZFL, 
+			   IF(SMZQ = NULL OR SMZQ = '', '', SMZQ - ((CAST((NOW()-CJRQ) AS SIGNED) + 0) + 1)) AS YXTS,
+			   #viewType# AS TYPE
+		FROM QZ_DY QZ
+			WHERE (QZ.CZYID = #nodeId# OR SFGX = '1')
+			AND (
+				  STR_TO_DATE(DATE_FORMAT(DATE_ADD(str_to_date(DATE_FORMAT(QZ.CJRQ, '%Y-%m-%d'), '%Y-%m-%d') , INTERVAL QZ.SMZQ DAY ),
+				 	 '%Y-%m-%d'), '%Y-%m-%d') 
+			 		<![CDATA[>]]> 
+			      STR_TO_DATE(DATE_FORMAT(NOW(), '%Y-%m-%d'), '%Y-%m-%d') 
+		      
+				    OR
+		
+				  STR_TO_DATE(DATE_FORMAT(DATE_ADD(str_to_date(DATE_FORMAT(QZ.CJRQ, '%Y-%m-%d'), '%Y-%m-%d') , INTERVAL QZ.SMZQ DAY ),
+					 '%Y-%m-%d'),'%Y-%m-%d')
+					  =
+				  STR_TO_DATE(DATE_FORMAT(QZ.CJRQ, '%Y-%m-%d'), '%Y-%m-%d')	
+			   )
+		ORDER BY QZ.QZMC
+	</select>
+	
+	<!-- 群组树 查询所有群组明细 -->
+	<select id="getQzMx" resultClass="java.util.HashMap">
+		SELECT DISTINCT QZID FROM QZ_MX WHERE QZID IN (
+			SELECT QZ.QZID 
+			  FROM QZ_DY QZ
+			 WHERE (QZ.CZYID = #nodeId# OR SFGX = '1')
+			  AND (
+				  STR_TO_DATE(DATE_FORMAT(DATE_ADD(str_to_date(DATE_FORMAT(QZ.CJRQ, '%Y-%m-%d'), '%Y-%m-%d') , INTERVAL QZ.SMZQ DAY ),
+				 	 '%Y-%m-%d'), '%Y-%m-%d') 
+			 		<![CDATA[>]]> 
+			      STR_TO_DATE(DATE_FORMAT(NOW(), '%Y-%m-%d'), '%Y-%m-%d') 
+		      
+				    OR
+		
+				  STR_TO_DATE(DATE_FORMAT(DATE_ADD(str_to_date(DATE_FORMAT(QZ.CJRQ, '%Y-%m-%d'), '%Y-%m-%d') , INTERVAL QZ.SMZQ DAY ),
+					 '%Y-%m-%d'),'%Y-%m-%d')
+					  =
+				  STR_TO_DATE(DATE_FORMAT(QZ.CJRQ, '%Y-%m-%d'), '%Y-%m-%d')	
+			   )
+		)
+		<isEqual property="viewType" compareValue="bjqz">
+			AND BJJH IS NOT NULL AND BJJH != ''
+		</isEqual>
+		<isNotEqual property="viewType" compareValue="bjqz">
+			AND ZDJH IS NOT NULL AND ZDJH != ''
+		</isNotEqual>
+	</select>
+
+	<!--群组获取设备 -->
+	<select id="getQzSb" resultClass="java.util.HashMap" remapResults = "true">
+		<include refid='lefttree.SbCxFilter' />
+		<!-- 设备 -->
+		<isEqual property="viewType" compareValue="sb">
+			FROM DA_ZD ZD,QZ_MX QZ, 
+			(SELECT VALUE BM, NAME MC FROM P_CODE WHERE CODE_TYPE = 'zdzt' AND LANG = #appLang#) ZDZT,
+			(SELECT VALUE BM, NAME MC FROM P_CODE WHERE CODE_TYPE = 'zdlx' AND LANG = #appLang#) ZDLX
+			WHERE QZ.ZDJH = ZD.ZDJH
+			AND ZD.ZT = ZDZT.BM
+			AND ZD.ZDLX = ZDLX.BM
+			<isNotEmpty property="nodeId">
+				AND QZ.QZID = #nodeId#
+			</isNotEmpty>
+			ORDER BY ZD.ZDJH
+	   </isEqual>
+	   
+	   <!-- 表计 -->
+	   <isEqual property="viewType" compareValue="bj">
+			FROM DA_YH YH,QZ_MX QZ,DA_BJ BJ LEFT JOIN DA_CLD CLD ON CLD.CLDJH = BJ.BJJH,
+			(SELECT VALUE BM, NAME MC FROM P_CODE WHERE CODE_TYPE = 'dbzt' AND LANG = #appLang#) BJZT,
+			(SELECT VALUE BM, NAME MC FROM P_CODE WHERE CODE_TYPE = 'dblx' AND LANG = #appLang#) BJLX
+			<!-- 专变，公变情况下关联DA_ZD取出终端局号 -->
+			<!-- 
+			<isNotEqual property="yhlx" compareValue="03">
+				,DA_ZD ZD,DA_CLD CLD
+			</isNotEqual>
+			 -->
+			WHERE YH.HH = BJ.HH
+			AND YH.DWDM = BJ.DWDM
+			AND QZ.BJJH = BJ.BJJH
+			AND BJ.ZT = BJZT.BM
+			AND BJ.BJLX = BJLX.BM
+			<!-- 专变，公变情况下关联DA_ZD取出终端局号 -->
+			<!-- 
+			<isNotEqual property="yhlx" compareValue="03">
+				AND ZD.ZDJH = CLD.ZDJH
+				AND CLD.CLDJH = BJ.BJJH
+			</isNotEqual>
+			 -->
+			<isNotEmpty property="nodeId">
+				AND QZ.QZID = #nodeId#
+			</isNotEmpty>
+			<!-- ORDER BY YH.HH	 -->
+	   </isEqual>
+	</select>
+	
+	<!--查询 -->
+	<select id="countCxSb" parameterClass="java.util.HashMap"
+		resultClass="java.lang.Long">
+		SELECT 
+		  count(1)
+		FROM
+		  ar_meter m 
+		  LEFT JOIN ar_customer c 
+		    ON m.CNO = c.CNO 
+		WHERE 1=1 
+		<isNotEmpty property="bjjh">
+		    AND m.MSN LIKE concat('%', #bjjh#, '%')
+		</isNotEmpty>
+		<isNotEmpty property="hh">
+		    AND c.cno LIKE concat('%', #hh#, '%')
+		</isNotEmpty>
+		<isNotEmpty property="hm">
+		    AND c.CNAME LIKE concat('%', #hm#, '%')
+		</isNotEmpty>
+		<include refid='common.fwdwFilterN'/>
+	</select>
+
+	<select id="getCxSb" remapResults="true" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+	    SELECT 
+		  m.msn,
+		  m.STATUS msts,
+		  (SELECT 
+		    NAME 
+		  FROM
+		    p_code pc 
+		  WHERE pc.CODE_TYPE = 'mStatus' 
+		    AND pc.lang = #appLang#
+		    AND pc.value = m.STATUS) mstsn,
+		  m.CNO,
+		  c.CNAME 
+		FROM
+		  ar_meter m 
+		  LEFT JOIN ar_customer c 
+		    ON m.CNO = c.CNO 
+		WHERE 1=1 
+		<isNotEmpty property="bjjh">
+		    AND m.MSN LIKE concat('%', #bjjh#, '%')
+		</isNotEmpty>
+		<isNotEmpty property="hh">
+		    AND c.cno LIKE concat('%', #hh#, '%')
+		</isNotEmpty>
+		<isNotEmpty property="hm">
+		    AND c.CNAME LIKE concat('%', #hm#, '%')
+		</isNotEmpty>
+		<include refid='common.fwdwFilterN'/>
+	    <isNotEmpty property="pages">
+	   	 	limit #start#,#limit#
+	   </isNotEmpty>
+	</select>
+
+	<!--右键菜单权限 -->
+	<select id="getQxcd" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		SELECT (SELECT COUNT(*)
+			FROM QX_CD CD
+			WHERE SUBSTR(CD.URL, 1, INSTR(CD.URL, '!') - 1) = #actionName#) AS
+			ITEMCOUNT,
+			(SELECT COUNT(*)
+			FROM (SELECT SUBSTR(CD.URL, 1, INSTR(CD.URL, '!') - 1) AS ACTION
+			FROM QX_CD CD
+			WHERE EXISTS (SELECT 1
+			FROM Qx_Czyjs UR,
+			QX_JS R,
+			QX_JSCD RM,
+			QX_CD M
+			WHERE UR.JSID = R.JSID
+			and R.JSID = RM.JSID
+			and M.CDID = RM.CDID
+			and M.CDID = CD.CDID
+			AND UR.CZYID = #operatorId#
+			AND M.URL IS NOT NULL)) MN
+			WHERE MN.ACTION = #actionName#) AS CANACCESSCOUNT
+		FROM DUAL
+	</select>
+	
+	<!-- 根据终端号判断是否是集中器-->
+	<select id="queryZDLX" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		select t.zdlx
+		  from da_zd t
+		 where t.zdjh = #zdjh#
+	</select>
+	
+	
+		<!-- 变压器分线路 -->
+	<select id="getByqfxl" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap">
+		SELECT FXL.XLID AS DWBM,
+		       FXL.XLMC AS DWMC,
+		       FXL.DWDM AS DWDM,
+		       'byqfxl' AS TYPE,
+		       FXL.XH
+		  FROM G_BYQFXL FXL
+		 WHERE FXL.BYQID = #nodeId#
+		 ORDER BY FXL.XH
+    </select>
+    
+    
+    <!-- 查询单位代码   zhouh-->
+ 	 <select id="quyQxQy" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 	 	SELECT T.* FROM QX_QY T WHERE T.DWDM = #nodeId#
+ 	 </select>
+	
+</sqlMap>

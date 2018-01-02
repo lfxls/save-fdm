@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app>  
+<web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	<display-name>AmiWeb</display-name>
+	<!-- 临时文件收集器 , 支持超大附件必须项 --> 
+	<listener>  
+        <listener-class> 
+          org.apache.commons.fileupload.servlet.FileCleanerCleanup  
+        </listener-class>  
+    </listener>  
+    
+	 <context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			<!-- oracle -->
+			<!-- 
+			classpath*:res/spring/dao/ref/applicationContext-resources-oracle.xml, 
+			 -->
+			<!-- mysql -->
+			classpath*:res/spring/dao/ref/applicationContext-resources-mysql.xml,
+			classpath*:res/spring/dao/applicationContext-*.xml,
+			classpath*:res/spring/service/applicationContext-*.xml,
+			classpath*:res/spring/web/applicationContext-*.xml,
+		</param-value>
+	</context-param>
+	
+	 <context-param>
+		<param-name>ignoreURL</param-name>
+		<param-value>/jsp/init.jsp,/jsp/commonModule/login.jsp,/jsp/commonModule/nosession.jsp</param-value>
+	</context-param>
+	
+	<listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    
+    <!-- 解决quartz引起的内存泄漏  -->
+    <listener>
+	    <listener-class>
+	        org.springframework.web.util.IntrospectorCleanupListener
+	    </listener-class>
+	</listener>
+    
+    <listener>
+        <listener-class>cn.hexing.ami.web.listener.StartupListener</listener-class>
+    </listener>
+	
+      <!-- 压缩response 减少页码流，加速输出 -->
+	<filter>
+		<filter-name>gzipFilter</filter-name>
+		<filter-class>
+			net.sf.ehcache.constructs.web.filter.GzipFilter
+		</filter-class>
+	</filter>
+    
+	<!-- struts2.0 -->
+	<filter>
+           <filter-name>struts-cleanup</filter-name>
+          <filter-class>
+               org.apache.struts2.dispatcher.ActionContextCleanUp
+          </filter-class>
+      </filter>  
+      
+	<filter>
+		<filter-name>struts2</filter-name>
+		 <filter-class>
+           org.apache.struts2.dispatcher.FilterDispatcher
+        </filter-class>
+	</filter>
+
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	
+	 <filter>
+	  	  <filter-name>sessionFilter</filter-name>
+	      <filter-class>cn.hexing.ami.web.servlet.SessionFilter</filter-class>
+	      <init-param>
+	      	<param-name>loginPage</param-name>
+	      	<param-value>/jsp/commonModule/nosession.jsp</param-value>
+	      </init-param>
+   	 </filter>
+	
+	<filter-mapping>
+             <filter-name>gzipFilter</filter-name>
+             <url-pattern>*.css</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+            <filter-name>gzipFilter</filter-name>
+            <url-pattern>*.html</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+            <filter-name>gzipFilter</filter-name>
+            <url-pattern>*.js</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+           <filter-name>gzipFilter</filter-name>
+           <url-pattern>*.jsp</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+           <filter-name>gzipFilter</filter-name>
+           <url-pattern>*.gif</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+           <filter-name>gzipFilter</filter-name>
+           <url-pattern>*.jpg</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+           <filter-name>gzipFilter</filter-name>
+           <url-pattern>*.png</url-pattern>
+    </filter-mapping>
+	
+	<filter-mapping>
+           <filter-name>struts-cleanup</filter-name>
+           <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+	<filter-mapping>
+		<filter-name>struts2</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+  	<filter-mapping>   
+         <filter-name>sessionFilter</filter-name>   
+         <url-pattern>*.jsp</url-pattern>   
+     </filter-mapping>
+     
+     <filter-mapping>   
+         <filter-name>sessionFilter</filter-name>   
+         <url-pattern>*.servlet</url-pattern>   
+     </filter-mapping>
+
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>*.do</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>*.ajax</url-pattern>
+	</filter-mapping>
+	
+	<!-- dwr 配置 -->
+	<servlet>
+		<servlet-name>dwr-invoker</servlet-name>
+		<servlet-class>uk.ltd.getahead.dwr.DWRServlet</servlet-class>
+		<init-param>
+			<param-name>debug</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<!-- 跨越报错 -->
+		<init-param>   
+            <param-name>crossDomainSessionSecurity</param-name>   
+            <param-value>false</param-value>   
+        </init-param>
+        
+        <init-param>  
+          <param-name>allowScriptTagRemoting</param-name>  
+          <param-value>true</param-value>  
+        </init-param>
+        <init-param>
+          <param-name>activeReverseAjaxEnabled</param-name>
+          <param-value>true</param-value>
+        </init-param>
+	</servlet>
+	
+	<servlet>  
+    	<servlet-name>CXFServlet</servlet-name>  
+     	<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>  
+     	<load-on-startup>1</load-on-startup>  
+ 	</servlet>  
+ 	
+ 	<servlet-mapping>  
+    	<servlet-name>CXFServlet</servlet-name>  
+     	<url-pattern>/services/*</url-pattern>  
+ 	</servlet-mapping> 
+	
+	<servlet-mapping>
+		<servlet-name>dwr-invoker</servlet-name>
+		<url-pattern>/dwr/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<description></description>
+		<display-name>FCExporter</display-name>
+		<servlet-name>FCExporter</servlet-name>
+		<servlet-class>com.fusioncharts.exporter.servlet.FCExporter</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>FCExporter</servlet-name>
+		<url-pattern>/FCExporter</url-pattern>
+	</servlet-mapping>
+  
+	<welcome-file-list>
+		<welcome-file>/jsp/init.jsp</welcome-file>
+	</welcome-file-list>
+	
+	<session-config>
+    	<session-timeout>60</session-timeout>
+  	</session-config>
+  	
+  	<error-page>
+		<error-code>404</error-code>
+		<location>/jsp/commonModule/404.jsp</location>
+	</error-page>
+	
+	<error-page>
+		<error-code>403</error-code>
+		<location>/jsp/commonModule/403.jsp</location>
+	</error-page>
+	
+	<error-page>
+		<error-code>500</error-code>
+		<location>/jsp/commonModule/500.jsp</location>
+	</error-page>
+</web-app>

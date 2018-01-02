@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+	
+<sqlMap namespace="qzsz">
+	<sql id="qzGrid">
+	  FROM QZ_DY QZ LEFT JOIN QZ_MX MX ON QZ.QZID = MX.QZID , QX_QY DW
+       <isNotEqual property="czyid" compareValue="admin"> 
+      	  ,QX_CZY CZY
+       </isNotEqual>
+       
+		   WHERE QZ.DWDM = DW.DWDM
+		 
+	   <isNotEqual property="czyid" compareValue="admin"> 
+	       AND QZ.CZYID = CZY.CZYID
+	   </isNotEqual>
+	   
+		   AND (QZ.CZYID = #czyid# OR SFGX = '1')
+		   
+	  <isNotEmpty property="qzm">
+		 AND QZ.QZMC LIKE CONCAT('%', #qzm# ,'%')
+	  </isNotEmpty>
+	  <isEqual property="qzlx" compareValue="bj"> 
+   		 AND MX.ZDJH IS NULL
+	  </isEqual>
+	  <isEqual property="qzlx" compareValue="zd"> 
+   	 	 AND MX.BJJH IS NULL
+	  </isEqual>
+	  <isNotEmpty property="cjkssj">
+		 AND QZ.CJRQ &gt; str_to_date(#cjkssj#,'%Y-%m-%d')
+	  </isNotEmpty>
+	  <isNotEmpty property="cjjssj">
+	 	 AND QZ.CJRQ &lt; DATE_ADD(str_to_date(#cjjssj#,'%Y-%m-%d'), INTERVAL 1 DAY)
+	  </isNotEmpty>
+    </sql>
+	
+	<!-- 群组设置 具体信息获取-->
+	<select id="getQzGridCount"  parameterClass="java.util.HashMap"  resultClass="java.lang.Integer">
+		SELECT COUNT(DISTINCT QZ.QZID)
+		<include refid="qzsz.qzGrid"/>
+	</select>
+	
+	<!-- 群组设置 具体信息获取-->
+	<select id="getQzGridQuery"  parameterClass="java.util.HashMap"  resultClass="java.util.HashMap">
+		<include refid ="common.pagingTop"/>
+			SELECT DISTINCT QZ.QZID, QZ.QZMC,
+				 case when QZ.smzq = '0' then
+		         	(select name from p_code where code_type='qzzt' and lang=#appLang# and value='0')
+		         else
+		           <!--  to_char(to_date(TO_char(qz.cjrq, 'YYYY-MM-DD'), 'YYYY-MM-DD') + qz.smzq, 'YYYY-MM-DD') -->
+		            DATE_FORMAT(DATE_ADD(str_to_date(DATE_FORMAT(QZ.CJRQ, '%Y-%m-%d'), '%Y-%m-%d') , INTERVAL qz.smzq DAY ), '%Y-%m-%d')
+		         end SMZQ
+			<isEqual property="czyid" compareValue="admin"> 
+	      		 ,#czyid# AS CJR,
+	        </isEqual>
+	        <isNotEqual property="czyid" compareValue="admin"> 
+	       		,CZY.XM AS CJR,
+	        </isNotEqual>
+		       DW.DWMC,
+		       QZ.QZFL,
+		        (select name from p_code where code_type='sfbs' and lang = #appLang# and value=qz.sfgx)as sfgx,
+		        (select name from p_code where code_type='gjsjly' and lang = #appLang# and value=qz.qzfl)as qzflmc,
+		       qz.czyid,
+		       DATE_FORMAT(QZ.CJRQ, '%Y-%m-%d %H:%i:%s') AS CJSJ,
+			       <!-- 
+					NVL(DECODE(SMZQ, 0, (select name from p_code where code_type='qzzt' 
+					and lang=#appLang# and value='0'), SMZQ), (select name from p_code where 
+					code_type='qzzt' and lang=#appLang# and value='0')) AS SMZQ, 
+				  -->
+		  	   #qzlx# AS QZLX
+       <include refid="qzsz.qzGrid"/>
+        ORDER BY CJSJ DESC
+	   <include refid ="common.pagingBottom"/>
+	</select>
+	
+	<!--  查找群组名是否存在   -->
+	<select id = "qzmExsit" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT * FROM QZ_DY G
+		 WHERE G.QZMC = #qzm#
+	</select>
+	
+	<!-- 新建群组 -->
+	<insert id="insQzdy" parameterClass="java.util.HashMap">
+		<selectKey resultClass="java.lang.String" keyProperty="qzid">
+			SELECT Nextval('S_QZ_DY') FROM DUAL
+		</selectKey>
+		INSERT INTO QZ_DY(qzid,dwdm,qzmc,czyid,sfgx,cjrq,smzq,qzfl)
+		VALUES(#qzid#,#dwdm#,#qzm#,#czyid#,#sfgx#,now(),#smzq#,#qzfl#) 
+	</insert>
+	
+	<!--获取群组内设备信息-->
+	<sql id="getUpdateGridSql">
+		select m.zdjh,'sb' sblx from qz_mx m where m.qzid = #qzid# and m.zdjh is not null and m.zdjh != ''
+			union
+		select m.bjjh zdjh, 'bj' sblx from qz_mx m where m.qzid = #qzid# and m.bjjh is not null and m.bjjh != ''
+	</sql>
+	
+	<!-- 群组设置 根据qzid获取具体-->
+	<select id="getUpdateGridCount"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		select count(zdjh) from (
+			<include refid ="qzsz.getUpdateGridSql"/>
+		) a
+	</select>
+	
+	<!-- 群组设置 根据qzid获取具体-->
+	<select id="getUpdateGridQuery"  parameterClass="java.util.HashMap" remapResults="true" resultClass="java.util.HashMap">
+	   <include refid ="common.pagingTop"/>
+	   <include refid ="qzsz.getUpdateGridSql"/>
+	   <include refid ="common.pagingBottom"/>
+	</select>
+	
+	<!-- 群组 更新-->
+	<update id="saveQz"  parameterClass="java.util.HashMap">
+		UPDATE QZ_DY SET QZMC = #qzm#, SMZQ = #smzq#, sfgx=#sfgx# WHERE QZID = #qzid#
+	</update>
+	
+	<!-- 群组设置 删除用户-->
+	<delete id="delUser"  parameterClass="java.util.HashMap">
+		delete from QZ_MX WHERE QZID = #qzid#
+		<isEqual property="qzlx" compareValue="bj"> 
+			<isNotEmpty prepend="AND" property="zdjh">
+				BJJH
+				<iterate prepend="IN" open="(" close=")" property="zdjh" conjunction=",">
+					#zdjh[]#
+				</iterate>
+			</isNotEmpty>
+		</isEqual>
+		<isNotEqual property="qzlx" compareValue="bj"> 
+			<isNotEmpty prepend="AND" property="zdjh">
+				ZDJH
+				<iterate prepend="IN" open="(" close=")" property="zdjh" conjunction=",">
+					#zdjh[]#
+				</iterate>
+			</isNotEmpty>
+		</isNotEqual>
+	</delete>
+	
+	<!-- 群组设置 根据qzid获取明细-->
+	<select id="getQzDetail"  parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		SELECT QZID, QZMC, SFGX, 
+			CASE
+	         WHEN SMZQ = '0' THEN
+	           SMZQ
+	         ELSE
+	           DATE_FORMAT(DATE_ADD(str_to_date(DATE_FORMAT(QZ.CJRQ, '%Y-%m-%d'), '%Y-%m-%d') , INTERVAL QZ.SMZQ DAY ), '%Y-%m-%d')
+	         END SMZQ,
+			 QZFL FROM QZ_DY QZ
+		 WHERE QZ.QZID = #value#
+	</select>
+	
+	<!--  查找群组名是否存在   -->
+	<select id = "qzmExsits" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<!-- SELECT * FROM QZ_DY G WHERE G.QZMC = #qzm# and qzid <![CDATA[<>]]>#qzid# -->
+		SELECT * FROM QZ_DY G WHERE G.QZMC = #qzm# and qzid != #qzid#
+	</select>
+	
+	<!-- 表计档案查询 -->
+	<sql id="bjda">
+		<!-- 导入 -->
+		<isEqual property="type" compareValue="dr"> 
+		 	from da_bj bj 
+		 	       LEFT JOIN da_yh yh ON bj.hh = yh.hh AND bj.dwdm = yh.dwdm
+	               LEFT JOIN g_byq byq ON bj.byqid = byq.byqid
+	               LEFT JOIN da_cld cld bj.bjjh = cld.cldjh,
+	               qx_qy dw,
+	               qz_sj sj
+	         where
+	           and bj.syyt = '02'
+	           and bj.dwdm = dw.dwdm
+	           and bj.bjjh = sj.jh
+	           and sj.sjid = #sjid#
+	            <isNotEmpty property="bjjh">
+			  	 	AND BJ.bjjh LIKE CONCAT('%' , #bjjh# ,'%')
+			    </isNotEmpty>
+		</isEqual>
+	
+		<!-- 非导入 -->
+		<isNotEqual property="type" compareValue="dr">
+			 from da_bj bj 
+			 	   LEFT JOIN  da_yh  yh  ON  bj.hh = yh.hh AND bj.dwdm = yh.dwdm
+	               LEFT JOIN  g_byq  byq ON  bj.byqid = byq.byqid
+	               LEFT JOIN  da_cld cld ON  bj.bjjh = cld.cldjh 
+	               ,qx_qy dw
+	         where 1 > 0
+	           AND bj.syyt = '02'
+	           AND bj.dwdm = dw.dwdm
+			  <isNotEmpty property="bjzt">
+			  	 AND bj.zt = #bjzt#
+			  </isNotEmpty>
+	 		 <isNotEmpty property="bjlx">
+			  	 AND bj.BJLX = #bjlx#
+			  </isNotEmpty>
+			   <isNotEmpty property="csbm">
+			  	 AND bj.csbm = #csbm#
+			  </isNotEmpty>
+			   <isNotEmpty property="bjgylx">
+			  	 AND bj.txgy = #bjgylx#
+			  </isNotEmpty>
+			   <isNotEmpty property="bjms">
+			  	 AND BJ.BJms = #bjms#
+			  </isNotEmpty>
+			   <isNotEmpty property="jxfs">
+			  	 AND BJ.jxfs = #jxfs#
+			  </isNotEmpty>
+			  <isNotEmpty property="hyid">
+				 AND yh.hyid =#hyid#
+			  </isNotEmpty>
+			  <isNotEmpty property="ydsx">
+				 AND yh.ydsx =#ydsx#
+			  </isNotEmpty>
+			  <isNotEmpty property="gddy">
+				 AND yh.gddy =#gddy#
+			  </isNotEmpty>
+			  <isNotEmpty property="bjjh">
+			  	 AND BJ.bjjh  LIKE CONCAT('%' , #bjjh# , '%')
+			  </isNotEmpty>
+			  <isNotEmpty property="yhh">
+			  	 AND UPPER(yh.hh)  LIKE CONCAT('%' , UPPER(#yhh#) , '%')
+			  </isNotEmpty>
+			  <isNotEmpty property="yhm">
+			  	 AND UPPER(yh.hm)  LIKE CONCAT('%' , UPPER(#yhm#) , '%')
+			  </isNotEmpty>
+			  <include refid="common.nodeFilter"/>
+		  </isNotEqual>
+		  order by BJ.BJJH
+	</sql>
+	<select id="bjdaCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(BJ.BJJH) 
+		<include refid='qzsz.bjda'/>
+	</select>
+	<select id="bjdaQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true" >
+	    <include refid='common.pagingTop'/>
+			select dw.dwdm, dw.dwmc, yh.hh, yh.hm, yh.yhlx, yh.yhdz, cld.zdjh, bj.bjjh, bj.bjazdz,
+               (select name from p_code where code_type = 'dblx' and lang = #appLang# and value = bj.bjlx) bjlxmc, bj.bjlx,
+               (select name from p_code where code_type = 'dbzt' and lang = #appLang# and value = bj.zt) bjztmc, bj.zt,
+               (select name from p_code where code_type = 'dbgylx' and lang = #appLang# and value = bj.txgy) txgymc, bj.txgy,
+               (select name from p_code where code_type = 'jxfs' and lang = #appLang# and value = bj.jxfs) jxfsmc, bj.jxfs,
+               (select name from p_code where code_type = 'bjms' and lang = #appLang# and value = bj.bjms) bjmsmc, bj.bjms,
+               (select name from p_code where code_type = 'ydsx' and lang = #appLang# and value = yh.ydsx) ydsxmc,
+			   (select t.hymc from p_hy t where hyid = yh.hyid and lang = #appLang# ) hymc,
+               (select name from p_code where code_type = 'bjcs' and lang = #appLang# and value = bj.csbm) bjcsmc
+ 		 <include refid='qzsz.bjda'/>
+		 <include refid='common.pagingBottom'/>
+		 <include refid="common.pagingSort"/>
+	</select>
+	
+	
+	<!-- 取行业-->
+	<select id="getHyTree" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT T.HYID, T.HYMC, (SELECT COUNT(HY.HYID) FROM P_HY HY WHERE SJHYID = T.HYID) LEAF
+		FROM P_HY T	
+		WHERE SJHYID = #sjhyid#
+		AND HYID != SJHYID
+		AND LANG = #appLang#
+		ORDER BY XH
+ 	 </select>
+
+	<!-- 取用电属性-->
+	<select id="getYdsxTree" parameterClass="java.util.HashMap"	resultClass="java.util.HashMap">
+		SELECT VALUE AS BM, NAME AS MC FROM P_CODE WHERE CODE_TYPE = 'ydsx' AND LANG = #appLang# AND ISSHOW = '1'
+ 	</select>
+ 	
+ 	<!-- 查询群组 -->
+ 	<select id="getQzMc" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT DISTINCT QZ.QZID AS BM, QZ.QZMC AS MC FROM QZ_DY QZ
+	     WHERE QZ.CZYID =#czyid# 
+	</select>
+	
+	<!--查询共享并且没有过期的群组	-->
+	<sql id="DetailQz">
+		 FROM QZ_DY QZ
+		  <isNotEqual property="czyid" compareValue="admin"> 
+	       	,QX_CZY CZY
+	      </isNotEqual>
+		 	WHERE (QZ.CZYID = #czyid# OR SFGX = '1')
+		 	
+		  <isNotEqual property="czyid" compareValue="admin"> 
+		       AND QZ.CZYID = CZY.CZYID
+		  </isNotEqual>
+		 	<!-- and (to_date(to_char(to_date(TO_char(qz.cjrq, 'YYYY-MM-DD'), 'YYYY-MM-DD') + qz.smzq, 'YYYY-MM-DD'), 'YYYY-MM-DD') -->
+		 	AND 
+		 	(
+			 	STR_TO_DATE(DATE_FORMAT(DATE_ADD(str_to_date(DATE_FORMAT(QZ.CJRQ, '%Y-%m-%d'), '%Y-%m-%d') , INTERVAL QZ.SMZQ DAY ),
+			 	 '%Y-%m-%d'), '%Y-%m-%d')
+			  	  <![CDATA[>]]> 
+			  	STR_TO_DATE(DATE_FORMAT(NOW(), '%Y-%m-%d'), '%Y-%m-%d') 
+			  	
+			 		OR
+			 		
+			 	STR_TO_DATE(DATE_FORMAT(DATE_ADD(str_to_date(DATE_FORMAT(QZ.CJRQ, '%Y-%m-%d'), '%Y-%m-%d') , INTERVAL QZ.SMZQ DAY ), 
+			 	'%Y-%m-%d'), '%Y-%m-%d')
+			 	   = 
+			 	STR_TO_DATE(DATE_FORMAT(QZ.CJRQ, '%Y-%m-%d'), '%Y-%m-%d')
+		   )
+		 	
+		  <isNotEmpty property="qzm">
+				AND QZ.QZMC  LIKE CONCAT('%' , #qzm# , '%')
+		  </isNotEmpty>
+		 ORDER BY QZ.CZYID, SFGX
+	</sql>
+	<select id="queryDetailQzQuery"  parameterClass="java.util.HashMap" remapResults="true" resultClass="java.util.HashMap">
+		<include refid ="common.pagingTop"/>
+			SELECT QZID, QZMC,  QZ.CZYID, DATE_FORMAT(QZ.CJRQ, '%Y-%m-%d %H:%i:%s') AS CJSJ, QZFL, 
+	        	(SELECT NAME FROM P_CODE WHERE CODE_TYPE ='sfbs' AND LANG=#appLang# AND VALUE=QZ.SFGX) AS SFGX,
+	        
+	       CASE
+	         WHEN SMZQ = '0' THEN
+	         	(SELECT NAME FROM P_CODE WHERE CODE_TYPE='qzzt' AND LANG=#appLang# AND VALUE='0')
+	         ELSE
+	          DATE_FORMAT(DATE_ADD(str_to_date(DATE_FORMAT(QZ.CJRQ, '%Y-%m-%d'), '%Y-%m-%d') , INTERVAL QZ.SMZQ DAY ), '%Y-%m-%d')
+	       END SMZQ
+        <include refid ="qzsz.DetailQz"/>
+	    <include refid ="common.pagingBottom"/>
+   </select>
+   <select id="queryDetailQzCount"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	  select count(*)
+	  	<include refid ="qzsz.DetailQz"/>
+   </select>
+   
+   <!-- 群组 更新-->
+   <update id="updateQzfl"  parameterClass="java.util.HashMap">
+		UPDATE QZ_DY SET qzfl=#qzfl# WHERE QZID = #qzid#
+   </update>
+   
+   <!-- 新建群组明细 -->
+   <insert id="insQzmx" parameterClass="java.util.HashMap">
+		INSERT INTO QZ_MX VALUES(#qzid#,#hhIns#,#zdjhIns#,#bjjhIns#) 
+   </insert>
+   
+   <!-- 查询群组、设备是否有数据 -->
+   <select id="queryQzMxExist" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+   		SELECT COUNT(T.QZID) FROM QZ_MX T WHERE T.QZID = #qzid# 
+   		<isEqual property="qzlx" compareValue="bj"> 
+   		   AND T.BJJH = #jh#
+		</isEqual>
+		<isNotEqual property="qzlx" compareValue="bj"> 
+		   AND T.ZDJH = #jh# 
+		</isNotEqual>
+   </select>
+   
+   	<!-- 获取序列 -->
+	<select id="getSeq" resultClass="java.lang.String">
+		SELECT NEXTVAL('S_QZ_DY') FROM DUAL
+	</select>
+	
+	<!-- 删除群组审计 -->
+	<delete id="delsj" >
+	    delete from QZ_SJ
+	</delete>
+	
+     <!-- 新建群组审计 -->
+	<insert id="insQzsj" parameterClass="java.util.HashMap">
+		INSERT INTO QZ_SJ(sjid,jh) VALUES(#sjid#,#jh#) 
+	</insert>
+	
+	<!-- 群组设置 具体信息获取-->
+<!-- 	
+	<select id="getQzGridQuery"  parameterClass="java.util.HashMap"  resultClass="java.util.HashMap">
+		<include refid ="common.pagingTop"/>
+		SELECT DISTINCT QZ.QZID,
+		       QZMC
+		       <isEqual property="czyid" compareValue="admin"> 
+		       ,#czyid# AS CJR,
+		       </isEqual>
+		       <isNotEqual property="czyid" compareValue="admin"> 
+		       ,CZY.XM AS CJR,
+		       </isNotEqual>
+		       DW.DWMC,
+		       QZ.QZFL,
+	 YHLX.NAME AS YHLXMC,
+		       DATE_FORMAT(QZ.CJRQ, '%Y-%m-%d %H:%i:%s') AS CJSJ,
+		       IFNULL(
+		       	CASE SMZQ WHEN 0 THEN (select name from p_code where code_type='qzzt' and lang=#appLang# and value='0')
+		       	ELSE SMZQ
+		       , (select name from p_code where code_type='qzzt' and lang=#appLang# and value='0')) AS SMZQ,
+		  	   #qzlx# AS QZLX
+		  FROM QZ_DY QZ LEFT JOIN QZ_MX MX ON MX.QZID = QZ.QZID,QX_QY DW,(SELECT * FROM P_CODE T WHERE T.CODE_TYPE = 'yhlx' and lang=#appLang#) YHLX
+		       <isNotEqual property="czyid" compareValue="admin"> 
+		       ,QX_CZY CZY
+		       </isNotEqual>
+		 WHERE QZ.DWDM = DW.DWDM
+		   <isNotEqual property="czyid" compareValue="admin"> 
+		       AND QZ.CZYID = CZY.CZYID
+		   </isNotEqual>
+		   AND QZ.CZYID = #czyid#
+		 <isNotEmpty property="qzm">
+			 AND QZ.QZMC LIKE CONCAT('%',#qzm#,'%')
+		 </isNotEmpty>
+		 AND YHLX.VALUE = QZ.QZFL
+		 <isEqual property="qzlx" compareValue="bj"> 
+       		 AND MX.ZDJH IS NULL
+		 </isEqual>
+		 <isEqual property="qzlx" compareValue="zd"> 
+       		 AND MX.BJJH IS NULL
+		 </isEqual>
+		 <isNotEmpty property="cjkssj">
+			 AND QZ.CJRQ &gt; str_to_date(#cjjssj#,'%Y-%m-%d')
+		 </isNotEmpty>
+		 <isNotEmpty property="cjjssj">
+			 AND QZ.CJRQ &lt; DATE_ADD(str_to_date(#cjjssj#,'%Y-%m-%d'), INTERVAL 1 DAY)
+		 </isNotEmpty>
+	     ORDER BY CJSJ DESC
+	   <include refid ="common.pagingBottom"/>
+	</select>
+ -->	
+	
+	<!-- 群组设置 根据qzid获取具体-->
+<!-- 	
+	<select id="getUpdateGridCount"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	     <isEqual property="qzlx" compareValue="bj"> 
+			SELECT COUNT(QZ.BJJH)
+			FROM QZ_MX QZ,DA_YH YH,DA_BJ BJ
+		  	WHERE YH.HH = BJ.HH AND YH.DWDM = BJ.DWDM AND YH.HH = QZ.HH AND BJ.BJJH = QZ.BJJH
+	     </isEqual>
+	     <isNotEqual property="qzlx" compareValue="bj"> 
+			SELECT COUNT(QZ.ZDJH)
+			FROM QZ_MX QZ,DA_YH YH,DA_ZD ZD
+		  	WHERE YH.HH = ZD.HH AND YH.DWDM = ZD.DWDM AND YH.HH = QZ.HH AND ZD.ZDJH = QZ.ZDJH
+	     </isNotEqual>
+	   	  <isNotEmpty property="hh">
+	   		   AND YH.HH = #hh#
+	      </isNotEmpty>
+	   	  <isNotEmpty property="hm">
+	   		   AND YH.HM LIKE '%' || #hm# || '%'
+	   	  </isNotEmpty>
+		  AND QZ.QZID = #qzid#
+		  AND YH.YHLX = #qzfl#
+	</select>
+	<select id="getUpdateGridQuery"  parameterClass="java.util.HashMap" remapResults="true" resultClass="java.util.HashMap">
+	   <include refid ="common.pagingTop"/>
+	    <isEqual property="qzfl" compareValue="04"> 
+			SELECT QZ.BJJH AS ZDJH,QZ.HH,YH.HM
+			FROM QZ_MX QZ,DA_YH YH,DA_BJ BJ
+		  	WHERE YH.HH = BJ.HH AND YH.DWDM = BJ.DWDM AND YH.HH = QZ.HH AND BJ.BJJH = QZ.BJJH
+	    </isEqual>
+	     <isNotEqual property="qzfl" compareValue="04"> 
+			SELECT QZ.ZDJH,QZ.HH,YH.HM, ZDLJDZ
+			FROM QZ_MX QZ,DA_YH YH,DA_ZD ZD
+		  	WHERE YH.HH = ZD.HH AND YH.DWDM = ZD.DWDM AND YH.HH = QZ.HH AND ZD.ZDJH = QZ.ZDJH
+	    </isNotEqual>
+	   	  <isNotEmpty property="hh">
+	   		   AND YH.HH = #hh#
+	      </isNotEmpty>
+	   	  <isNotEmpty property="hm">
+	   		   AND YH.HM LIKE CONCAT('%', #hm# ,'%')
+	   	  </isNotEmpty>
+		  AND QZ.QZID = #qzid#
+		  AND YH.YHLX = #qzfl#
+	   <include refid ="common.pagingBottom"/>
+	</select>
+	 -->
+	
+	<!-- 根据户号，户名查找当前权限下的用户-->
+	<select id="queryForYhCount"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	  <isEqual property="qzlx" compareValue="bj"> 
+		SELECT COUNT(BJ.BJJH)
+		FROM DA_YH YH,DA_BJ BJ
+	  	WHERE YH.HH = BJ.HH AND YH.DWDM = BJ.DWDM 
+      </isEqual>
+      <isNotEqual property="qzlx" compareValue="04"> 
+		SELECT COUNT(ZD.ZDJH)
+		FROM DA_YH YH,DA_ZD ZD
+	  	WHERE YH.HH = ZD.HH AND YH.DWDM = ZD.DWDM 
+      </isNotEqual>
+   	  <isNotEmpty property="hh">
+   		   AND YH.HH = #hh#
+      </isNotEmpty>
+   	  <isNotEmpty property="hm">
+   		   AND YH.HM LIKE CONCAT('%' , #hm# , '%')
+   	  </isNotEmpty>
+   	  AND YH.YHLX = #qzfl#
+	  <include refid = "common.fwdwFilter"/>
+	</select>
+	
+	<!-- 根据户号，户名查找当前权限下的用户-->
+	<select id="queryForYhQuery"  parameterClass="java.util.HashMap" remapResults="true" resultClass="java.util.HashMap">
+	   <include refid ="common.pagingTop"/>
+		  <isEqual property="qzlx" compareValue="bj"> 
+			SELECT BJ.BJJH AS ZDJH,YH.HH,YH.HM
+			FROM DA_YH YH,DA_BJ BJ
+		  	WHERE YH.HH = BJ.HH AND YH.DWDM = BJ.DWDM 
+	      </isEqual>
+	      <isNotEqual property="qzlx" compareValue="bj"> 
+			SELECT ZD.ZDJH,YH.HH,YH.HM, ZDLJDZ
+			FROM DA_YH YH,DA_ZD ZD
+		  	WHERE YH.HH = ZD.HH AND YH.DWDM = ZD.DWDM 
+	      </isNotEqual>
+	   	  <isNotEmpty property="hh">
+	   		   AND YH.HH = #hh#
+	      </isNotEmpty>
+	   	  <isNotEmpty property="hm">
+	   		   AND YH.HM LIKE CONCAT('%' , #hm# , '%')
+	   	  </isNotEmpty>
+	   	  AND YH.YHLX = #qzfl#
+		  <include refid = "common.fwdwFilter"/>
+	   <include refid ="common.pagingBottom"/>
+	</select>
+	
+	<!--群组 -->
+	<sql id="zdxx">
+		<isEqual property="type" compareValue="dr">
+			 FROM DA_ZD ZD LEFT JOIN G_BYQ BYQ ON ZD.BYQID = BYQ.BYQID
+			 LEFT JOIN DA_YH YH ON  ZD.HH =YH.HH, QX_QY DW,qz_sj sj
+				WHERE ZD.DWDM = DW.DWDM
+		    	 and ZD.zdjh=sj.jh
+		       and sj.sjid=#sjid#
+		       <isNotEmpty property="zdjh">
+				  	 AND zd.zdjh  LIKE CONCAT('%', #zdjh# , '%')
+			   </isNotEmpty>
+		</isEqual>
+	
+		<isNotEqual property="type" compareValue="dr">
+			<!-- 01：在线，02：不在线 -->
+			<isEqual property="zxzt" compareValue="01">
+			FROM DA_ZD ZD LEFT JOIN G_BYQ BYQ ON ZD.BYQID = BYQ.BYQID
+			LEFT JOIN DA_YH YH ON ZD.HH =YH.HH, QX_QY DW, tx_zxqk zxqk
+			WHERE ZD.DWDM = DW.DWDM
+				and zxqk.zdljdz = zd.zdljdz
+				and greatest(IFNULL(zxqk.zjxtsj, zxqk.zjgprssxsj), IFNULL(zxqk.zjgprssxsj, zxqk.zjxtsj)) <![CDATA[ >  ]]>
+				NOW() - #zxsj# / 1440
+			</isEqual>
+			<isNotEqual property="zxzt" compareValue="01">
+			FROM DA_ZD ZD LEFT JOIN G_BYQ BYQ ON ZD.BYQID = BYQ.BYQID
+			LEFT JOIN DA_YH YH ON ZD.HH =YH.HH 
+			LEFT JOIN tx_zxqk zxqk ON  ZD.zdljdz=zxqk.zdljdz,QX_QY DW
+			WHERE ZD.DWDM = DW.DWDM
+				and ZD.zdljdz not in
+				(select zdljdz from
+				tx_zxqk where
+				greatest(IFNULL(zjxtsj,
+				zjgprssxsj),
+				IFNULL(zjgprssxsj,
+				zjxtsj)) <![CDATA[ >  ]]>
+				NOW() - #zxsj# / 1440)
+			</isNotEqual>
+			<isNotEmpty property="csbm">
+				AND zd.zzcjbm =#csbm#
+			</isNotEmpty>
+			<isNotEmpty property="zdlx">
+				AND zd.zdlx =#zdlx#
+			</isNotEmpty>
+			<isNotEmpty property="cjfs">
+				AND zd.cjfs =#cjfs#
+			</isNotEmpty>
+			<isNotEmpty property="zdgylx">
+				AND zd.zdgylx =#zdgylx#
+			</isNotEmpty>
+			<isNotEmpty property="zdzt">
+				AND zd.zt =#zdzt#
+			</isNotEmpty>
+			 <isNotEmpty property="zdjh">
+			  	 AND zd.zdjh  LIKE CONCAT('%' , #zdjh# , '%')
+			  </isNotEmpty>
+			<include refid='common.nodeFilter' />
+		</isNotEqual>
+	</sql>
+	<select id="getZdxxQuery"  parameterClass="java.util.HashMap" remapResults="true" resultClass="java.util.HashMap">
+	   <include refid ="common.pagingTop"/>
+		select zd.zdjh zdjh,
+		zd.zdljdz zdljdz,
+		DW.DWDM,
+		DW.DWMC,
+		(SELECT NAME
+		FROM P_CODE
+		WHERE CODE_TYPE = 'zdlx'
+		AND LANG = #appLang#
+		and value = zd.zdlx) zdlx,
+		(SELECT NAME
+		FROM P_CODE
+		WHERE CODE_TYPE = 'bjcs'
+		AND LANG = #appLang#
+		and value = zd.zzcjbm) zzcjbm,
+		(SELECT NAME
+		FROM P_CODE
+		WHERE CODE_TYPE = 'zdzt'
+		AND LANG = #appLang#
+		and value = zd.zt) zdzt,
+		(SELECT NAME
+		FROM P_CODE
+		WHERE CODE_TYPE = 'zdgylx'
+		AND LANG = #appLang#
+		and value = zd.zdgylx) zdgylx,
+		(SELECT NAME
+		FROM P_CODE
+		WHERE CODE_TYPE = 'cjfs'
+		AND LANG = #appLang#
+		and value = zd.cjfs) cjfs
+		<include refid="qzsz.zdxx" />
+		<include refid='common.pagingBottom' />
+		<include refid="common.pagingSort" />
+	</select>
+	<select id="getZdxxCount" parameterClass="java.util.HashMap"
+		resultClass="java.lang.Integer">
+		select COUNT (*)
+		<include refid="qzsz.zdxx" />
+	</select>
+	
+	<select id="getextjh" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		 select * from qz_mx where qzid=#qzid# 
+		 <isEqual compareValue="zd" property="qzlx">
+		  and zdjh=#jh#
+		 </isEqual>
+		 <isNotEqual compareValue="zd" property="qzlx">
+		 and bjjh=#jh#
+		 </isNotEqual>
+	</select>
+	
+</sqlMap>

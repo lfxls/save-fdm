@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	 
+    <package name="struts-base" namespace="/" extends="struts-default">
+        <interceptors>
+            <interceptor name="sessionCheck" class="sessionIntercept"></interceptor>
+            <interceptor name="logger" class="loggerInterceptor"></interceptor>
+            <interceptor name="exception" class="exceptionIntercept"></interceptor>
+            <interceptor-stack name="baseStack">
+                <interceptor-ref name="defaultStack">
+                	<param name="exception.logEnabled">true</param>   
+  					<param name="exception.logLevel">error</param>     
+                </interceptor-ref>
+                <interceptor-ref name="sessionCheck"></interceptor-ref>
+                <interceptor-ref name="logger"></interceptor-ref>
+                <interceptor-ref name="exception"></interceptor-ref>
+            </interceptor-stack>
+        </interceptors>
+        
+        <default-interceptor-ref name="baseStack"></default-interceptor-ref>
+        <global-results>
+        	 <result name="errorPage" type="redirectAction">
+                <param name="actionName">error!initError</param>
+                <param name="namespace">/</param>
+            </result>
+            <result name="nosession" type="redirectAction">
+                <param name="actionName">error!initNoSession</param>
+                <param name="namespace">/</param>
+            </result>
+        </global-results>
+        <global-exception-mappings>
+            <exception-mapping result="errorPage" exception="java.lang.Exception"></exception-mapping>
+            <exception-mapping result="errorPage" exception="java.lang.Throwable"></exception-mapping>    
+        </global-exception-mappings>
+    </package>
+    
+    <package name="default"  namespace="/" extends="struts-default">
+    	<default-action-ref name="notfound"></default-action-ref> 
+        <!--登录-->
+        <action name="login" class="loginAction">
+            <result name="init">/jsp/commonModule/login.jsp</result>
+            <result name="view" type="redirectAction">
+                <param name="actionName">view!init</param>
+                <param name="namespace">/</param>
+            </result>
+        </action>
+        
+         <!--出错-->
+        <action name="error" class="loginAction">
+            <result name="initNoSession">/jsp/commonModule/nosession.jsp</result>
+            <result name="initNoRight">/jsp/commonModule/noright.jsp</result>
+            <result name="error">/jsp/commonModule/error.jsp</result>
+        </action>
+        
+   		<action name="notfound" class="com.opensymphony.xwork2.ActionSupport">
+    		<result>/jsp/commonModule/404.jsp</result>
+   		</action>
+    </package>
+    
+    <package name="index" namespace="/" extends="struts-base">
+    	
+    	<action name="todo" class="todoAction">
+            <result>/jsp/commonModule/todo.jsp</result>
+        </action>
+        
+        <!-- 主页框架 -->
+        <action name="view" class="viewAction">
+            <result>/jsp/commonModule/view.jsp</result>
+            <result name="dtm">/jsp/commonModule/dtmView.jsp</result>
+            <result name="changeMenu" type="redirectAction">
+                <param name="actionName">view!init</param>
+                <param name="namespace">/</param>
+            </result>
+            <result name="main" type="redirectAction">
+                <param name="actionName">mainPage!init</param>
+                <param name="namespace">/</param>
+            </result>
+            <result name="left" type="redirectAction">
+                <param name="actionName">leftTree!init</param>
+                <param name="namespace">/</param>
+            </result>
+            <result name="leftS" type="redirectAction">
+                <param name="actionName">leftTree!initS</param>
+                <param name="namespace">/</param>
+            </result>
+            <result name="shortCuts">/jsp/commonModule/shortCuts.jsp</result>
+            <result name="down">/jsp/commonModule/down.jsp</result>
+        </action>
+        
+         <!-- 主页-->
+        <action name="mainPage" class="mainPageAction">
+            <result>/jsp/commonModule/mainPage.jsp</result>
+            <result name="CaiMain">/jsp/commonModule/CaimainPage.jsp</result>
+             <result name="MdMsy">/jsp/commonModule/mainMdmPage.jsp</result>
+             <result name="MdCsy">/jsp/commonModule/mainMdcPage.jsp</result>
+        </action>
+        
+        <!-- 左边树 -->
+        <action name="leftTree" class="leftTreeAction">
+            <result name="sb">/jsp/commonModule/left/leftDw.jsp</result>
+            <result name="bj">/jsp/commonModule/left/leftBj.jsp</result>
+            <result name="qz">/jsp/commonModule/left/leftQz.jsp</result>
+            <result name="cx">/jsp/commonModule/left/leftCx.jsp</result>
+            <result name="adv">/jsp/commonModule/left/advQuery.jsp</result>
+            <result name="leftS">/jsp/commonModule/left/leftS.jsp</result>
+            <result name="leftSBj">/jsp/commonModule/left/leftSBj.jsp</result>
+            <result name="leftSCx">/jsp/commonModule/left/leftSCx.jsp</result>
+        </action>
+        
+        <!--公共-->
+        <action name="common" class="commonAction">
+        	<result>/jsp/commonModule/dwDetail.jsp</result>
+        </action>
+        
+        <!--公共组件-->
+        <action name="util" class="commonAction">
+        	<result name="initTree">/jsp/commonModule/util/tree.jsp</result>
+        </action>
+        
+        <!-- 群组 -->
+        <action name="qz" class="qzAction">
+            <result name="qzDetail">/jsp/commonModule/qz/qz.jsp</result>
+        </action>
+        
+        <!-- 群组设置 -->
+        <action name="qzsz" class="qzszAction">
+        	<result>/jsp/commonModule/qz/qzsz.jsp</result>
+        	<result name="newGroup">/jsp/commonModule/qz/qzNew.jsp</result>
+            <result name="updateQz">/jsp/commonModule/qz/updateQzDetail.jsp</result>
+            <result name="mdm_qzzd">/jsp/commonModule/qz/mdm_qzzd.jsp</result><!-- 本地抄表系统不用 -->
+            <result name="mdm_qzbj">/jsp/commonModule/qz/mdm_qzbj.jsp</result>
+            <result name="mdm_jrqz">/jsp/commonModule/qz/mdm_jrqz.jsp</result>
+            <result name="qzpldr">/jsp/commonModule/qz/mdm_qzdr.jsp</result>
+            <result name="tree">/jsp/commonModule/qz/tree.jsp</result>
+        </action>
+    </package>
+</struts>

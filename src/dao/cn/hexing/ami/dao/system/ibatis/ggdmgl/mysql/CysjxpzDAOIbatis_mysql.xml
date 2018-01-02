@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="cysjxpz">
+	<!-- 常用数据项查询-->
+	<sql id="cysjx">
+		  from p_sszccysj cysjx,
+		       (select zgbm sjxbm, sjxmc, lang
+		          from p_zgsjx
+		        union
+		        select gwbm sjxbm, sjxmc, lang
+		          from p_gwsjx
+		        union
+		        select sjxbm, sjxmc, lang
+		          from p_ansi
+		        union
+		        select ggbm sjxbm, sjxmc, lang
+		          from p_ggsjx
+		        union
+		        select item_id sjxbm, item_name sjxmc, lang from dlms_params_name) sjx1
+		 where cysjx.sjxbm = sjx1.sjxbm
+		 	<isNotEmpty property="gylx">
+		 		and cysjx.gylx = #gylx#
+		 	</isNotEmpty>
+		 	<isNotEmpty property="sjxmc">
+		 		and sjx1.sjxmc like CONCAT('%', #sjxmc# , '%')
+		 	</isNotEmpty>
+		 	<isNotEmpty property="sjxbm">
+		 		and cysjx.sjxbm like CONCAT('%' ,  #sjxbm# , '%')
+		 	</isNotEmpty>
+		 	<isNotEmpty property="appLang">
+		 		and sjx1.lang = #appLang#
+		 	</isNotEmpty>
+	</sql>
+	
+	<select id="cysjxCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		select count(*) 
+		<include refid='cysjxpz.cysjx'/>
+	</select>
+	
+	<select id="cysjxQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true" >
+	    <include refid='common.pagingTop'/>
+	    select cysjx.gylx, cysjx.sjxbm, sjx1.sjxmc,
+	       (select p.name from p_code p
+	         where p.code_type = 'zdgylx'
+	           and p.lang = #appLang#
+	           and p.value = cysjx.gylx) as gylxmc
+			<include refid='cysjxpz.cysjx'/>
+		 <include refid='common.pagingBottom'/>
+		 <include refid="common.pagingSort"/>
+	</select>
+	
+	<!-- 数据项查询-->
+	<sql id="sjx">
+		  from (select zgbm sjxbm, sjxmc, lang, '01' gylx, CONCAT(sjlxid , '') flid
+		          from p_zgsjx
+		         where sfxs = '1' and sjlxid is not null
+		        union
+		        select gwbm sjxbm, sjxmc, lang, '02' gylx, CONCAT(sjlxid , '') flid
+		          from p_gwsjx
+		         where sfxs = '1' and sjlxid is not null
+		        union
+		        select sjxbm, sjxmc, lang, '06' gylx, CONCAT(sjlxid , '') flid
+		          from p_ansi
+		         where sfxs = '1' and sjlxid is not null
+		        union
+		        select ggbm sjxbm, sjxmc, lang, '04' gylx, CONCAT(sjlxid , '') flid
+		          from p_ggsjx
+		         where sfxs = '1' and sjlxid is not null
+		        union
+		        select mc.item_id   sjxbm,
+		               mc.item_name sjxmc,
+		               mc.lang,
+		               '03' gylx,
+		               sjxbm.item_sort flid
+		          from dlms_params sjxbm, dlms_params_name mc
+		         where sjxbm.item_id = mc.item_id and sjxbm.isshow = '1') sjx
+		       where 
+		       NOT EXISTS
+		       (
+		       select cysjx.gylx, cysjx.sjxbm, sjx.sjxmc,
+	          (select p.name from p_code p
+	         where p.code_type = 'zdgylx'
+	           and p.lang = #appLang#
+	           and p.value = cysjx.gylx) as gylxmc
+		       
+		        <include refid='cysjxpz.cysjx'/>
+		        
+		         
+		        
+		        AND  sjx.sjxbm = sjx1.sjxbm
+                AND sjx.gylx = cysjx.gylx
+                AND sjx.sjxmc = sjx1.sjxmc
+                )
+		     and 1 = 1
+		 	<isNotEmpty property="gylx">
+		 		and sjx.gylx = #gylx#
+		 	</isNotEmpty>
+		 	<isNotEmpty property="sjxmc">
+		 		and sjx.sjxmc like CONCAT('%' , #sjxmc# , '%')
+		 	</isNotEmpty>
+		 	<isNotEmpty property="sjxbm">
+		 		and sjx.sjxbm like CONCAT('%' ,  #sjxbm# , '%')
+		 	</isNotEmpty>
+		 	<isNotEmpty property="appLang">
+		 		and sjx.lang = #appLang#
+		 	</isNotEmpty>
+		 	   
+		 	
+	</sql>
+	
+	<select id="sjxCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		select count(*) 
+		<include refid='cysjxpz.sjx'/>
+	</select>
+	
+	<select id="sjxQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true" >
+	    <include refid='common.pagingTop'/>
+	    select sjx.gylx, sjx.sjxbm, sjx.sjxmc, sjx.flid,
+	       (select p.name from p_code p
+	         where p.code_type = 'zdgylx'
+	           and p.lang = #appLang#
+	           and p.value = #gylx#) as gylxmc
+			<include refid='cysjxpz.sjx'/>
+			
+		 <include refid='common.pagingBottom'/>
+		 <include refid="common.pagingSort"/>
+	</select>
+	
+	<select id="getCysjxBySjxbm" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		select count(*) from p_sszccysj cysjx,
+		       (select zgbm sjxbm, sjxmc, lang
+		          from p_zgsjx
+		        union
+		        select gwbm sjxbm, sjxmc, lang
+		          from p_gwsjx
+		        union
+		        select sjxbm, sjxmc, lang
+		          from p_ansi
+		        union
+		        select ggbm sjxbm, sjxmc, lang
+		          from p_ggsjx
+		        union
+		        select item_id sjxbm, item_name sjxmc, lang from dlms_params_name) sjx
+		 where cysjx.sjxbm = sjx.sjxbm
+		 	<isNotEmpty property="gylx">
+		 		and cysjx.gylx = #gylx#
+		 	</isNotEmpty>
+		 	<isNotEmpty property="sjxbm">
+		 		and cysjx.sjxbm =  #sjxbm# 
+		 	</isNotEmpty>
+		 	<isNotEmpty property="appLang">
+		 		and sjx.lang = #appLang#
+		 	</isNotEmpty>
+	</select>
+	
+	<delete id="delSjx" parameterClass="java.util.HashMap">
+		delete from p_sszccysj where gylx = #gylx# and sjxbm = #sjxbm#
+	</delete>
+	
+	<update id="addSjx" parameterClass="java.util.HashMap">
+		insert into p_sszccysj values(#gylx#, #flid#, #sjxbm#, #xh#)
+	</update>
+</sqlMap>

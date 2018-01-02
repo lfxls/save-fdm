@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="jggl">
+
+	 <!-- 取下级机构 -->
+	 <select id="getJgBySjdwdm" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+	 	SELECT BMID,DWDM,BMMC FROM QX_BM WHERE SJBMID = #sjbmid#
+	 </select>
+	 
+ 	 <!-- 取下级单位 -->
+ 	 <select id="getDwBySjdwdm" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+ 	 	SELECT DWDM, SJDWDM, DWMC, JB FROM QX_QY WHERE SJDWDM = #dwdm#
+ 	 </select>
+ 	 
+ 	 <!-- 取访问单位根 -->
+ 	  <select id="getQxFwTree" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 	 	SELECT DW.DWDM, DW.DWMC, DW.JB, IF(QX.DWDM IS NULL,'0','1') AS CHECKED
+		  FROM QX_QY DW left JOIN (SELECT DWDM FROM QX_BMFWQX WHERE BMID = #bmid#) QX
+		 ON DW.DWDM = QX.DWDM
+		 <isEqual property="root" compareValue="true">
+			where DW.DWDM = #dwdm# 
+		 </isEqual>
+		 <isEqual property="root" compareValue="false">
+			where DW.SJDWDM = #dwdm#
+		 </isEqual>
+ 	 </select>
+ 	 
+ 	 <sql id="Xjjg">
+ 	     FROM QX_BM BM, QX_QY DW,(SELECT VALUE AS BM, NAME AS MC FROM P_CODE WHERE CODE_TYPE = 'bmlx' and lang = #appLang#) BMLX
+		 WHERE 
+		 	<isEqual property="nodeType" compareValue="jg">
+		 		BM.BMID = #nodeId#
+		 	</isEqual>
+		 	<isNotEqual property="nodeType" compareValue="jg">
+		 		BM.SJBMID = #nodeId#
+		 	</isNotEqual>
+		   AND BM.DWDM = DW.DWDM
+		   AND BM.BMLX = BMLX.BM
+ 	 </sql>
+ 	 
+ 	 <select id="XjjgCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+ 	 	SELECT COUNT(BM.BMID) 
+ 	 	 <include refid='jggl.Xjjg'/>
+ 	 </select>
+ 	 
+ 	 <select id="XjjgQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 	 	<include refid='common.pagingTop'/>
+	 	 	SELECT BM.BMID,
+			       DW.DWMC,
+			       BM.DWDM,
+			       BM.BMMC,
+			       BMLX.MC AS BMLX,
+			       (SELECT COUNT(CZYID) FROM QX_CZYBM CZYBM WHERE CZYBM.BMID = BM.BMID) CZYS
+			 <include refid='jggl.Xjjg'/>
+		 <include refid='common.pagingBottom'/>
+ 	 </select>
+ 	 
+ 	 <select id="existsJgmc" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 	 	SELECT 1 FROM QX_BM WHERE SJBMID = #sjbmid# AND BMMC = #bmmc#
+ 	 </select>
+ 	 
+ 	 <select id="existsDwmc" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 	 	SELECT 1 FROM QX_QY WHERE SJDWDM = #sjdwdm# AND DWMC = #dwmc#
+ 	 </select>
+ 	 
+ 	 <select id="existsCzy" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 	 	SELECT 1 FROM QX_CZYBM WHERE BMID = #bmid#
+ 	 </select>
+ 	
+ 	 <!-- 根据dwdm查询下级的部门 -->
+ 	 <select id="existsXjBm" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+ 	  	select count(1) from qx_bm  where dwdm = #dwdm#
+ 	 </select> 
+ 	 
+ 	 <!-- 根据dwdm查询下级的单位 -->
+ 	  <select id="existsXjDw" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+ 	  	select count(1) from qx_qy where sjdwdm = #dwdm#
+ 	 </select> 
+ 	 
+ 	 <!-- 插入单位 -->
+ 	 <insert id="insDw" parameterClass="java.util.HashMap">
+ 	 	<selectKey resultClass="java.lang.String" keyProperty="dwdm">
+			SELECT IF(DWDM IS NOT NULL,MAX(DWDM) + 1, CONCAT(#sjdwdm#, '01')) as dwdm
+			  FROM QX_QY
+			 WHERE SJDWDM = #sjdwdm#
+		</selectKey>
+ 	       INSERT INTO QX_QY
+			  (DWDM, SJDWDM, DWMC, JB)
+			VALUES
+			  (#dwdm#, #sjdwdm#, #dwmc#, #dwjb#)
+ 	 </insert>
+ 	 
+ 	 <!--查询当前单位所有上级单位的部门-->
+ 	 <select id="getAllParentBm" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+<!--  	 	select bmid
+			from qx_bm
+			where dwdm in (select dwdm
+		                      from qx_qy
+		                     start with dwdm = #dwdm#
+		                    connect by prior sjdwdm = dwdm) -->
+		                    
+		select bmid from qx_bm t
+		where 
+		FIND_IN_SET(dwdm,get_Parent_Dwdm(#dwdm#))
+
+ 	 </select>
+ 	 <!-- 插入部门单位权限 -->
+ 	 <insert id="insBmfwqx" parameterClass="java.util.HashMap">
+ 	       insert into qx_bmfwqx
+			   (bmid, dwdm, fwjb)
+			values
+			   (#bmid#,
+			    #dwdm#,
+			    #dwjb#)
+ 	 </insert>
+ 	 <!-- 删除单位 -->
+ 	  <delete id="delDw" parameterClass="java.util.HashMap">
+ 	 	DELETE FROM QX_QY WHERE DWDM = #dwdm#
+ 	 </delete>
+ 	 
+ 	  <!-- 删除单位部门权限 -->
+ 	  <delete id="delDwbmqx" parameterClass="java.util.HashMap">
+ 	 	DELETE FROM qx_bmfwqx WHERE DWDM = #dwdm#
+ 	 </delete>
+ 	 
+ 	 <!-- 修改单位 -->
+ 	 <update id="updDw" parameterClass="java.util.HashMap">
+ 	 	update qx_qy
+		   set dwmc = #dwmc#
+		 where dwdm = #dwdm#
+ 	 </update>
+ 	 
+ 	 <!-- 插入部门 -->
+ 	 <insert id="insBm" parameterClass="java.util.HashMap">
+ 	 	<selectKey resultClass="java.lang.String" keyProperty="bmid">
+			SELECT nextval('S_QX_BM')
+		</selectKey>
+ 	 	INSERT INTO QX_BM
+ 	 	   ( BMID,DWDM, SJBMID, BMMC, BMLX)
+		 VALUES
+		   (#bmid# ,#dwdm#, #sjbmid#, #bmmc#, #bmlx#)
+ 	 </insert>
+ 	 
+ 	 <!-- 插入默认机构访问单位 -->
+  	 <insert id="insDefaultFwdw">
+		INSERT INTO QX_BMFWQX (BMID, DWDM, FWJB)
+        SELECT #bmid# AS BMID, dw.DWDM, dw.JB FROM QX_QY dw 
+ 		 WHERE FIND_IN_SET(dw.dwdm,get_Child_Dwdm (#dwdm#))
+	 </insert>
+ 	 
+ 	 <!-- 删除机构访问单位 -->
+ 	 <delete id="delFwdw" parameterClass="java.util.HashMap">
+ 	 	DELETE FROM QX_BMFWQX WHERE BMID = #bmid#
+ 	 </delete>
+ 	 
+ 	 <!-- 插入机构访问单位上级单位 -->	
+ 	  <insert id="insFwdwRoot" parameterClass="java.util.HashMap">
+		INSERT INTO QX_BMFWQX (BMID, DWDM, FWJB)
+		  SELECT #bmid# AS BMID, DW.DWDM, DW.JB
+		    FROM QX_QY DW
+		   WHERE DW.DWDM = #dwdm#
+ 	 </insert>
+ 	 
+	<!-- 插入机构访问单位 -->	 
+ 	 <insert id="insFwdw" parameterClass="java.util.HashMap">
+		<!-- INSERT INTO QX_BMFWQX (BMID, DWDM, FWJB)
+		  SELECT #bmid# AS BMID, DW.DWDM, DW.JB
+		    FROM QX_QY DW
+		   START WITH DW.DWDM		
+		<iterate prepend="IN" open="(" close=")" property="fwdws" conjunction=",">
+			#fwdws[]#
+		</iterate> 
+		  CONNECT BY PRIOR DW.DWDM = DW.SJDWDM -->
+		  INSERT INTO QX_BMFWQX (BMID, DWDM, FWJB)
+		  SELECT #bmid# AS BMID, DW.DWDM, DW.JB
+		    FROM QX_QY DW
+		    where 
+		
+		    FIND_IN_SET(DW.dwdm,get_Child_Dwdm(#dwdms#))	
+		   
+ 	 </insert>
+ 	 <!-- 删除操作员访问单位 -->
+ 	 <delete id="delCzyFwdw" parameterClass="java.util.HashMap">
+ 	    DELETE FROM QX_CZYFWQX WHERE EXISTS (SELECT 1 FROM QX_CZYBM BM WHERE QX_CZYFWQX.CZYID = BM.CZYID AND BM.BMID = #bmid#)
+ 	 </delete>
+
+	 <!-- 删除机构 --> 	 
+ 	 <delete id="delBm" parameterClass="java.util.HashMap" >
+ 	   DELETE FROM QX_BM WHERE BMID = #bmid#
+ 	 </delete>
+ 	 
+ 	 <!-- 修改机构 -->
+ 	 <update id="updBm" parameterClass="java.util.HashMap">
+ 	 	update qx_bm set bmmc = #bmmc# where bmid = #bmid#
+ 	 </update>
+ 	 
+ 	 <!--查询区域信息-->
+ 	  <select id="qyCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+ 	 	select count(q.dwdm) sjdwmc from qx_qy q where q.dwmc like concat('%', #dwmc# ,'%') and dwdm like concat(#dwdm#, '%') 
+ 	 </select>
+ 	 
+ 	 <select id="qyQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	 	 	select q.dwdm,q.dwmc,(select q.dwmc from qx_qy where dwdm=q.sjdwdm ) sjdwmc from qx_qy q where q.dwmc like concat('%', #dwmc# ,'%') and dwdm like concat(#dwdm#, '%') 
+		 <include refid='common.pagingBottom'/>
+ 	 </select>
+ 	 
+  	 <!-- 新增 虚拟电网结构  zhouh-->
+ 	 	<!-- 虚拟线路 -->
+ 	 <!-- <insert id="insXnxl" parameterClass="java.util.HashMap">
+ 	 		 <selectKey resultClass="java.lang.String" keyProperty="xnxlid">
+				SELECT nextval('S_QX_BM') 
+			 </selectKey>
+			 
+			INSERT INTO G_XL
+			VALUES(#xnxlid#,#dwdm#,#xnxlid#,#xnxlid#,'AC00101',null,null,'02',null,now(),'01')
+ 	 </insert> -->
+ 	 
+ 	  	<!-- 虚拟台区 -->
+ 	 <!-- <insert id="insXntq" parameterClass="java.util.HashMap">
+			 <selectKey resultClass="java.lang.String" keyProperty="xntqid">
+				SELECT nextval('S_QX_BM') 
+			 </selectKey>
+			 
+			INSERT INTO G_TQ
+			VALUES(#xntqid#,#dwdm#,#xntqid#,#xntqid#,'100',null,now(),'01','01')
+ 	 </insert> -->
+ 	 
+ 	  	<!-- 虚拟线路台区关系 -->
+ 	 <!-- <insert id="insXnxltq" parameterClass="java.util.HashMap">
+			INSERT INTO G_XLTQGX(TQID, XLID, BZ) VALUES(#xntqid#, #xnxlid#, '1')
+ 	 </insert> -->
+ 	 
+ 	  	<!-- 虚拟变压器-->
+ 	 <!-- <insert id="insXnbyq" parameterClass="java.util.HashMap">
+			 <selectKey resultClass="java.lang.String" keyProperty="xnbyqid">
+				SELECT nextval('S_QX_BM') 
+			 </selectKey>
+		
+			INSERT INTO
+			G_BYQ(BYQID,TQID,DWDM,MC,AZDZ,AZRQ,RL,ZBXZ,BZ,ZT,XH,JD,WD)
+			VALUES(#xnbyqid#,#xntqid#,#dwdm#,#xnbyqid#,null,now(),'100','01','01','01',null,null,null)
+ 	 </insert> -->	 
+ 	 
+ 	 <!-- 查询单位代码   zhouh-->
+ 	 <select id="quyQxQy" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 	 	SELECT T.* FROM QX_QY T WHERE T.DWDM = #dwdm#
+ 	 </select>
+ 	 
+ 	 <!-- 查询该单位的虚拟电网结构是否存在 zhouh -->
+ 	 <select id="getXnDwByDwdm" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+ 	  	 SELECT COUNT(1) FROM G_XL A, G_TQ B, G_XLTQGX C, G_BYQ D
+			WHERE 1 > 0 AND A.XLID = C.XLID AND B.TQID = C.TQID AND C.TQID = D.TQID 
+			AND A.DWDM = #dwdm#
+ 	 </select>
+ 	 <select id="getPf" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 	  select * from qx_qy where dwdm=#nodeIddw#
+ 	 </select>
+</sqlMap>
+
+	
+

@@ -1,0 +1,663 @@
+/*
+ * Ext JS Library 3.1.0
+ * Copyright(c) 2006-2010, Ext JS, LLC.
+ * licensing@extjs.com
+ * 
+ * http://extjs.com/license
+ */
+
+body .x-panel {
+	/*
+	margin-left:15px;
+	margin-right:15px;
+	margin-bottom:10px;
+	*/
+}
+.icon-grid {
+	background-image:url(resources/icons/fam/grid.png) !important;
+}
+#button-grid .x-panel-body {
+	border:1px solid #99bbe8;
+	border-top:0 none;
+}
+.add {
+	background-image:url(resources/icons/fam/add.png) !important;
+}
+
+.copy{
+	background-image:url(resources/icons/fam/copy.png) !important;
+}
+.group{background-image:url(resources/icons/fam/group.png) !important;}
+.import{background-image:url(resources/icons/fam/import.png) !important;}
+.history{background-image:url(resources/icons/fam/history.png) !important;}
+.batch-edit{background-image:url(resources/icons/fam/batch-edit.png) !important;}
+.batch-delete{background-image:url(resources/icons/fam/batch-delete.png) !important;}
+.select{background-image:url(resources/icons/fam/select.png) !important;}
+.upload {
+	background-image:url(resources/icons/fam/upload.png) !important;
+}
+.activate {
+	background-image:url(resources/icons/fam/activate.png) !important;
+}
+
+.freeze {
+	background-image:url(resources/icons/fam/freeze.png) !important;
+}
+
+.thaw {
+	background-image:url(resources/icons/fam/thaw.png) !important;
+}
+
+.cancel {
+	background-image:url(resources/icons/fam/cancel.png) !important;
+}
+
+.in {
+	background-image:url(resources/icons/fam/in.png) !important;
+}
+.out {
+	background-image:url(resources/icons/fam/out.png) !important;
+}
+.none {
+	background-image:url(resources/icons/fam/none.png) !important;
+}
+.multiple {
+	background-image:url(resources/icons/fam/multiple.png) !important;
+}
+
+.unmultiple {
+	background-image:url(resources/icons/fam/unmultiple.png) !important;
+}
+
+.okCell {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/ok.png) !important;
+}
+.scrape{
+	background-image:url(resources/icons/fam/invalid.png) !important;
+}
+
+.time{
+	background-image:url(resources/icons/fam/time.png) !important;
+}
+
+.balanceBtn{
+	height: 20px; 
+	width: 20px; 
+	min-width: 20px;
+	float:left;
+	background-image:url(resources/icons/fam/balance.png) !important;
+}
+
+.balNetBtn{
+	height: 20px; 
+	width: 20px; 
+	min-width: 20px;
+	float:left;
+	background-image:url(resources/icons/fam/net.png) !important;
+}
+
+.balSmsBtn{
+	height: 20px; 
+	width: 20px; 
+	min-width: 20px;
+	float:left;
+	background-image:url(resources/icons/fam/msg.png) !important;
+}
+
+.energy{
+	height: 16px; 
+	width: 16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/energy.png) !important;
+}
+
+.addCell {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/add.gif) !important;
+}
+.remove {
+	background-image:url(resources/icons/fam/delete.gif) !important;
+}
+
+.edit {
+	display:block;
+	height:16px; 
+	width:16px; 
+	float:left;
+	background:url(resources/icons/fam/edit.gif) 0 0 no-repeat;
+}
+
+.authorize{
+	height:24px; 
+	width:24px; 
+	min-width: 24px;
+	float:left; 
+	background-image:url(resources/icons/fam/authorize.png) !important;
+}
+
+.deauthorize{
+	height:24px; 
+	width:24px; 
+	min-width: 24px;
+	float:left;
+	background-image:url(resources/icons/fam/deauthorize.png) !important;
+}
+
+.unlock{
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/thaw.png) !important;
+}
+
+.enable {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/enable.png) !important;
+}
+.disable {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/disable.png) !important;
+}
+.del {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/cross.gif) !important;
+}
+.unlock {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/unlock.png) !important;
+}
+.curve {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/curve.png) !important;
+}
+.trend {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/trend.png) !important;
+}
+
+.stat {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/dataQuery.png) !important;
+}
+
+.posm {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/posm.png) !important;
+}
+.exportDoc {
+	background-image:url(resources/icons/exportDoc.png) !important;
+}
+.excel {
+	background-image:url(resources/icons/xls.gif) !important;
+}
+.note {
+	background-image:url(resources/icons/note.png) !important;
+}
+.pdf {
+	background-image:url(resources/icons/pdf.png) !important;
+}
+.doc {
+	background-image:url(resources/icons/doc.png) !important;
+}
+.fix {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/fix.png) !important;
+}
+.back-out {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/remove.png) !important;
+}
+.ticket {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/ticket.png) !important;
+}
+
+.sms {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/sms.png) !important;
+}
+
+.mail {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/mail.png) !important;
+}
+
+.export {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/export.gif) !important;
+}
+
+.doback {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/redoit.png) !important;
+}
+
+.exp {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/exp.png) !important;
+}
+
+.imp {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/imp.png) !important;
+}
+
+.license {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/license.png) !important;
+}
+
+.export1 {
+	background-image:url(resources/icons/fam/export.gif) !important;
+}
+
+.sale {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/sale.png) !important;
+}
+
+.reissue {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/reissue.png) !important;
+}
+.posStation {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/pos.png) !important;
+}
+
+.posTree {
+	background-image:url(resources/icons/fam/pos.png) !important;
+}
+
+.recharge {
+	background-image:url(resources/icons/fam/recharge.gif) !important;
+}
+
+
+.bill {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/recharge.gif) !important;
+}
+
+.install {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/install.png) !important;
+}
+.run {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/run.png) !important;
+}
+.delT {
+	background-image:url(resources/icons/fam/cross.gif) !important;
+}
+.offline {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/delete.gif) !important;
+}
+.online {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/accept.png) !important;
+}
+.change {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/change.png) !important;
+}
+.changecld {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/changeCld.png) !important;
+}
+.redo{
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/redo.png) !important;
+}
+.logoff{
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/logoff.png) !important;
+}
+.printAccount{
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/print.png) !important;
+}
+.key {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/key.gif) !important;
+}
+.set {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/set.gif) !important;
+}
+.qingbiao {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/qingbiao.png) !important;
+}
+.soubiao {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/soubiao.png) !important;
+}
+.read {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/read.gif) !important;
+}
+.readbackup {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/readbackup.gif) !important;
+}
+.gasmeter {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/gasmeter.gif) !important;
+}
+.editPermissions {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/permissions.png) !important;
+}
+.fail {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/fail.png) !important;
+}
+.redoTask {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/redoit.png) !important;
+}
+.redoit {
+	background-image:url(resources/icons/fam/redoit.png) !important;
+}
+.g_add {
+	background-image:url(resources/icons/fam/g_add.png) !important;
+}
+.g_join {
+	background-image:url(resources/icons/fam/g_join.png) !important;
+}
+.archivesQ{
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/user.gif) !important;
+}
+.dataQ{
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/meter.png) !important;
+}
+.alarmQ{
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/sb_gz.bmp) !important;
+}
+
+.gjReissue {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/gjReissue.png) !important;
+}
+
+.newCon {
+	background-image:url(resources/icons/fam/newCon.png) !important;
+}
+
+.oldCon {
+	background-image:url(resources/icons/fam/oldCon.png) !important;
+}
+
+.editCon {
+	background-image:url(resources/icons/fam/editCon.png) !important;
+}
+
+.logoffCon {
+	background-image:url(resources/icons/fam/logoffCon.png) !important;
+}
+.card {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/card.png) !important;
+}
+.rechargeMeter {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/prePayEng.png) !important;
+}
+.primeTree {
+	background-image:url(resources/icons/fam/prime.png) !important;
+}
+
+.vee-successful-valid {
+	background-color:#FFFFFF;
+}
+.vee-css-successful-valid{background-color:#FFFFFF;color:black;font-weight:bold;};
+
+.vee-unsuccessful-valid {
+	background-color:#FA8072;
+}
+.vee-css-unsuccessful-valid{background-color:#FA8072;color:black;font-weight:bold;};
+
+.vee-non-valid {
+	background-color:#FFFF00;
+}
+.vee-css-non-valid{background-color:#FFFF00;color:black;font-weight:bold;};
+
+.vee-estimated {
+	background-color:#90EE90;
+}
+.vee-css-estimated{background-color:#90EE90;color:black;font-weight:bold;};
+
+.vee-edited {
+	background-color:#7B68EE;
+}
+.vee-css-edited{background-color:#7B68EE;color:black;font-weight:bold;};
+
+.vee-missing {
+	background-color:#FF69B4;
+}
+.vee-css-missing{background-color:#FF69B4;color:black;font-weight:bold;};
+
+.vee-btn {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/enable.png) !important;
+}
+
+.vee-colorTitle-item{float: left;padding-left:10px;}
+.vee-colorTitle-title{float: left;}
+.vee-colorTitle-color{float: left;border: 1px solid blue;width: 25px;height:15px;}
+
+.xtopen {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/xtopen.png) !important;
+}
+.xtclose {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/xtclose.png) !important;
+}
+.preview {
+	height:16px; 
+	width:16px; 
+	min-width: 16px;
+	float:left;
+	background-image:url(resources/icons/fam/preview.png) !important;
+}
+
+.pod-destruction {
+	background-color:#FFA07A;
+}
+
+.pod-unassign {
+	background-color:#FFFF99;
+}
+
+.vee-c-successful-valid {
+	background-color:#FFFFFF;
+}
+
+.vee-c-unsuccessful-valid {
+	background-color:#FA8072;
+}
+
+.vee-c-non-valid {
+	background-color:#FFFF00;
+}
+
+.vee-c-estimated {
+	background-color:#90EE90;
+}
+
+.vee-c-edited {
+	background-color:#7B68EE;
+}
+
+.vee-c-missing {
+	background-color:#FF69B4;
+}
+
+.insPln-create {
+	background-color:#FFFF00;
+}

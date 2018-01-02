@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="mainPage">
+	  
+	  <select id="getSyzb" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT ZB.BM, ZB.MC, SY.ZBZ
+		  FROM (SELECT ZBZ, ZBDM
+		          FROM TJ_SYTX
+		         WHERE DWDM = #dwdm#
+		           AND DATE_FORMAT(RQ,'%Y-%m-%d') = DATE_FORMAT(now(),'%Y-%m-%d')) SY left join
+		       (SELECT VALUE AS BM, NAME AS MC FROM P_CODE WHERE CODE_TYPE = 'syzb' AND LANG = #appLang#) ZB
+		 on SY.ZBDM = ZB.BM AND ZB.BM 
+		<iterate prepend="IN" open="(" close=")" property="zbbms" conjunction=",">
+			#zbbms[]#
+		</iterate>
+	  </select>
+	  <!--CAI ADD -->
+	  <select id="getBjNumTotal" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	  	SELECT db.DWDM, xy.DWMC,COUNT(db.bjjh) AS TOTAL 
+		FROM da_bj db 
+  			INNER JOIN da_zd dz  ON db.BJJH = dz.ZDJH 
+  			INNER JOIN qx_qy xy  ON db.DWDM = xy.DWDM 
+		WHERE db.DWDM IN 
+	  (SELECT  q.DWDM 
+	    FROM qx_qy q 
+	  WHERE q.SJDWDM IS NOT NULL 
+	    AND q.SJDWDM IN 
+	    (SELECT  DWDM 
+	     FROM qx_qy 
+	    WHERE SJDWDM IS NULL)
+	    ORDER BY DWDM ASC) 
+	    AND db.HH IS NOT NULL 
+	    AND db.BYQID IS NOT NULL 
+	   GROUP BY DWDM,DWMC 
+	  </select>
+	  <select id="getBjNumAlert" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	  	SELECT BJ.DWDM,xy.DWMC,COUNT(DISTINCT BJ.BJJH) AS ALERT 
+		FROM SB_SJZB ZB 
+  		INNER JOIN SB_GJ GJ ON ZB.SJID = GJ.SJID 
+  		INNER JOIN DA_BJ BJ ON ZB.CLDJH = BJ.BJJH 
+  		INNER JOIN qx_qy xy ON BJ.DWDM = xy.DWDM 
+		WHERE BJ.DWDM IN 
+		  (SELECT q.DWDM 
+		   FROM  qx_qy q 
+		   WHERE q.SJDWDM IS NOT NULL AND q.SJDWDM IN 
+		    (SELECT DWDM 
+		      FROM   qx_qy 
+		    WHERE SJDWDM IS NULL) 
+		  ORDER BY DWDM ASC) 
+		  AND BJ.HH IS NOT NULL 
+		  AND BJ.BYQID IS NOT NULL 
+		GROUP BY DWDM, DWMC
+	 </select>
+</sqlMap>

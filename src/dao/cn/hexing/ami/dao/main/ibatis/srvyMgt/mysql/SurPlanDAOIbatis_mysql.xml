@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+	
+<sqlMap namespace="surPlan">
+  
+    <!-- 表安装计划查询  -->
+	<sql id="qSurPlan">
+	   FROM INS_PLN_SRVY P  
+              LEFT JOIN AR_CUSTOMER C ON P.CNO = C.CNO
+              LEFT JOIN QX_QY QY ON C.UID = QY.DWDM
+              LEFT JOIN QX_CZY CZY ON P.OPTID = CZY.CZYID
+              WHERE 1 = 1 
+          <include refid="common.nodeFilterN"/>
+		  <isNotEmpty property="cno">
+		     AND P.CNO LIKE CONCAT('%',#cno#,'%')
+		  </isNotEmpty>
+		  <isNotEmpty property="status">
+		  	 AND P.STATUS = #status#
+		  </isNotEmpty>
+		  ORDER BY P.PID DESC
+    </sql>
+  
+  	<select id="querySurPCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(P.PID) 
+		<include refid='surPlan.qSurPlan'/>
+	</select>
+	
+	<select id="querySurPQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true" >
+	    <include refid='common.pagingTop'/>
+	      SELECT
+	        (SELECT T.NAME FROM P_CODE T WHERE T.CODE_TYPE = 'planStatus' AND T.LANG = #appLang# AND T.VALUE = P.STATUS) SNAME, P.STATUS STATUS,
+	         P.CNO CNO, C.CNAME CNAME, C.ADDR ADDR, QY.DWMC UNAME, C.UID UID, P.PHONE MNO,
+	         DATE_FORMAT(P.UPT_DATE, '%Y-%m-%d %H:%i:%s') UTIME, P.PID PID, 
+	         IF(P.OPTID = 'admin','admin', CZY.XM) OPR, P.WOID WOID
+ 		<include refid='surPlan.qSurPlan'/>
+		<include refid='common.pagingBottom'/>
+		<include refid="common.pagingSort"/>
+	</select>
+	
+	<insert id="insAddSurPln" parameterClass="java.util.HashMap">
+	 		INSERT INTO ins_pln_srvy(PID,P_TYPE,WOID,STATUS,CNO,CNAME,ADDR,PHONE,UPT_DATE,OPTID)
+	 		VALUES(#pid#,'3',null,#status#,#cno#,#cname#,#addr#,#mno#,now(),#CURR_STAFFID#);	  
+	 
+	</insert>
+	 
+	<delete id="delSurPln" parameterClass="java.util.HashMap">
+		DELETE FROM INS_PLN_SRVY WHERE PID = #pid#
+  	</delete>
+  	 
+  	<!-- 根据勘察计划id获取对应的勘察计划 -->
+  	<select id="getSPlan" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT T.PID PID,  T.CNO CNO, T.CNAME CNAME, T.ADDR ADDR, T.PHONE MNO 
+		FROM INS_PLN_SRVY T  
+		WHERE T.PID=#pid#
+	</select>
+
+   <update id="updSurPln" parameterClass="java.util.HashMap">
+	 	UPDATE ins_pln_srvy SET CNO=#cno#,CNAME=#cname#,ADDR=#addr#,PHONE=#mno#,UPT_DATE=now(),OPTID=#CURR_STAFFID# 
+	 	WHERE PID=#pid#	 
+   </update>
+   
+   <!-- 获取安装计划id -->
+   <select id="getPID" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+   		SELECT NEXTVAL('S_INSPLAN_METER') FROM DUAL
+   </select>
+   
+   <!-- 根据工单id获取对应的勘察计划 -->
+   	<select id="getSrvyPlnByWoid" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+   		SELECT PLN.PID, PLN.P_TYPE, PLN.WOID, PLN.STATUS, PLN.CNO,
+   		PLN.CNAME, PLN.ADDR, PLN.PHONE, CUST.UID, QY.DWMC UNAME
+   		FROM INS_PLN_SRVY PLN, AR_CUSTOMER CUST, QX_QY QY
+   		WHERE PLN.CNO = CUST.CNO
+   		AND CUST.UID = QY.DWDM
+   		AND PLN.WOID=#woid#
+   	</select>
+   	
+   	<!-- 获取工单下指定状态的勘察计划数量 -->
+   	<select id="getSrvyPlnCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+   		SELECT COUNT(*) FROM INS_PLN_SRVY PLN
+   		WHERE PLN.WOID=#woid#
+   		AND PLN.STATUS
+   		<iterate prepend="IN" open="(" close=")" property="status" conjunction=",">
+			#status[]#
+		</iterate>
+   	</select>
+   	
+   	<!-- 更新勘察计划状态 -->
+   	<update id="updSrvyPlnStatus" parameterClass="java.util.HashMap">
+   		UPDATE INS_PLN_SRVY
+   		SET STATUS=#PLNSTATUS#, UPT_DATE=NOW()
+   		WHERE PID=#PID#
+   	</update>
+
+   	
+   	<!-- 是否存在勘察计划 -->
+   	<select id="existSrvyPln" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+   		SELECT COUNT(*) FROM INS_PLN_SRVY PLN
+   		WHERE PLN.PID=#pid#
+   	</select>
+
+<!-- 插入计划操作日志 -->
+   <insert id="insPlnOPLog" parameterClass="java.util.HashMap">
+	    <selectKey resultClass="java.lang.String" keyProperty="logId">
+			SELECT NEXTVAL('S_INSPLAN_OPLOG') FROM DUAL
+		</selectKey>
+		INSERT INTO INS_PLN_OPLOG(LOGID,PID,DEV_TYPE,STATUS,OPTID,OP_DATE)
+    	VALUES 
+    	(#logId#, #pid#,null,#status#,#CURR_STAFFID#,now())  
+   </insert>
+   
+   <!--删除计划操作日志 -->
+   <delete id="delPlnOPLog" parameterClass="java.util.HashMap">
+		DELETE FROM INS_PLN_OPLOG WHERE PID = #pid#
+   </delete>
+   
+   	<!-- 获取用户  -->
+   	<select id="getCustByCno" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+   		SELECT C.CNO,C.CNAME,C.ADDR,C.PHONE, C.UID FROM AR_CUSTOMER C WHERE 1=1 
+   		AND C.CNO = #cno# 
+   	</select>
+   
+</sqlMap>

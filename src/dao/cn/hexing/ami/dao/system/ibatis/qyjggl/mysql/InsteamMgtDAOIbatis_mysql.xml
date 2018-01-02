@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+	
+<sqlMap namespace="insteamMgt">
+
+	<!-- 插入安装队信息 -->
+	<insert id="insertInsteam" parameterClass="java.util.HashMap">
+		<selectKey resultClass="java.lang.String" keyProperty="tno">
+			SELECT nextval('S_INS_TEAM')
+		</selectKey>
+		insert into ins_team
+			(tno, tname, rsp_name, phone, p_num, status, crt_date) 
+		values
+			(#tno#, #tname#, #rsp_name#, #phone#, #p_num#, #status#, Now())
+	</insert>
+	
+	<!-- 查询安装队信息 -->
+	<select id="queryInsteam" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select ins.tno, ins.tname, ins.rsp_name, ins.phone, ins.status, ins.crt_date 
+			from ins_team ins
+			<isNotEmpty property="tname">
+				where ins.tname like '%' || #tname# || '%'
+			</isNotEmpty>  
+	</select>
+	
+	<!-- 修改安装队信息 -->
+	<update id="updateInsteam" parameterClass="java.util.HashMap">
+		update ins_team
+			set tname = #tname#, rsp_name = #rsp_name#, phone = #phone#, status = #status#, p_num = #p_num#
+				where tno = #tno#
+	</update>
+	
+	<!-- 删除安装队信息 -->
+	<delete id="deleteInsteam" parameterClass="java.util.HashMap">
+		delete from ins_team
+			where tname = #tname#
+	</delete>
+	
+	<!-- 判断安装队是否已经存在 -->
+	<select id="existsInsteam" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select 1 from ins_team
+			where tname = #tname#
+			<isNotEmpty property="tno"> 
+				and tno != #tno# 
+			</isNotEmpty>
+				 
+	</select>
+	
+	<!-- 管理界面，获取安装队列表 -->
+	<select id="getInsteamListQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<include refid='common.pagingTop'/>
+			select ins.tno, ins.tname, ins.rsp_name, ins.p_num, ins.phone, 
+				ins.status as insteamsts,
+				(select c.name 
+					from p_code c 
+				where c.code_type = 'insteamsts' 
+					and c.lang = #appLang# 
+					and c.value = ins.status) status,
+					date_format(ins.crt_date, '%Y-%m-%d') crt_date
+			from ins_team ins
+				where ins.tname like concat('%', #tname#, '%')
+				<isNotEmpty property="status"> 
+				and ins.status = #status#
+				</isNotEmpty>
+		<include refid='common.pagingBottom'/>
+	</select>
+	
+	<!-- 管理界面，获取安装队总数 -->
+	<select id="getInsteamListCount" resultClass="int">
+		select count(ins.tno)
+			from ins_team ins
+				where ins.tname like concat('%', #tname#, '%')
+				<isNotEmpty property="status"> 
+				and ins.status = #status#
+				</isNotEmpty>
+	</select>
+	
+	<!-- 选择界面，获取安装队列表 -->
+	<select id="insteamSelQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<include refid='common.pagingTop'/>
+			select ins.tno, ins.tname, ins.rsp_name, ins.p_num, ins.phone
+			from ins_team ins
+				where ins.tname like concat('%', #tname#, '%')
+					and ins.status = '0'
+		<include refid='common.pagingBottom'/>
+	</select>
+	
+	<!-- 选择界面，获取安装队总数 -->
+	<select id="insteamSelCount" resultClass="int">
+		select count(ins.tno)
+			from ins_team ins
+				where ins.tname like concat('%', #tname#, '%')
+					and ins.status = '0'
+	</select>
+	
+	<!-- 查询安装队下面是否有操作员 -->
+	<select id="qyczy" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		select ins.tno 
+			from ins_team ins join qx_czy czy 
+		where ins.tno = czy.tid 
+			and ins.tname = #tname#
+	</select>
+	
+	<!-- 查询安装队是否状态是Enabled -->
+	<select id="cxstatus" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		select ins.tno
+			from ins_team ins
+		where ins.tname = #tname#
+			and ins.status = '0'
+	</select>
+	<!-- 编辑安装队获取信息 -->
+	<select id="getInsteam" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select tno, tname, rsp_name, phone, status, crt_date, CAST(p_num as char) as p_num
+			from ins_team
+		where tno = #tno#
+	</select>
+	
+	<!-- 从数据库中获取安装队修改之前的状态 -->
+	<select id="qySts" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+		select status
+			from ins_team
+		where tno = #tno#
+	</select>
+	<!-- 从数据库中查询，安装队下面是否有操作员 -->
+	<select id="qyCzyUnderTeam" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		select 1
+			from ins_team i inner join qx_czy q
+		where i.tno = q.tid
+			and i.tno = #tno#
+	</select>
+</sqlMap>

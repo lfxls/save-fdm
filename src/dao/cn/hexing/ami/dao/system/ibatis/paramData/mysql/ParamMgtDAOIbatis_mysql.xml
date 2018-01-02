@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="paramMgt">
+<select id="getVerLs" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	select verid bm,m_vername mc from ar_meter_model 
+</select>
+
+<select id="getCateLs" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	select cate_no bm,cate_name mc from p_ps_category where status='0' and PM_TYPE=#paramType#  and verid=#verId#
+</select>
+<!--获取测试参数  -->
+<sql id="getTestParam">
+FROM 
+p_ps_category cate 
+join p_ps_test p on cate.cate_no=p.cate_no
+ JOIN 
+(SELECT tiid,STATUS, #verId# as verid from p_ps_ti where verid=#verId#
+UNION 
+SELECT tiid,STATUS, #verId# as verid from p_ps_ti where verid='0'
+AND NOT EXISTS (
+SELECT 1 FROM p_ps_ti WHERE verid=#verId#
+))ti
+  ON p.tiid=ti.tiid LEFT JOIN p_ps_tiname tn ON ti.tiid=tn.tiid  WHERE  tn.lang=#appLang#  
+  and cate.verid=#verId#
+</sql>
+
+<select id="getTestParamCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+select count(*)
+<include refid="paramMgt.getTestParam"/>
+</select>
+
+<select id="getTestParamQuery"  parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	<include refid="common.pagingTop"/>
+	select ti.tiid,tn.TINAME,p.status statusValue,
+	(select name from p_code where code_type='pmStatus' and lang=#appLang# and value=p.status)status,
+	(select name from p_code where code_type='level' and lang=#appLang# and value= p.level) level
+	,p.sort sortNum
+	<include refid="paramMgt.getTestParam"/>
+	order by p.sort
+ 	<include refid="common.pagingBottom"/>
+</select>
+
+<sql id="getParam">
+<isEqual property="paramType" compareValue="0">
+FROM p_ps_read p  
+</isEqual>
+<isEqual property="paramType" compareValue="1">
+FROM p_ps_set p  
+</isEqual>
+	LEFT JOIN p_ps_category  ppc ON p.cate_no=ppc.cate_no
+	LEFT JOIN ar_meter_model model ON ppc.verid=model.verid 
+ 	LEFT JOIN 
+ 	  (SELECT doc.* FROM dlms_obis_code doc,ar_meter_model model WHERE  doc.isshow='1' AND  model.verid=doc.verid AND model.verid=#verId#
+	UNION 
+	SELECT doc.* FROM dlms_obis_code doc WHERE  isshow='1' AND doc.verid='0'
+	   AND  NOT EXISTS
+	(SELECT 1 FROM dlms_obis_code c,ar_meter_model m  WHERE c.item_id =doc.item_id	
+	 AND c.verid=m.verid AND m.verid=#verId# )
+	    )doc
+ 	ON p.obis=doc.item_id 
+	LEFT JOIN dlms_obis_name don ON doc.item_id=don.item_id and doc.verid=don.verid 
+	where  ppc.verid=#verId#  and ppc.pm_type=#paramType#
+	and don.lang=#appLang#
+</sql>
+
+<select id="getParamQuery"  parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+<include refid="common.pagingTop"/>
+<isEqual property="paramType" compareValue="0">
+SELECT ppc.cate_name,p.obis ITEM_ID,don.item_name,p.sort sortNum,model.m_vername, doc.scale,doc.unit,doc.buss_type, '' value,'' ulimit,'' dlimit, '' level,p.status statusValue,
+(select name from p_code where code_type='pmStatus' and lang=#appLang# and value=p.status) status
+</isEqual>
+<isEqual property="paramType" compareValue="1">
+SELECT ppc.cate_name,p.obis ITEM_ID,don.item_name,p.sort sortNum,model.m_vername,doc.scale,doc.unit,doc.buss_type, p.value,'' ulimit,'' dlimit, '' level,p.status statusValue,
+(select name from p_code where code_type='pmStatus' and lang=#appLang# and value=p.status) status
+</isEqual>
+	<include refid="paramMgt.getParam"/>
+	order by p.sort
+ 	<include refid="common.pagingBottom"/>
+</select>
+
+<select id="getParamCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+select count(*)
+	<include refid="paramMgt.getParam"/>
+</select>
+<!-- 获取参数分类列表 -->
+<sql id="getCate">
+FROM P_PS_CATEGORY ppc LEFT JOIN ar_meter_model model ON ppc.verid=model.verid
+WHERE ppc.verid=#verId#
+AND ppc.pm_type=#paramType#
+<isNotEmpty property="cateName">
+and ppc.CATE_NAME like concat('%',#cateName#,'%')
+</isNotEmpty>
+<isNotEmpty property="cateId">
+and ppc.cate_no &lt;&gt; #cateId#
+</isNotEmpty>
+</sql>
+
+<select id="getCateCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer"> 
+select count(*)
+<include refid="paramMgt.getCate"/>
+</select>
+
+<select id="getCateQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+<include refid="common.pagingTop"/>
+SELECT ppc.cate_name catename,ppc.sort sortNum, ppc.status,ppc.cate_no cateId,model.m_vername vername,ppc.verid verid,
+(SELECT NAME FROM p_code WHERE code_type='pmStatus' AND lang=#appLang# AND VALUE=ppc.status)STATUSNAME,
+(SELECT NAME FROM p_code WHERE code_type='pmType' AND lang=#appLang# AND VALUE=ppc.pm_type)pmType,
+ppc.pm_type paramType
+<include refid="paramMgt.getCate"/>
+ ORDER BY ppc.sort 
+ <include refid="common.pagingBottom"/>
+</select>
+
+<!--获取测试项列表  -->
+<sql id="queryTestParamList">
+FROM (SELECT tiid,STATUS, #verId# as verid from p_ps_ti where verid=#verId#
+UNION 
+SELECT tiid,STATUS, #verId# as verid from p_ps_ti where verid='0'
+AND NOT EXISTS (
+SELECT 1 FROM p_ps_ti WHERE verid=#verId#
+))ti left join p_ps_tiname tn on ti.tiid=tn.tiid WHERE ti.status='0' and tn.lang=#appLang# AND NOT EXISTS 
+(SELECT 1 FROM p_ps_test p WHERE p.tiid=ti.tiid and p.cate_no=(select cate_no from p_ps_category where verid=#verId# and pm_type='2'))
+<isNotEmpty property="tiName">
+ and ti.tiname like concat('%',#tiName#,'%')
+</isNotEmpty>
+
+</sql>
+
+<select id="queryTestParamListCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+select count(*)
+<include refid="paramMgt.queryTestParamList"/>
+</select>
+
+<select id="queryTestParamListQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+<include refid="common.pagingTop"/>
+SELECT ti.tiid ,tn.tiname tiName 
+<include refid="paramMgt.queryTestParamList"/>
+<include refid="common.pagingBottom"/>
+</select>
+
+<!-- 获取读取或者设置类数据项 -->
+<sql id="queryParamList">
+FROM 
+(
+SELECT doc.* FROM dlms_obis_code doc,ar_meter_model model WHERE  doc.isshow='1' AND  model.verid=doc.verid AND model.verid=#verId#
+	UNION 
+	SELECT doc.* FROM dlms_obis_code doc WHERE  isshow='1' AND doc.verid='0'
+   AND  NOT EXISTS
+	(SELECT 1 FROM dlms_obis_code c,ar_meter_model m  WHERE c.item_id =doc.item_id	
+	 AND c.verid=m.verid AND m.verid=#verId# ))c
+  JOIN dlms_obis_name n  ON c.item_id=n.item_id and  c.verid=n.verid
+WHERE  1=1 
+<isNotEmpty property="itemSort">
+and c.item_sort=#itemSort#
+</isNotEmpty>
+<isNotEmpty property="itemName">
+and n.item_name like concat('%',#itemName#,'%') 
+</isNotEmpty>
+AND n.lang=#appLang#
+<isEqual property="paramType" compareValue="0">
+and c.op_type &lt;&gt; 'W'
+AND NOT EXISTS( SELECT * FROM p_ps_read p WHERE  p.obis=c.item_id AND cate_no =(select cate_no from p_ps_category where verid=#verId# and pm_type='0' ) )
+</isEqual>
+<isEqual  property="paramType" compareValue="1">
+and c.op_type &lt;&gt; 'R'
+AND NOT EXISTS( SELECT * FROM p_ps_set p WHERE  p.obis=c.item_id AND cate_no =(select cate_no from p_ps_category where verid=#verId# and pm_type='1' ))
+</isEqual>
+</sql>
+
+<select id="queryParamListCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+select count(*)
+<include refid="paramMgt.queryParamList"/>
+</select>
+
+<select id="queryParamListQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+<include refid="common.pagingTop"/>
+select c.item_id, n.item_name,c.buss_type bussType, (SELECT NAME FROM p_code WHERE code_type='item_sort' AND lang=#appLang# AND VALUE=c.item_sort)itemSort
+<include refid="paramMgt.queryParamList"/>
+ <include refid="common.pagingBottom"/>
+</select>
+
+<delete id="delParam">
+<isEqual property="paramType" compareValue="0">
+DELETE FROM p_ps_read WHERE OBIS=#itemId# and cate_no=(select cate_no from p_ps_category where verid=#verId# and PM_TYPE='0')
+</isEqual>
+<isEqual property="paramType" compareValue="1">
+DELETE FROM p_ps_set WHERE OBIS=#itemId#  and cate_no=(select cate_no from p_ps_category where verid=#verId# and PM_TYPE='1')
+</isEqual>
+<isEqual property="paramType" compareValue="2">
+DELETE FROM p_ps_test WHERE TIID=#testId# and cate_no=(select cate_no from p_ps_category where verid=#verId# and PM_TYPE='2')
+</isEqual>
+</delete>
+<update id="updParam">
+<isEqual property="paramType" compareValue="0">
+update p_ps_read set status=#status# ,sort=#sortNum# where OBIS=#itemId# and cate_no=(select cate_no from p_ps_category where verid=#verId# and PM_TYPE='0')
+</isEqual>
+<isEqual property="paramType" compareValue="1">
+update p_ps_set set status=#status# ,sort=#sortNum#,
+<isNotEqual property="bussType" compareValue="1">
+buss_Type='0',
+value=#value#
+</isNotEqual>
+<isEqual property="bussType" compareValue="1">
+buss_Type='1',
+value=null
+</isEqual>
+
+ where OBIS=#itemId# and cate_no=(select cate_no from p_ps_category where verid=#verId# and PM_TYPE='1')
+</isEqual>
+<isEqual property="paramType" compareValue="2">
+update p_ps_test set status=#status# ,sort=#sortNum#,level=#level# where tiid=#testId# and cate_no=(select cate_no from p_ps_category where verid=#verId# and PM_TYPE='2')
+</isEqual>
+</update>
+<insert id="insParam">
+<isEqual property="paramType" compareValue="0">
+insert into p_ps_read values(#cateId#,#itemId#,#sortNum#,#status#,#czyId#,now())
+</isEqual>
+<isEqual property="paramType" compareValue="1">
+insert into p_ps_set values(#cateId#,#itemId#,
+<isEqual property="bussType" compareValue="1">
+null,
+</isEqual>
+<isNotEqual property="bussType" compareValue="1">
+#value#,
+</isNotEqual>
+#sortNum#,#status#,#czyId#,now()
+<isEqual property="bussType" compareValue="1">
+,'1'
+</isEqual>
+<isNotEqual property="bussType" compareValue="1">
+,'0'
+</isNotEqual>
+)
+</isEqual>
+<isEqual property="paramType" compareValue="2">
+insert into p_ps_test values(#cateId#,#testId#,#sortNum#,#status#,#level#,#czyId#,now())
+</isEqual> 
+</insert>
+
+<insert id="insCate" parameterClass="java.util.HashMap" >
+<selectKey resultClass="java.lang.String" keyProperty="cate_no">
+select nextval('S_CATE_NO') from dual
+</selectKey>
+INSERT INTO p_ps_category VALUES(#cate_no#,'',#verId#,#cateName#,#paramType#,'1','0')	
+</insert>
+<update id="updCate" parameterClass="java.util.HashMap">
+UPDATE p_ps_category SET 
+verid=#verId#,
+cate_name=#cateName#,
+pm_type=#paramType#,
+sort=#sortNum#,
+STATUS=#status# 
+WHERE cate_no=#cateId# 
+</update>
+<delete id="delCate">
+DELETE FROM p_ps_category WHERE verid=#verId# and pm_type=#paramType#
+</delete>
+<select id="getParamByCate" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+<isEqual property="paramType" compareValue="0">
+SELECT cate_no FROM p_ps_read WHERE cate_no=(select cate_no from p_ps_category where verid=#verId# and PM_TYPE='0')
+</isEqual>
+<isEqual property="paramType" compareValue="1">
+SELECT cate_no FROM p_ps_set WHERE cate_no=(select cate_no from p_ps_category where verid=#verId# and PM_TYPE='1')
+</isEqual>
+<isEqual property="paramType" compareValue="2">
+SELECT cate_no FROM p_ps_test WHERE cate_no=(select cate_no from p_ps_category where verid=#verId# and PM_TYPE='2')
+</isEqual>
+</select>
+<select id="getParamById" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+<isEqual property="paramType" compareValue="0">
+select p.*,'' value,'' buss_type,n.item_name  FROM p_ps_read p 
+join p_ps_category cate on p.cate_no=cate.cate_no 
+JOIN  dlms_obis_name n ON n.item_id=p.obis
+</isEqual>
+<isEqual property="paramType" compareValue="1">
+select p.*,n.item_name
+FROM p_ps_set p  
+join p_ps_category cate on p.cate_no=cate.cate_no 
+JOIN  dlms_obis_name n ON n.item_id=p.obis
+</isEqual>
+where p.obis=#itemId# and cate.verid=#verId#
+and n.lang=#appLang#
+</select>
+<select id="getTestParamById"  parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+select p.level,p.status,ti.tiid testId,tn.tiname testName,p.cate_no FROM p_ps_test p  
+join p_ps_category cate on p.cate_no=cate.cate_no
+join p_ps_ti ti on p.TIID=ti.TIID
+LEFT JOIN p_ps_tiname tn ON ti.tiid=tn.tiid 
+where p.tiid=#testId# and cate.verid=#verId#
+and tn.lang=#appLang#
+</select>
+
+<select id="getAllRead" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.common.pojo.paramData.ParamData">
+select r.*, ppc.pm_type ,m.verid ,m.m_model model,
+'R' as OP_TYPE,
+  IF(doc.child_data_type IS NULL,doc.dlms_data_type,CONCAT(doc.dlms_data_type,'_',doc.child_data_type))dlms_data_type,
+ doc.scale,
+  doc.unit,
+  doc.xctpt
+ FROM p_ps_category ppc  JOIN p_ps_read r ON ppc.cate_no=r.CATE_NO
+JOIN ar_meter_model m ON m.verid=ppc.verid 
+JOIN  (SELECT doc.item_id,doc.dlms_data_type,doc.child_data_type,doc.op_type,doc.scale,doc.unit,doc.xctpt,m.verid FROM dlms_obis_code doc JOIN ar_meter_model m ON m.verid=doc.verid
+ WHERE  doc.isshow='1'  AND m.verid=#VERID# 
+	UNION 
+	SELECT doc.item_id,doc.dlms_data_type,doc.child_data_type,doc.op_type,doc.scale,doc.unit,doc.xctpt,m.verid FROM dlms_obis_code doc  JOIN ar_meter_model m ON doc.verid = '0'
+	 WHERE  isshow='1' AND m.verid=#VERID# 
+	   AND  NOT EXISTS
+	(SELECT 1 FROM dlms_obis_code c,ar_meter_model m  WHERE c.item_id =doc.item_id	
+	 AND c.verid=m.verid AND m.verid=#VERID# )) doc
+	  ON r.obis=doc.item_id AND (m.verid=doc.verid OR doc.verid='0')
+	  where r.cate_no=#CATE_NO#  AND r.status='0'
+	order by r.sort
+</select>
+<select id="getAllSet" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.common.pojo.paramData.ParamData">
+select s.*, ppc.pm_type ,m.verid ,m.m_model model,
+ 'W' as OP_TYPE,
+ IF(doc.child_data_type IS NULL,doc.dlms_data_type,CONCAT(doc.dlms_data_type,'_',doc.child_data_type))dlms_data_type,
+  doc.scale,
+  doc.unit,
+  doc.xctpt
+ FROM p_ps_category ppc  JOIN p_ps_set s ON ppc.cate_no=s.CATE_NO
+JOIN ar_meter_model m ON m.verid=ppc.verid 
+JOIN  (SELECT doc.item_id,doc.dlms_data_type,doc.child_data_type,doc.op_type,doc.scale,doc.unit,doc.xctpt,m.verid  FROM dlms_obis_code doc JOIN ar_meter_model m ON m.verid=doc.verid
+
+ WHERE  doc.isshow='1'  AND m.verid=#VERID# 
+	UNION 
+	SELECT doc.item_id,doc.dlms_data_type,doc.child_data_type,doc.op_type,doc.scale,doc.unit,doc.xctpt,m.verid FROM dlms_obis_code doc  JOIN ar_meter_model m ON doc.verid = '0'
+	 WHERE  isshow='1' AND m.verid=#VERID# 
+	   AND  NOT EXISTS
+	(SELECT 1 FROM dlms_obis_code c,ar_meter_model m  WHERE c.item_id =doc.item_id	
+	 AND c.verid=m.verid AND m.verid=#VERID# )) doc
+	  ON s.obis=doc.item_id AND (m.verid=doc.verid OR doc.verid='0')
+	  where s.cate_no=#CATE_NO#  AND s.status='0'
+		order by s.sort
+</select>
+<select id="getAllTest" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.common.pojo.paramData.ParamData">
+SELECT tc.*,
+ IF(doc.child_data_type IS NULL,doc.dlms_data_type,CONCAT(doc.dlms_data_type,'_',doc.child_data_type))dlms_data_type,
+doc.scale,doc.unit,doc.xctpt,doc.verid FROM P_PS_TICODE tc 
+JOIN p_ps_test t ON
+   t.tiid=tc.tiid
+ JOIN  
+(SELECT doc.item_id,doc.dlms_data_type,doc.child_data_type,doc.op_type,doc.scale,doc.unit,doc.xctpt,m.verid FROM dlms_obis_code doc JOIN ar_meter_model m ON m.verid=doc.verid
+ WHERE  doc.isshow='1'  AND m.verid=#VERID# 
+	UNION 
+	SELECT doc.item_id,doc.dlms_data_type,doc.child_data_type,doc.op_type,doc.scale,doc.unit,doc.xctpt,m.verid FROM dlms_obis_code doc  JOIN ar_meter_model m ON doc.verid = '0'
+	 WHERE  isshow='1' AND m.verid=#VERID# 
+	   AND  NOT EXISTS
+	(SELECT 1 FROM dlms_obis_code c,ar_meter_model m  WHERE c.item_id =doc.item_id	
+	 AND c.verid=m.verid AND m.verid=#VERID# )) doc ON tc.OBIS=doc.item_id where tc.tiid=#TIID# and t.cate_no=#CATE_NO#  AND t.status='0'
+ORDER BY tc.sort
+</select>
+<select id="getTestLs" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ SELECT ps.cate_No,ps.status,ps.level,ps.sort,ps.tiid,ppc.verid,m.verid,m.m_model,ppc.PM_type FROM p_ps_category ppc
+	 JOIN p_ps_test ps
+	ON ppc.cate_no=ps.cate_no
+	LEFT JOIN P_PS_TI ti
+	ON ps.tiid=ti.tiid 
+	LEFT JOIN ar_meter_model m ON ppc.verid=m.verid
+	where ps.status='0'
+	order by ps.sort
+</select>
+<select id="getReadLs" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ SELECT m.*,ppc.CATE_NO,ppc.PM_TYPE FROM  ar_meter_model m LEFT JOIN p_ps_category ppc ON m.verid=ppc.verid
+ WHERE ppc.PM_TYPE='0'
+</select>
+<select id="getSetLs" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ SELECT m.*,ppc.CATE_NO,ppc.PM_TYPE FROM  ar_meter_model m LEFT JOIN p_ps_category ppc ON m.verid=ppc.verid
+ WHERE ppc.PM_TYPE='1'
+</select>
+<select id="getTiName" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.common.pojo.paramData.TestParamName">
+	  SELECT tn.fhint,tn.tiname,tn.lang FROM P_PS_TI ti LEFT JOIN p_ps_tiname tn ON ti.tiid=tn.tiid  where  ti.tiid=#TIID# 
+</select>
+<select id="getItemName" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.common.pojo.paramData.ParamName">
+<isEqual property="PM_TYPE" compareValue="2" >
+	  SELECT tcn.fhint,don.item_name,don.lang FROM 	
+	 (SELECT tiid,STATUS, #VERID# as verid from p_ps_ti where verid=#VERID#
+		UNION 
+		SELECT tiid,STATUS, #VERID# as verid from p_ps_ti where verid='0'
+		AND NOT EXISTS (
+		SELECT 1 FROM p_ps_ti WHERE verid=#VERID#
+		))ti
+	   JOIN p_ps_ticodeName tcn  ON ti.tiid=tcn.tiid  
+	   JOIN (  SELECT doc.item_id,m.verid,don.item_name,don.lang FROM dlms_obis_code doc JOIN ar_meter_model m ON m.verid=doc.verid
+JOIN  dlms_obis_name don ON doc.item_id=don.item_id AND doc.verid=don.verid 
+ WHERE  doc.isshow='1'  AND m.verid=#VERID#
+	UNION 
+	SELECT doc.item_id,m.verid,don.item_name,don.lang FROM dlms_obis_code doc  JOIN ar_meter_model m ON doc.verid = '0'
+		JOIN  dlms_obis_name don ON doc.item_id=don.item_id AND doc.verid=don.verid 
+	 WHERE  isshow='1' AND m.verid=#VERID#
+	   AND  NOT EXISTS
+	(SELECT 1 FROM dlms_obis_code c,ar_meter_model m  WHERE c.item_id =doc.item_id	
+	 AND c.verid=m.verid AND m.verid=#VERID# )) don ON tcn.obis=don.item_id AND tcn.lang=don.lang
+	  and tcn.obis=#obis# and ti.verid=#VERID#  and ti.tiid=#TIID#
+</isEqual>
+<isNotEqual property="PM_TYPE" compareValue="2">
+  SELECT item_id,item_name,lang, '' fhint FROM (  SELECT doc.item_id,m.verid,don.item_name,don.lang  FROM dlms_obis_code doc JOIN ar_meter_model m ON m.verid=doc.verid
+JOIN  dlms_obis_name don ON doc.item_id=don.item_id AND doc.verid=don.verid 
+ WHERE  doc.isshow='1'  AND m.verid=#VERID#
+	UNION 
+	SELECT doc.item_id,m.verid,don.item_name,don.lang  FROM dlms_obis_code doc  JOIN ar_meter_model m ON doc.verid = '0'
+		JOIN  dlms_obis_name don ON doc.item_id=don.item_id AND doc.verid=don.verid 
+	 WHERE  isshow='1' AND m.verid=#VERID#
+	   AND  NOT EXISTS
+	(SELECT 1 FROM dlms_obis_code c,ar_meter_model m  WHERE c.item_id =doc.item_id	
+	 AND c.verid=m.verid AND m.verid=#VERID# ))don
+    WHERE don.item_id=#obis# and don.verid=#VERID# 
+</isNotEqual>
+</select>
+<sql id="queryTestDetail">
+ FROM p_ps_ti ti LEFT JOIN p_ps_ticode tc ON ti.tiid=tc.tiid
+    LEFT JOIN(SELECT doc.item_id,m.verid,don.item_name,don.lang  FROM dlms_obis_code doc JOIN ar_meter_model m ON m.verid=doc.verid
+JOIN  dlms_obis_name don ON doc.item_id=don.item_id AND doc.verid=don.verid 
+ WHERE  doc.isshow='1'  AND m.verid=#verId#
+	UNION 
+	SELECT doc.item_id,m.verid,don.item_name,don.lang  FROM dlms_obis_code doc  JOIN ar_meter_model m ON doc.verid = '0'
+		JOIN  dlms_obis_name don ON doc.item_id=don.item_id AND doc.verid=don.verid 
+	 WHERE  isshow='1' AND m.verid=#verId#
+	   AND  NOT EXISTS
+	(SELECT 1 FROM dlms_obis_code c,ar_meter_model m  WHERE c.item_id =doc.item_id	
+	 AND c.verid=m.verid AND m.verid=#verId#))don ON don.item_id=tc.obis 
+	 LEFT JOIN  p_ps_ticodename tn ON tc.obis= tn.obis AND tc.tiid=tn.tiid AND tn.lang=don.lang
+	 WHERE don.lang=#appLang#
+	 AND ti.tiid=#tiid#
+	 order by tc.sort
+</sql>
+<select id="queryTestDetailCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+select count(1)
+ <include refid="paramMgt.queryTestDetail"/>
+</select>
+<select id="queryTestDetailQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ <include refid="common.pagingTop"/>
+ SELECT tc.obis,don.item_name,tn.fhint,tc.sort
+<include refid="paramMgt.queryTestDetail"/>
+<include refid="common.pagingBottom"/>
+</select>
+<!-- 分类名称，从数据库中获取 -->
+<select id="qyCateName" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+	SELECT 
+	  CATE_NAME 
+	FROM
+	  P_PS_CATEGORY 
+	WHERE CATE_NO = #cateId#
+</select>
+<!-- 内控版本号，从数据库中获取 -->
+<select id="qyVerId" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+	SELECT 
+	  VERID 
+	FROM
+	  P_PS_CATEGORY 
+	WHERE CATE_NO = #cateId#
+</select>
+<select id="existSort" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+select cate.* from 
+<isEqual property="paramType" compareValue="0">
+p_ps_read p 
+join p_ps_category cate on p.cate_no=cate.cate_no 
+where p.obis&lt;&gt;#itemId#
+</isEqual>
+<isEqual property="paramType" compareValue="1">
+p_ps_set p 
+join p_ps_category cate on p.cate_no=cate.cate_no 
+where p.obis&lt;&gt;#itemId#
+</isEqual>
+<isEqual property="paramType" compareValue="2">
+p_ps_test p 
+join p_ps_category cate on p.cate_no=cate.cate_no 
+
+where p.tiid&lt;&gt;#testId#
+</isEqual>
+and  cate.verid=#verId# and p.sort=#sortNum#
+
+</select>
+</sqlMap>

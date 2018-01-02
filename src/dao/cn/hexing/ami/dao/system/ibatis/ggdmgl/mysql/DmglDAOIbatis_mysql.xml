@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="dmgl">
+	<sql id="DMXX">
+		 <isNotEmpty prepend="and" property="cateCode">
+	 		 code_type = #cateCode#
+	 	 </isNotEmpty>
+	 	 <isEmpty prepend="and" property="cateCode">
+             code_type = (select <!-- code_sort_id -->code_type
+                                     from p_code_sort
+                                    where lang = #lang#
+                                      and name like '%' || #name# || '%' and rownum = 1
+                                    <!-- order by code_sort_id -->)
+	 	 </isEmpty>
+	</sql>
+	
+	<!--根据条件查询编码-->
+	<select id="DMXXQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 		<include refid='common.pagingTop'/>
+ 		select <!-- code_id as id,  -->code_type as cateCode,
+ 		(select name from P_CODE_SORT where code_type = #cateCode# and lang = #lang#) cateName, 
+ 		value as codeValue, name as codeName,<!-- code_sort_id, -->isShow, disp_sn
+		  from p_code
+		 where lang = #lang#
+		 and code_type = #cateCode#
+		 <!-- <include refid='DMXX'/> -->
+		 <!-- order by code_id -->
+		 order by disp_sn
+		 <include refid='common.pagingBottom'/>
+ 	</select>
+ 	
+ 	<!--根据条件查询编码的数量-->
+ 	<select id="DMXXCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+ 		select <!-- count(code_id)  -->count(code_type)
+ 		  from p_code
+ 		 where lang = #lang#
+ 		 and code_type = #cateCode#
+ 		  <!-- <include refid='DMXX'/> -->
+ 	</select>
+ 	
+ 	<sql id="DMFL">
+	   <!-- <isNotEqual prepend="and" property="name" compareValue="">
+ 		name like concat('%', #name#, '%')
+ 	   </isNotEqual> -->
+ 	   <isNotEmpty prepend="and" property="name">
+	   		name like concat('%', #name#, '%')
+	   </isNotEmpty>
+	   <isNotEmpty prepend="and" property="cateCode">
+	   		code_type like concat('%', #cateCode#, '%')
+	   </isNotEmpty>
+	   
+ 	</sql>
+ 	
+ 	<!--根据条件查询编码分类-->
+ 	<select id="DMFLQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	     <include refid='common.pagingTop'/>
+		  select <!-- code_sort_id as sortid, -->
+		         code_type as cateCode,
+		         name as cateName
+		    from p_code_sort
+		   where lang = #lang#
+		   <include refid="DMFL"/>
+		   order by name
+		   <!-- order by code_sort_id -->
+	    <include refid='common.pagingBottom'/>
+ 	</select>
+ 	
+ 	<!--根据条件查询编码分类的数量-->
+ 	<select id="DMFLCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		 select count(code_type)<!-- count(code_sort_id) -->
+	       from p_code_sort
+	      where lang = #lang#
+	      <include refid="DMFL"/>
+ 	</select>
+ 	
+ 	<!--根据分类编码查询分类信息-->
+ 	<select id="QueryDMFLByID" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.system.pojo.ggdmgl.CodeCategory">
+		select <!-- code_sort_id as dmflbs, -->
+		       name         as cateName,
+		       code_type    as cateCode
+		  from p_code_sort
+		 where <!-- code_sort_id = #code_sort_id# -->
+		 	   code_type = #cateCode#
+		 	and lang = #lang#
+ 	</select>
+ 	
+ 	<!--根据分类编码和编码值查询编码信息-->
+ 	<select id="QueryDMXXByID" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.system.pojo.ggdmgl.Code">
+		 select <!-- code_id as dmbs,
+		        code_sort_id as dmflbs, -->
+		        code_type as cateCode,
+		        value as codeValue,
+		        name as codeName,
+		        <!-- code_sort_id, -->
+		        isshow as isShow,
+		        disp_sn
+		   from p_code
+		  where code_type = #cateCode# and value = #value#<!-- code_id = #code_id# -->
+		  	and lang = #lang#
+ 	</select>
+ 	
+ 	<!--新增编码分类-->
+ 	<insert id="inDmFl" parameterClass="java.util.HashMap">
+ 		<!-- <selectKey resultClass="java.lang.Integer" keyProperty="code_sort_id">
+			 select s_p_code.nextval from dual
+		</selectKey> -->
+		 insert into p_code_sort
+		   (<!-- code_sort_id, -->
+		    name,
+		    code_type,
+		    <!-- vn,
+		    valid_flag, -->
+		    lang)
+		 values
+		   (<!-- #code_sort_id#, -->
+		    #name#,
+		    #cateCode#,
+		    <!-- '1',
+		    '1', -->
+		    #lang#)
+ 	</insert>
+ 	
+ 	<!--修改分类信息-->
+ 	<update id="updDmFl"  parameterClass="java.util.HashMap">
+	   update p_code_sort
+          set name = #name#, code_type =  #cateCode#
+        where <!-- code_sort_id = #code_sort_id# -->
+        code_type = #cateCodeOld# and lang = #lang#
+ 	</update>
+ 	
+ 	<!--修改编码的分类-->
+ 	<update id="updDmXXFl"  parameterClass="java.util.HashMap">
+	   update p_code
+          set code_type =  #cateCode#
+        where <!-- code_sort_id = #code_sort_id# -->
+        code_type = #cateCodeOld# and lang = #lang#
+ 	</update>
+ 	
+ 	<!--新增编码-->
+ 	<insert id="inDmXx" parameterClass="java.util.HashMap">
+ 		<!-- <selectKey resultClass="java.lang.Integer" keyProperty="id">
+			 select s_p_code.nextval from dual
+		</selectKey> -->
+			insert into p_code
+			  (<!-- code_id, code_sort_id, --> code_type, value, name, lang, isshow, disp_sn)
+			values
+			  (<!-- S_P_CODE.currval+1, #code_sort_id#, (select s.code_type from p_code_sort s where s.code_sort_id=#code_sort_id# and rownum=1)-->#cateCode#, #value#, #name#, #lang#, #isShow#, #disp_sn#)
+ 	</insert>
+ 	
+    <!--修改编码-->
+ 	<update id="updDmXx"  parameterClass="java.util.HashMap">
+		update p_code
+		   set value = #value#,
+		       name = #name#,
+		       isshow = #isShow#,
+		       disp_sn = #disp_sn#
+		 where <!-- code_id = #code_id# -->
+		 code_type = #cateCode# and value = #valueOld# and lang = #lang#
+ 	</update>
+ 	
+ 	<!--根据编码分类删除分类-->
+ 	<delete id="delDmFl" parameterClass="java.util.HashMap">
+	 	 delete from p_code_sort
+	      where <!-- code_sort_id = #code_sort_id# -->
+	      code_type = #cateCode# and lang = #lang#
+ 	</delete>
+ 	
+ 	<!--根据分类编码删除编码-->
+ 	<delete id="delDmXxByFl" parameterClass="java.util.HashMap">
+	 	 delete from p_code
+	      where <!-- code_sort_id = #code_sort_id# -->
+	      code_type = #cateCode# and lang = #lang#
+ 	</delete>
+ 	
+ 	<!--根据分类编码和编码值删除编码-->
+ 	<delete id="delDmXx" parameterClass="java.util.HashMap">
+	 	 delete from p_code
+	      where <!-- code_id = #code_id# -->
+	      code_type = #cateCode# and value = #value# and lang = #lang#
+ 	</delete>
+ 	
+ 	<!-- 处于安全考虑，代码分类下面有代码时，不允许删除代码分类 -->
+ 	<select id="queryCodeUnderSort" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 		<!-- select 1
+ 		from P_CODE_SORT s inner join P_CODE c
+ 		where s.CODE_TYPE = c.CODE_TYPE and s.LANG = c.LANG
+ 			and s.CODE_TYPE = ## and s.LANG -->
+ 		select 1
+ 			from p_code
+ 		where code_type = #cateCode# and lang = #lang#
+ 	</select>
+ 	<!-- 删除时，param里面没有cateName，需从数据库中查询 -->
+ 	<select id="qyCateName" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+ 		select name as cateName
+ 			from P_CODE_SORT
+ 		where code_type = #cateCode# and lang = #lang#
+ 	</select>
+ 	<!-- 删除时，param里面没有codeName，需从数据库中查询 -->
+ 	<select id="qyCodeName" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+ 		select name as codeName
+ 			from p_code
+ 		where code_type = #cateCode# and lang = #lang# and value = #value#
+ 	</select>
+ 	<!-- 删除时，param里面没有isShow，从数据库中查询 -->
+ 	<select id="qyDelIsShow" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+ 		select isShow
+ 			from p_code
+ 		where code_type = #cateCode# and lang = #lang# and value = #value#
+ 	</select>
+ 	<!-- 根据代码分类查询代码 -->
+ 	<select id="qyCodeBySort" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.system.pojo.ggdmgl.Code">
+ 		select code_type cateCode,
+ 			(select name from P_CODE_SORT where code_type = #cateCode# and lang = #lang#) cateName,
+ 			lang,
+ 			value codeValue,
+ 			name codeName,
+ 			isshow isShow,
+ 			disp_sn
+ 		from p_code
+ 			where code_type = #cateCode#
+ 				and lang = #lang#
+ 	</select>
+ 	<!-- 从数据库中获取修改之前的isShow -->
+ 	<select id="qyIsShow" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+ 		select isShow
+ 			from p_code
+ 		where code_type = #cateCode#
+ 			and lang = #lang#
+ 			and value = #valueOld#
+ 	</select>
+ 	
+ 	<!-- 获取所有基础编码 -->
+	<select id="getAllCode" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.system.pojo.ggdmgl.Code">
+	    SELECT 
+		  <!-- code.* -->
+		  code.code_type cateCode,
+		  code.lang lang,
+		  code.value codeValue,
+		  code.name codeName,
+		  code.isshow isShow,
+		  code.disp_sn disp_sn
+		FROM
+		  p_code CODE
+		WHERE CODE.isshow = '1'
+ 	</select>
+ 	
+ 	<!-- 新增编码时需要查询是否有分类 -->
+ 	<select id="qyExitsSort" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+ 		select 1
+ 			from P_CODE_SORT
+ 		where CODE_TYPE = #cateCode#
+ 	</select>
+</sqlMap>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="licMgt">
+
+ 	<!-- 获取客户信息列表 -->
+	<select id="getClientListQuery" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.common.pojo.license.Client">
+ 		<include refid='common.pagingTop'/>
+ 			select t.client_no clientNo,
+			       t.client_name clientName,
+			       t.contact,
+			       t.country_no countryNo,
+			       t.address,
+			       t.cpu_id cpuId,
+			       t.bios_id biosId,
+			       t.disk_id diskId
+		      from lic_client t where 1=1 
+ 			<isNotEmpty property="clientNo">
+				and t.client_no like #clientNo# || '%'
+			</isNotEmpty>
+		<include refid='common.pagingBottom'/>
+	</select>
+	
+	<!-- 客户信息分页 --> 
+	<select id="getClientListCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		select count(t.client_no) from lic_client t where 1=1
+		<isNotEmpty property="clientNo">
+			and t.client_no like #clientNo# || '%'
+		</isNotEmpty>
+	</select>
+	
+	<!-- 获取license信息列表 -->
+	<select id="getLicListQuery" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.common.pojo.license.License">
+ 		<include refid='common.pagingTop'/>
+ 			select t.license_no licNo,
+			       t.client_no clientNo,
+			       t.meter_num meterNum,
+			       t.expired_date expDate,
+			       to_char(t.create_date, 'yyyy-mm-dd') createDate
+		      from lic_license t where 1=1
+ 			<isNotEmpty property="clientNo">
+				and t.client_no = #clientNo#
+			</isNotEmpty>
+		<include refid='common.pagingBottom'/>
+	</select>
+	
+	<!-- license信息分页 --> 
+	<select id="getLicListCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		select count(t.license_no) from lic_license t where 1=1
+ 		<isNotEmpty property="clientNo">
+			and t.client_no = #clientNo#
+		</isNotEmpty>
+	</select>
+	
+	<!-- 根据clientNo查询客户信息 -->
+ 	<select id="getClientById" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.common.pojo.license.Client">
+		select t.client_no clientNo,
+		       t.client_name clientName,
+		       t.contact,
+		       t.country_no countryNo,
+		       t.address,
+		       t.cpu_id cpuId,
+		       t.disk_id distId
+		  from lic_client t
+		 where t.client_no = #clientNo#
+ 	</select>
+ 	
+ 	<!-- 根据licNo查询客户信息 -->
+ 	<select id="getLicById" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.common.pojo.license.License">
+		select t.license_no licNo,
+		       t.client_no clientNo,
+		       t.meter_num meterNum,
+		       t.expired_date expDate,
+		       to_char(t.create_date, 'yyyy-mm-dd') createDate
+		  from lic_license t
+		 where t.license_no = #licNo#
+ 	</select>
+ 	
+ 	<!-- 获取license详细信息 -->
+ 	<select id="generateLicenseFile" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.common.pojo.license.License">
+		select t.license_no licNo,
+		       t.client_no clientNo,
+		       t.meter_num meterNum,
+		       t.expired_date expDate,
+		       to_char(t.create_date, 'yyyy-mm-dd') createDate,
+		       t1.cpu_id cpuId,
+		       t1.disk_id diskId,
+		       t1.bios_id biosId
+		  from lic_license t, lic_client t1
+		 where t.client_no = t1.client_no
+		   and t.license_no = #licNo#
+ 	</select>
+ 	
+ 	<!--新增客户-->
+ 	<insert id="inClient" parameterClass="java.util.HashMap">
+ 		insert into lic_client
+		  (client_no, client_name, contact, country_no, address, cpu_id, disk_id, bios_id)
+		values
+		  (#clientNo#, #clientName#, #contact#, #countryNo#, #address#, #cpuId#, #diskId#, #biosId#)
+ 	</insert>
+ 	
+ 	<!-- 修改客户 -->
+ 	<update id="updClient" parameterClass="java.util.HashMap">
+ 		update lic_client t
+		   set t.client_name = #clientName#,
+		       t.contact = #contact#,
+		       t.country_no = #countryNo#,
+		       t.address = #address#
+		 where t.client_no = #clientNo#
+ 	</update>
+ 	
+ 	<!-- 删除客户 -->
+ 	<update id="delClient" parameterClass="java.util.HashMap">
+ 		delete lic_client t where t.client_no = #clientNo#
+ 	</update>
+ 	
+ 	<!--新增license-->
+ 	<insert id="inLicense" parameterClass="java.util.HashMap">
+ 		<selectKey resultClass="java.lang.Integer" keyProperty="licNo">
+			 select s_lic_license.nextval from dual
+		</selectKey>
+		insert into lic_license
+		  (license_no, client_no, meter_num, expired_date, create_date)
+		values
+		  (#licNo#, #clientNo#, #meterNum#, #expDate#, sysdate)
+ 	</insert>
+ 	
+ 	<!-- 修改license -->
+ 	<update id="updLicense" parameterClass="java.util.HashMap">
+		update lic_license t
+		   set t.meter_num = #meterNum#,
+		       t.expired_date = #expDate#
+		 where t.license_no = #licNo#
+ 	</update>
+ 	
+ 	<!-- 删除license -->
+ 	<update id="delLicense" parameterClass="java.util.HashMap">
+ 		delete lic_license t where t.license_no = #licNo#
+ 	</update>
+ 	
+ 	<!-- 导入硬件信息 -->
+ 	<update id="updateMachInfo" parameterClass="java.util.HashMap">
+ 		update lic_client t
+		   set t.cpu_id = #cpuId#,
+		       t.disk_id = #diskId#,
+		       t.bios_id = #biosId#
+		 where t.client_no = #clientNo#
+ 	</update>
+</sqlMap>

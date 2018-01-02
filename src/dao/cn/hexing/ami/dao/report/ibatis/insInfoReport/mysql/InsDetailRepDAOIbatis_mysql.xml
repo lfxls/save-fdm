@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="insDetailRep" >
+<sql id="insDetail">
+ FROM ins_pln_meter pln 
+	LEFT JOIN ins_fb_meter fb ON fb.pid = pln.pid 
+	LEFT JOIN ins_wo wo  ON pln.woid=wo.woid
+	LEFT JOIN  qx_czy czy ON wo.p_optid = czy.czyid 
+	LEFT JOIN ar_customer cust ON cust.cno=pln.cno 
+	LEFT JOIN ins_team team ON team.tno = czy.TID 
+WHERE 1=1 
+<isNotEmpty property="tno">
+and team.tno=#tno#
+</isNotEmpty>
+<isEqual property="dateType" compareValue="0">
+AND DATE_FORMAT(fb.op_date,'%Y-%m-%d')=str_to_date(#opDate#,'%Y-%m-%d')
+</isEqual>
+<isEqual property="dateType" compareValue="1">
+AND STR_TO_DATE(DATE_FORMAT(fb.op_date, '%Y-%m'),'%Y-%m')=str_to_date(#opDate#,'%Y-%m')
+</isEqual>
+<isNotEmpty property="woid">
+AND  wo.woid=#woid# 
+</isNotEmpty>
+<isNotEmpty property="pid">
+AND pln.pid=#pid# 
+</isNotEmpty>
+<isNotEmpty property="bussType">
+AND pln.buss_type=#bussType# and (pln.status='3' or pln.status='4')
+</isNotEmpty>
+<isEqual property="proType" compareValue="1">
+AND (pln.status='3' or pln.status='4')
+</isEqual>
+<isEqual property="proType" compareValue="2">
+AND (pln.status='0' or pln.status='1' or pln.status='2' or pln.status='5')
+</isEqual>
+<isEqual  property="proType" compareValue="3">
+AND (pln.status='0' or pln.status='1' or pln.status='2' or pln.status='5') and wo.pf_date &lt;now()
+</isEqual>
+</sql>
+<select id="insDetailCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+select count(*) 
+<include refid="insDetailRep.insDetail"/>
+</select>
+<select id="insDetailQuery" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+<include refid="common.pagingTop"/>
+SELECT team.tname,wo.woid,pln.pid,ifnull(fb.cname,cust.cname)cname,ifnull(fb.cno,pln.cno) cno,ifnull(fb.n_MSN,pln.N_MSN) nmsn,ifnull(fb.o_msn,pln.o_msn) omsn,
+DATE_FORMAT(wo.pf_date,'%Y-%m-%d') pfdate,DATE_FORMAT(fb.op_date,'%Y-%m-%d') opdate,pln.status,
+(select name from p_code where code_type='bussType' and value=pln.buss_type and lang=#appLang#)bussType,
+(SELECT xm FROM qx_czy  WHERE czyid=wo.p_optid) optname 
+<include refid="insDetailRep.insDetail"/>
+<include refid="common.pagingBottom"/>
+</select>
+</sqlMap>

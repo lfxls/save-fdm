@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="gjbmgl">
+	<sql id="gjbm">
+		from p_gjbm gjbm,
+		(SELECT VALUE BM, NAME MC
+		FROM P_CODE
+		WHERE CODE_TYPE = 'gjlb'
+		AND LANG = 'en_US') gjlb,
+		(SELECT VALUE BM, NAME MC
+		FROM P_CODE
+		WHERE CODE_TYPE = 'gjdj'
+		AND LANG = 'en_US') gjdj,
+		(SELECT VALUE BM, NAME MC
+		FROM P_CODE
+		WHERE CODE_TYPE = 'zdgylx'
+		AND LANG = 'en_US') gylx,
+		(SELECT VALUE BM, NAME MC
+		FROM P_CODE
+		WHERE CODE_TYPE = 'dlyy'
+		AND LANG = 'ALL') dlyy
+		where gjlb.bm = gjbm.gjlb
+		and gjdj.bm = gjbm.gjdj
+		and dlyy.bm = gjbm.lang
+		and gylx.bm = gjbm.gylx
+		<isNotEmpty property="gylx">
+		 and gjbm.gylx=#gylx#
+		</isNotEmpty>
+		<isNotEmpty property="yy">
+		 and gjbm.lang=#yy#
+		</isNotEmpty>
+		<isNotEmpty property="gjlb">
+		 and gjbm.gjlb=#gjlb#
+		</isNotEmpty>
+		<isNotEmpty property="gjmc">
+		 and gjbm.gjmc like CONCAT('%' , #gjmc# , '%')
+		</isNotEmpty>
+		<isNotEmpty property="gjbm">
+		 and gjbm.gjbm like CONCAT('%' , #gjbm# , '%')
+		</isNotEmpty>
+		order by gjbm.gjdj asc
+	</sql>
+
+	<select id="gjbmCount" parameterClass="java.util.HashMap"
+		resultClass="java.lang.Integer">
+		select count(*)
+		<include refid='gjbmgl.gjbm' />
+	</select>
+
+	<select id="gjbmQuery" parameterClass="java.util.HashMap"
+		resultClass="java.util.HashMap" remapResults="true">
+		<include refid='common.pagingTop' />
+		select gjbm.gjbm,
+		gjbm.gjmc,
+		gjbm.gylx,
+		gylx.mc as gylxmc,
+		gjbm.gjlb,
+		gjlb.mc as gjlbmc,
+		gjbm.gjdj,
+		gjdj.mc as gjdjmc,
+		gjbm.lang,
+		dlyy.mc as yy
+		<include refid='gjbmgl.gjbm' />
+		<include refid='common.pagingBottom' />
+		<include refid="common.pagingSort" />
+	</select>
+<select id="getGjbm" parameterClass="java.util.HashMap" resultClass="cn.hexing.ami.dao.system.pojo.gjbm.Gjbm">
+ select gjbm,gjmc,gylx,gjlb,gjdj,lang as yy from p_gjbm where gjbm=#gjbm# and lang=#lang#		
+</select>
+<insert id="insGjbm" parameterClass="java.util.HashMap">
+  insert into p_gjbm (gjbm,gjmc,gylx,gjlb,gjdj,lang)values(#gjbm#,#gjmc#,#gylx#,#gjlb#,#gjdj#,#lang#) 
+</insert>
+<update id="upGjbm"  parameterClass="java.util.HashMap">
+ update p_gjbm set gjmc=#gjmc#,gylx=#gylx#,gjlb=#gjlb#,gjdj=#gjdj# where gjbm=#gjbm# and lang=#lang#
+</update>
+<delete id="delGjbm"  parameterClass="java.util.HashMap">
+ delete from p_gjbm where gjbm=#gjbm# and lang=#lang#
+</delete>
+</sqlMap>
